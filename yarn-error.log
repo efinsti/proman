@@ -1,0 +1,78 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\guntu\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
+
+PATH: 
+  C:\Program Files (x86)\Microsoft\Edge\Application;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\ProgramData\ComposerSetup\bin;C:\Program Files\Git\cmd;C:\Program Files (x86)\dotnet\;C:\Program Files\Docker\Docker\resources\bin;C:\Windows\System32\en-US;C:\Windows\WinSxS\amd64_microsoft-windows-t..linetools.resources_31bf3856ad364e35_10.0.22621.1_en-us_7ae5980eb68e6ce3;%NVM_HOME%;%NVM_SYMLINK%;C:\laragon\bin;C:\laragon\bin\laragon\utils;C:\gserve\nginx-1.22.1;C:\gserve\php-8.1.17-nts-Win32-vs16-x64;C:\Users\guntu\AppData\Local\Yarn\config\global\node_modules\.bin;C:\Users\guntu\AppData\Roaming\Composer\vendor\bin;C:\Users\guntu\AppData\Roaming\npm;C:\Users\guntu\AppData\Local\Microsoft\WindowsApps;C:\Users\guntu\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\heroku\bin;C:\gserve\MariaDB 10.11\bin;C:\Users\guntu\AppData\Roaming\nvm;C:\Program Files\nodejs
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  20.3.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'C:\Codes\node\2023\venice\node_modules\bcrypt\lib\binding\napi-v3\bcrypt_lib.node'
+
+npm manifest: 
+  {
+  
+    "private": true,
+  
+    "scripts": {
+  
+      "start": "nodemon server.js",
+  
+      "wp_start": "webpack --config webpack.config.js --watch",
+  
+      "tw": "tailwindcss -i ./dist/css/input.css -o ./dist/css/main.css --watch",
+  
+      "build": "webpack --config webpack.config.js s -p"
+  
+    },
+  
+    "dependencies": {
+  
+      "@fastify/static": "^6.10.2",
+  
+      "@fastify/view": "^7.4.1",
+  
+      "autonumeric": "^4.9.0",
+  
+      "bcrypt": "^5.0.1",
+  
+      "dotenv": "^16.3.1",
+  
+      "fastify": "^4.18.0",
+  
+      "knex": "^2.4.2",
+  
+      "mithril": "^2.2.2",
+  
+      "mysql": "^2.18.1",
+  
+      "pug": "^3.0.2"
+  
+    },
+  
+    "devDependencies": {
+  
+      "daisyui": "^3.1.6",
+  
+      "tailwindcss": "^3.3.2",
+  
+      "webpack": "^5.88.0",
+  
+      "webpack-cli": "^5.1.4"
+  
+    }
+  
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

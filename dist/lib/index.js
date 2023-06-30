@@ -1,13 +1,9 @@
  
 import ref from "./ref.js"
-
 import nav from "./nav.js"
-
- 
-
 import footer from "./footer.js"
  
-  
+import noway from "./noway.js"  
  
  console.log("loaded index")
 
@@ -101,6 +97,18 @@ m.route(ref.getById('content'), '/', {
         onmatch: () => {
 
             document.title = "DashBoard - " + tag
+
+        }
+    },
+
+    '/noway': {
+        render: () => {
+
+            return m(Layout, m(noway));
+        },
+        onmatch: () => {
+
+            document.title = "Noway - " + tag
 
         }
     },

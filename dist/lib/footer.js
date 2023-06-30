@@ -3,7 +3,7 @@ const footer =  {
 
     view : () =>  {
 
-        return m("footer", {"class":"footer p-10 bg-base-200 text-base-content"},
+        return m("footer", {"class":"footer p-10 bg-violet-200 text-base-content"},
         [
           m("div",
             [
@@ -12,7 +12,7 @@ const footer =  {
                 [
                   "Venice System",
                   m("br"),
-                  "Providing reliable tech since 1992"
+                  "Providing reliable tech since long time ago"
                 ]
               )
             ]
@@ -20,7 +20,7 @@ const footer =  {
           m("div",
             [
               m("span", {"class":"footer-title"}, 
-                "Services"
+                "Jasa Layanan"
               ),
               m("a", {"class":"link link-hover"}, 
                 "Merk"
@@ -42,7 +42,7 @@ const footer =  {
                 "Company"
               ),
               m("a", {"class":"link link-hover"}, 
-                "About us"
+                "Tentang"
               ),
               m("a", {"class":"link link-hover"}, 
                 "Contact"

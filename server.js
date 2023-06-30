@@ -1,8 +1,17 @@
+var r = require('./ref/ref')
+
 const fastify = require('fastify');
 const path = require("path");
 const mysql = require('mysql');
 const bikin = require('./db/init.js');
- 
+const genHash = require('./auth/genhash.js')
+
+
+console.log("this is", this);
+
+
+
+
 
 var connect = mysql.createConnection({
     host: "localhost",
@@ -31,28 +40,79 @@ app.register(require('@fastify/static'), {
     prefix: '/'
 })
 
-// app.register(require('@fastify/static'), {
-//     root: path.join(__dirname, 'src'),
-//     prefix: '/src/'
-// })
 
 app.register(require("@fastify/view"), {
     engine: {
-      pug: require("pug"),
+        pug: require("pug"),
     },
-  });
-  
-  app.get("/", (req, res) => {
-    res.view("/src/index.pug", { Hamung: "Sang Hyang Agung Katresnan" });
-  });
+});
 
- 
 
-app.get('/test', (request, res) => {
+app.post('/api/hashit', (req, res) => {
+    console.log(req)
+    var pwd = req.body.pwd
+    var opoiki
+
+    try {
+        opoiki = genHash.gen(pwd).then(data => {
+            console.log("theForce", data)
+            res.send(data);
+            r.hash = null;
+        })
+
+    }
+    catch (err) {
+        throw (err)
+    }
+    finally {
+        console.log('finally')
+    }
+
+
+
+
+
+
+
+})
+
+app.get('/', (request, res) => {
     res.view("/dist/index.pug", { Hamung: "Sang Hyang Agung Katresnan" });
 })
 
+const opts = {
+    schema: {
+        response: {
+            200: {
+                type: 'object',
+                properties: {
+                    hello: { type: 'string' }
+                }
+            }
+        }
+    }
+}
+
+
+
+app.post('/skala/:params', opts, function (request, reply) {
+    console.log(request.body)
+    console.log(request.query)
+    console.log(request.params)
+    console.log(request.headers)
+
+    console.log(request.ip)
+
+    console.log(request.hostname)
+    console.log(request.protocol)
+    console.log(request.url)
+
+    request.log.info('some info')
+    reply.send({ hello: 'world' })
+})
+
 app.listen({ port: 3000 }, (err, address) => {
+
     if (err) {
         app.log.error(err)
         process.exit(1)

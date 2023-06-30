@@ -36,7 +36,7 @@ var nav = {
   },
 
   view: () => {
-    return m("div", {"class":"navbar bg-base-100"},
+    return m("div", {"class":"navbar bg-base-200"},
     [
       m("div", {"class":"navbar-start"},
         [

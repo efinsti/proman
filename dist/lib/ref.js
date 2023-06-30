@@ -1,4 +1,4 @@
- 
+
 
 // const AutoNumeric = require('autonumeric')
 class errHandle {
@@ -28,7 +28,7 @@ var ref = {
     logout: () => {
         localStorage.removeItem(ref.lsname);
         ref.admMenu = null,
-        ref.logged = null
+            ref.logged = null
         ref.username = null
         ref.loginBtnDisabled = false
         m.route.set("/");
@@ -105,6 +105,29 @@ var ref = {
         }
         const item = JSON.parse(itemStr)
         const now = new Date()
+        console.log(item.expiry, ref.username)
+
+        var difference = item.expiry - now.getTime();
+
+        var minutesDifference = Math.floor(difference / 1000 / 60);
+
+        console.log('difference = ' +
+            minutesDifference + ' minute/s ');
+
+        if (minutesDifference < 15) {
+            var newItem = {}
+
+            Object.assign(newItem, { fullname: item.fullname, user: item.user, token: item.token, roles: item.roles, expiry: now.getTime() + 1800000 })
+
+            if (item.opd) {
+                Object.assign(newItem, { opd: item.opd })
+            }
+
+            localStorage.removeItem(k)
+            ref.setls(JSON.stringify(newItem))
+
+        }
+
 
         if (now.getTime() > item.expiry) {
             localStorage.removeItem(k)
@@ -116,8 +139,73 @@ var ref = {
         localStorage.setItem(ref.lsname, i)
     },
 
-
     tell: (type, msg, time, cb) => {
+
+        time == undefined ? time = 3000 : true
+        cb == undefined ? cb = () => { } : true
+
+        var iswe = ['info', 'success', 'warning', 'error', 'query']
+        var typeComp;
+        var theID = ref.ObjectID();
+
+        iswe.includes(type) ? null : console.log('type not define')
+        var num = null
+        iswe.forEach((t, idx) => {
+            type == t ? num = idx : null
+        })
+
+        typeComp = 'alert-' + iswe[num]
+        console.log(typeComp)
+        // bg - violet - 400
+        var comp = [
+            m("div", { "class": "toast " },
+                m("div", { "class": "alert " + typeComp },
+                m("span", {"class":"loading loading-ring loading-md"}),
+                    m("span",
+                        msg
+                    ),
+                    m("div",
+                        [
+
+                            typeComp == "alert-query" ? m("button", {
+                                "class": "btn btn-sm btn-primary", onclick: () => {
+
+                                    cb()
+                                    remove(theID)
+                                }
+                            },
+                                "Lanjut"
+                            ) : null,
+                            m("button", { "class": "btn btn-sm ml-1", onclick: () => { remove(theID) } },
+                                typeComp == "alert-query" ? "Batal" : "X"
+                            ),
+
+                        ]
+                    )
+                ), // m("progress", { "class": "progress  mt-0", "value": "10", "max": "100" })
+            )
+        ]
+
+        var remove = (theID) => {
+            var theToastEl = ref.getById(theID)
+            theToastEl.remove()
+        }
+
+        var iDiv = document.createElement('div');
+
+        iDiv.id = theID
+        document.getElementsByTagName('body')[0].appendChild(iDiv);
+        var theToastEl = ref.getById(theID)
+        m.render(theToastEl, m({ view: () => comp }))
+        ref.tunda(() => {
+            var theToastEl = ref.getById(theID)
+            if (theToastEl) remove(theID)
+        }, time)
+
+
+    },
+
+    tell2: (type, msg, time, cb) => {
 
         time == undefined ? time = 3000 : true
         cb == undefined ? cb = () => { } : true
