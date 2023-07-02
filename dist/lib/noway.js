@@ -1,143 +1,10 @@
 import r from './ref.js'
 
-
-
-class errHandle {
-  constructor(code) {
-    this.code = code;
-    this.name = 'errHandle';
-  }
-}
-
-var isAdmin
-
-var loginFire = () => {
-
-  if (Auth.canSubmit()) {
-
-    var btn = ref.getById('loginBtn')
-    btn.disabled = true
-
-    // Auth.login 
-    m.request({
-      method: "POST",
-      url: "/api/login",
-      body: { username: Auth.user, password: Auth.password }
-    }).then(data => {
-
-      //    console.log(data)
-
-      if (data) {
-        if (data.success == 0) {
-
-          throw new errHandle(data.status);
-        } else {
-
-          var arrRoles = data.roles.split(",");
-          var newRoles = []
-          arrRoles.map(r => {
-            r == "superadmin" || r == "admin" ? isAdmin = true : isAdmin = false
-            newRoles.push(r)
-
-          })
-          var item = {}
-          var now = new Date()
-          Object.assign(item, { fullname: data.fullname, user: data.username, token: data.token, roles: newRoles, expiry: now.getTime() + 36000000 })
-
-          //  Object.assign(data, { expiry: now.getTime() + 1800000}) // 30 min
-          // Object.assign(data, { expiry: now.getTime() + 180000}) // 3 min
-
-          ref.setls(JSON.stringify(item))
-          if (!isAdmin) {
-            var prm = {
-              arep: "golek",
-
-              nang: "entitas",
-              opo: ["nama"],
-              sing: { "kode": ["s", arrRoles[0]] },
-            }
-
-            var cb = () => {
-
-              console.log(ref.dataReturn)
-
-              _.assign(item, {
-
-                opd: ref.dataReturn.message[0].nama
-              })
-              localStorage.removeItem(ref.lsname);
-              ref.setls(JSON.stringify(item))
-
-
-            }
-            ref.comm(prm, cb)
-          }
-
-          ref.tell("success", "login berhasil", 896, () => {
-            console.log("checkadm")
-            ref.checkAdm(() => { console.log('check done') })
-            m.redraw()
-            m.route.set("/")
-          })
-
-        }
-
-      } else { throw new errHandle(500) }
+ 
 
 
 
-
-    }).catch(e => {
-
-      console.log(e)
-      console.log(JSON.stringify(e))
-
-      if (e.code === 401 || e.code === 422) {
-
-        ref.tell("error", "password tidak sesuai", 1100, () => { btn.disabled = !Auth.canSubmit() })
-
-
-
-      } else if (e.code === 404) {
-
-        ref.tell("error", "user tidak terdaftar", 1100, () => { btn.disabled = !Auth.canSubmit() })
-
-      } else if (e.code === 500) {
-
-        ref.tell("error", "ada kesalahan di server, hubungi admin", 1100, () => { btn.disabled = !Auth.canSubmit() })
-
-
-      }
-
-    })
-  } else {
-
-    r.tell("warning", "field input belum lengkap", 1100, () => { btn.disabled = !Auth.canSubmit() })
-
-
-
-  }
-
-}
-
-function reply_click(e, msg) {
-  var el = r.getById(e.target.id)
-
-  if (el) {
-    if (el.value.trim() == "") {
-      el.classList.remove('input-accent')
-      el.classList.add('input-error')
-      r.tell("query", msg, 5000, () => { console.log("horeee") })
-      el.focus()
-    } else {
-      el.classList.add('input-accent')
-      el.classList.remove('input-error')
-    }
-  }
-
-}
-
-const userLogin = {
+const daptar = {
 
 
 
@@ -184,9 +51,9 @@ const userLogin = {
 
 
                           m("input", {
-                            "class": inputClassDefault, "id": "fname", "name": "fname", "type": "text", "required": "required", onblur: (e) => {
+                            "class": inputClassDefault, "id": "fullname", "data-name": "Nama Lengkap", "type": "text", "required": "required", onblur: (e) => {
 
-                              reply_click(e, "Nama Lengkap harus diisi")
+                              r.lockInput(e, "Nama Lengkap harus diisi")
                             }
                           })
 
@@ -205,9 +72,9 @@ const userLogin = {
 
 
                           m("input", {
-                            "class": inputClassDefault, "id": "uname", "name": "uname", "type": "text", "required": "required", onblur: (e) => {
+                            "class": inputClassDefault, "id": "username", "data-name": "Nama User", "type": "text", "required": "required", onblur: (e) => {
 
-                              reply_click(e, "Nama User harus diisi")
+                              r.lockInput(e, "Nama User harus diisi")
                             }
                           })
 
@@ -224,9 +91,9 @@ const userLogin = {
                             ]),
                           m("div", { "class": "mt-2" },
                             m("input", {
-                              "class": inputClassDefault, "id": "email", "name": "email", "type": "email", "autocomplete": "email", "required": "required", onblur: (e) => {
+                              "class": inputClassDefault, "id": "email", "data-name": "Email", "type": "email", "autocomplete": "email", "required": "required", onblur: (e) => {
 
-                                reply_click(e, "Alamat email harus diisi")
+                                r.lockInput(e, "Alamat email harus diisi")
                               }
                             })
                           )
@@ -234,14 +101,18 @@ const userLogin = {
                       ),
                       m("div",
                         [
-                          m("label", { "class": "block text-sm font-medium leading-6 text-gray-900", "for": "pwd1" },
-                            "Password"
-                          ),
+                          m("label", { "class": "label" },
+                            [
+                              m("span", { "class": "label-text" },
+                                "Password"
+                              ),
+
+                            ]),
                           m("div", { "class": "mt-2" },
                             m("input", {
-                              "class": inputClassDefault, "id": "pwd1", "name": "pwd1", "type": "password", "required": "required", onblur: (e) => {
+                              "class": inputClassDefault, "id": "pwd", "data-name": "Password", "type": "password", "required": "required", onblur: (e) => {
 
-                                reply_click(e, "Password harus diisi")
+                                r.lockInput(e, "Password harus diisi")
                               }
                             })
                           )
@@ -249,14 +120,18 @@ const userLogin = {
                       ),
                       m("div",
                         [
-                          m("label", { "class": "block text-sm font-medium leading-6 text-gray-900", "for": "pwd2" },
-                            "Konfirmasi Password"
-                          ),
+                          m("label", { "class": "label" },
+                            [
+                              m("span", { "class": "label-text" },
+                                "Konfirmasi Password"
+                              ),
+
+                            ]),
                           m("div", { "class": "mt-2" },
                             m("input", {
-                              "class": inputClassDefault, "id": "pwd2", "name": "pwd2", "type": "password", "required": "required", onblur: (e) => {
+                              "class": inputClassDefault, "id": "pwd2", "data-name": "Konfirmasi Password", "type": "password", "required": "required", onblur: (e) => {
 
-                                reply_click(e, "konfirmasi password harus diisi")
+                                r.lockInput(e, "konfirmasi password harus diisi")
                               }
                             })
                           )
@@ -264,20 +139,24 @@ const userLogin = {
                       ),
                       m("div",
                         [
-                          m("label", { "class": "block text-sm font-medium leading-6 text-gray-900", "for": "secret" },
-                            "Kode"
-                          ),
+                          m("label", { "class": "label" },
+                            [
+                              m("span", { "class": "label-text" },
+                                "Kode Akses"
+                              ),
+
+                            ]),
                           m("div", { "class": "mt-2" },
                             m("input", {
-                              "class": inputClassDefault, "id": "secret", "name": "secret", "type": "password", "required": "required", onblur: (e) => {
+                              "class": inputClassDefault, "id": "secret", "data-name": "Kode Akses", "type": "password", "required": "required", onblur: (e) => {
 
-                                reply_click(e, "Secret harus diisi")
+                                r.lockInput(e, "Kode akses harus diisi")
                               }
                             })
                           )
                         ]
                       ),
-                   
+
                     ]
                   ),
 
@@ -286,8 +165,57 @@ const userLogin = {
             ],
 
             m("div", { "class": "card-actions justify-center" },
-              m("button", { "class": "btn btn-primary mt-2" },
-                "Buy Now"
+              m("button", {
+                "class": "btn btn-primary mt-2", onclick: () => {
+
+                  var tempArr = r.getValues()
+                  console.log(tempArr)
+                  var unfilled = []
+                  
+                  for (const [key, value] of Object.entries(tempArr[0])) {
+
+                    if (value == "") {
+                      var entry = tempArr[1][key]
+                      unfilled.push(entry)
+                    }
+                  }
+
+                  unfilled.length > 0 ? r.tell("warning", unfilled.join(', ') + " belum diisi") : null
+
+                  if (unfilled.length == 0) {
+
+                    if (tempArr[0].pwd !== tempArr[0].pwd2) {
+                      r.tell("warning", "Konfirmasi password harus sama dengan password")
+                    } else {
+                     var json = tempArr[0]
+                    
+                      m.request({
+                        method: "POST",
+                        url: "./api/daftar",
+                        body: json
+                    
+                      }).then(data => {
+                        console.log(data)
+                        if(data.success==0){
+                          r.tell("error",data.message)
+                        } else {
+
+                          r.tell("success","User berhasil didaftarkan, Anda akan masuk halaman login", 5000, ()=>{
+                            m.route.set('/login')
+                            m.redraw()
+                            console.log("cb-test")
+                          })
+
+                        }
+
+                      })
+                    
+                    }
+
+                  }
+                }},
+
+                "Kirim"
               )
             )
           ]
@@ -303,7 +231,7 @@ const userLogin = {
 
 
 
-export default userLogin
+export default daptar
 
 
 

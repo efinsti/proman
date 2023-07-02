@@ -22,11 +22,12 @@ var bikin = (cabac) => con.connect(function (err) {
             db.schema.createTable('users', function (table) {
 
                 table.increments("id").primary();
-                table.string("username").notNullable();
+                table.string("username").notNullable().unique();
                 table.string("fullname").notNullable();
-                table.string("email").notNullable();
+                table.string("email").notNullable().unique();
                 table.string("pwd").notNullable();
                 table.string("role").notNullable();
+                table.string("modified_by").notNullable();
                 table.timestamps(true, true);
 
             }).then(() => {

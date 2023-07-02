@@ -4,6 +4,7 @@ import nav from "./nav.js"
 import footer from "./footer.js"
  
 import noway from "./noway.js"  
+import login from "./login.js"
  
  console.log("loaded index")
 

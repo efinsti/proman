@@ -5,12 +5,8 @@ const path = require("path");
 const mysql = require('mysql');
 const bikin = require('./db/init.js');
 const genHash = require('./auth/genhash.js')
-
-
-console.log("this is", this);
-
-
-
+const daftar = require('./auth/daftar')
+const login = require('./auth/login')
 
 
 var connect = mysql.createConnection({
@@ -47,14 +43,15 @@ app.register(require("@fastify/view"), {
     },
 });
 
+app.post('/api/daftar', daftar)
+app.post('/api/login', login)
 
 app.post('/api/hashit', (req, res) => {
     console.log(req)
     var pwd = req.body.pwd
-    var opoiki
-
+   
     try {
-        opoiki = genHash.gen(pwd).then(data => {
+         genHash.gen(pwd).then(data => {
             console.log("theForce", data)
             res.send(data);
             r.hash = null;
@@ -67,13 +64,6 @@ app.post('/api/hashit', (req, res) => {
     finally {
         console.log('finally')
     }
-
-
-
-
-
-
-
 })
 
 app.get('/', (request, res) => {
@@ -121,3 +111,4 @@ app.listen({ port: 3000 }, (err, address) => {
 })
 
 
+console.log('"auto"')

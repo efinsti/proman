@@ -18,6 +18,52 @@ class ObjectID {
 }
 
 var ref = {
+    getVar(str) {
+        return str.match(/(\b[^\s]+\b)/g);
+    },
+    lockInput(e, msg) {
+        var el = ref.getById(e.target.id)
+
+        if (el) {
+            if (el.value.trim() == "") {
+                el.classList.remove('input-accent')
+                el.classList.add('input-error')
+                ref.tell("error", msg, 5000, () => { })
+                el.focus()
+            } else {
+                el.classList.add('input-accent')
+                el.classList.remove('input-error')
+            }
+        }
+
+    },
+    getValues() {
+        var els = [...ref.getByTag('input')]
+        //   console.log(els)
+
+        var ids = []
+
+        els.forEach(el => {
+            if (el.hasAttribute('id')) {
+                ids.push(el.id)
+            }
+        })
+
+        console.log(ids)
+
+        var tempObj = {}
+        var tempObj2 = {}
+        ids.forEach(i => {
+            Object.assign(tempObj, { [i]: ref.getById(i).value })
+            Object.assign(tempObj2, { [i]: ref.getById(i).dataset.name })
+        })
+
+
+
+        return [tempObj, tempObj2]
+    },
+
+
     mdlData: null,
     typeRumus: null,
     typeIKK: null,
@@ -141,8 +187,12 @@ var ref = {
 
     tell: (type, msg, time, cb) => {
 
-        time == undefined ? time = 3000 : true
+        time == undefined ? time = 5000 : true
         cb == undefined ? cb = () => { } : true
+
+        //just trigger all color
+
+        var allClassAlert = ["alert-success", "alert-warning", "alert-info", "alert-error"]
 
         var iswe = ['info', 'success', 'warning', 'error', 'query']
         var typeComp;
@@ -158,11 +208,11 @@ var ref = {
         console.log(typeComp)
         // bg - violet - 400
         var comp = [
-            m("div", { "class": "toast " },
+            m("div", { "class": "toast" },
                 m("div", { "class": "alert " + typeComp },
-                m("span", {"class":"loading loading-ring loading-md"}),
-                    m("span",
-                        msg
+                    m("span", { "class": "loading loading-ring loading-md" }),
+                    m("span", { class: "capitalize" },
+                        type + ": " + msg
                     ),
                     m("div",
                         [
@@ -176,7 +226,7 @@ var ref = {
                             },
                                 "Lanjut"
                             ) : null,
-                            m("button", { "class": "btn btn-sm ml-1", onclick: () => { remove(theID) } },
+                            m("button", { "class": "btn btn-sm btn-secondary btn-outline btn-active ml-1", onclick: () => { remove(theID) } },
                                 typeComp == "alert-query" ? "Batal" : "X"
                             ),
 
@@ -200,6 +250,7 @@ var ref = {
         ref.tunda(() => {
             var theToastEl = ref.getById(theID)
             if (theToastEl) remove(theID)
+            cb()
         }, time)
 
 
