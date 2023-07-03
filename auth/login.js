@@ -26,6 +26,37 @@ class ObjectID {
     }
 }
 
+function delete_token(token) {
+    db('signon')
+        .where('token', token)
+        .del().then(hsl => {
+            console.log(hsl)
+        })
+}
+
+function clear_token(user, token) {
+
+    console.log(user, token)
+    db.select().from('signon').then(data => {
+        console.log(data)
+        data.forEach(tkn => {
+
+            nJwt.verify(tkn.token, tkn.signing_key, function (err, jwt) {
+                if (err) {
+                    console.log(err); // Token has expired, has been tampered with, etc
+                    delete_token(tkn.token)
+                } else {
+                    console.log(jwt); // Will contain the header and body
+                    if (tkn.token !== token && jwt.body.username == user) {
+                        delete_token(tkn.token)
+                    }
+                }
+            });
+
+        });
+    })
+}
+
 
 module.exports = (req, reply) => {
 
@@ -43,8 +74,6 @@ module.exports = (req, reply) => {
                 check(dbObj.pwd, d.pwd).then(hsl => {
                     if (hsl) {
 
-
-
                         var signingKey = new ObjectID().id
                         console.log(signingKey)
                         var claims = {
@@ -55,28 +84,25 @@ module.exports = (req, reply) => {
                         }
 
                         var jwt = nJwt.create(claims, signingKey);
-                        jwt.setExpiration(new Date().getTime() + (60*60*1000)); 
+                        jwt.setExpiration(new Date().getTime() + (60 * 60 * 1000));
                         console.log(jwt)
                         var token = jwt.compact();
                         console.log(token);
 
                         var dbObj = {
-                            signing_key : signingKey, token : token
+                            signing_key: signingKey, token: token
                         }
-                        db('signon').insert(dbObj).then(hsl=>{
+                        db('signon').insert(dbObj).then(hsl => {
 
-                            if(hsl){
-                                  Object.assign(claims, {token:token})
-                            reply.send(new success(claims))
+                            if (hsl) {
+                                Object.assign(claims, { token: token })
+                                clear_token(claims.username, token)
+                                reply.send(new success(claims))
+
                             } else {
                                 reply.send(new fail("internal error 500"))
                             }
-                          
                         })
-
-                        
-
-
 
                     } else {
                         reply.send(new fail("password salah atau username tidak ada"))
@@ -86,41 +112,4 @@ module.exports = (req, reply) => {
             }
         })
 
-    // check.cek(req.body.pwd, darkMatter).then(data => {
-    //     console.log(data)
-    //     if (data) {
-
-
-
-
-    //         gen(dbObj.pwd).then(hash => {
-    //             dbObj.pwd = hash
-    //             Object.assign(dbObj, { role: "admin", modified_by: "system(modul daftar)" })
-    //             console.log(dbObj)
-    //             db.select('*')
-    //                 .from('users')
-    //                 .where('email', dbObj.email)
-    //                 .then(hsl => {
-    //                     if (hsl.length == 0) {
-    //                         db('users').insert(dbObj).then(result => {
-    //                             console.log(result)
-    //                             reply
-    //                                 .code(200)
-    //                                 .header('Content-Type', 'application/json; charset=utf-8')
-    //                                 .send(new success("insert " + result.length + " row"))
-
-    //                         })
-    //                     } else {
-    //                         reply.send(new fail("email sudah terdaftar", 403))
-    //                     }
-    //                 })
-
-
-
-
-    //         })
-
-    //     }
-    // })
-
-}
+    }

@@ -8,7 +8,7 @@ class errHandle {
   }
 }
 
-
+var isAdmin
 
 
 var loginFire = () => {
@@ -73,7 +73,7 @@ var loginFire = () => {
             ref.comm(prm, cb)
           }
 
-   var isAdmin
+   
 
         }
 
@@ -266,12 +266,14 @@ const login = {
                           })
                           var item = {}
                           var now = new Date()
-                          Object.assign(item, { fullname: data.fullname, user: data.username, token: data.token, roles: newRoles, expiry: now.getTime() + 36000000 })
+                          Object.assign(item, { fullname: data.fullname, user: data.username, token: data.token, roles: newRoles, expiry: now.getTime() + 3600000 })
                            
                           r.setls(JSON.stringify(item))
-                          ref.tell("success", "login berhasil", 896, () => {
+
+                          
+                          r.tell("success", "login berhasil", 896, () => {
                             console.log("checkadm")
-                            ref.checkAdm(() => { console.log('check done') })
+                            r.checkAdm(() => { console.log('check done') })
                             m.redraw()
                             m.route.set("/")
                           })
