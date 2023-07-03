@@ -10,6 +10,7 @@ class errHandle {
 
 
 
+
 var loginFire = () => {
 
   if (Auth.canSubmit()) {
@@ -72,12 +73,7 @@ var loginFire = () => {
             ref.comm(prm, cb)
           }
 
-          ref.tell("success", "login berhasil", 896, () => {
-            console.log("checkadm")
-            ref.checkAdm(() => { console.log('check done') })
-            m.redraw()
-            m.route.set("/")
-          })
+   var isAdmin
 
         }
 
@@ -257,11 +253,29 @@ const login = {
                         r.tell("error", data.message)
                       } else {
 
-                        r.tell("success", data.message, 5000, () => {
-                          m.route.set('/')
-                          m.redraw()
-                          console.log("cb-test")
-                        })
+                        
+
+                          console.log(data.message)
+
+                          var arrRoles = data.message.role.split(" ");
+                          var newRoles = []
+                          arrRoles.map(r => {
+                            r == "superadmin" || r == "admin" ? isAdmin = true : isAdmin = false
+                            newRoles.push(r)
+                
+                          })
+                          var item = {}
+                          var now = new Date()
+                          Object.assign(item, { fullname: data.fullname, user: data.username, token: data.token, roles: newRoles, expiry: now.getTime() + 36000000 })
+                           
+                          r.setls(JSON.stringify(item))
+                          ref.tell("success", "login berhasil", 896, () => {
+                            console.log("checkadm")
+                            ref.checkAdm(() => { console.log('check done') })
+                            m.redraw()
+                            m.route.set("/")
+                          })
+                        
 
                       }
 

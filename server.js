@@ -16,9 +16,9 @@ var connect = mysql.createConnection({
     database: 'venice'
 });
 
-connect.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+connect.query('SELECT 1212 + 2014 AS solution', function (error, results, fields) {
     if (error) {
-        bikin(() => console.log('DB created with "users" table'))
+        bikin(() => console.log('DB created'))
     } else {
         console.log('DB exists, the solution is: ', results[0].solution);
     }

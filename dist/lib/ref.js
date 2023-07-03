@@ -143,7 +143,7 @@ var ref = {
     fullname: null,
     loginBtnDisabled: false,
     logged: null,
-    lsname: "scripter",
+    lsname: "googlechrome",
     getls: (k) => {
         const itemStr = localStorage.getItem(k)
         if (!itemStr) {

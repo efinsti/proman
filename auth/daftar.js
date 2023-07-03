@@ -23,19 +23,51 @@ class fail {
     }
 }
 
-
-
 module.exports = (req, reply) => {
 
     //  console.log("in the body", req.body)
 
-    check.cek(req.body.secret, darkMatter).then(data => {
+    db.schema.hasTable("users").then(anaOra => {
+        console.log("anaOra", anaOra)
+
+        if (anaOra) {
+
+            lanjut()
+        } else {
+
+            db.schema.createTable('users', function (table) {
+
+                table.increments("id").primary();
+                table.string("username").notNullable().unique();
+                table.string("fullname").notNullable();
+                table.string("email").notNullable().unique();
+                table.string("pwd").notNullable();
+                table.string("role").notNullable();
+                table.string("modified_by").notNullable();
+                table.timestamps(true, true);
+
+            }).then(() => {
+
+                db.schema.createTable('signon', function (table) {
+
+                    table.string("signing_key", 36).notNullable().primary();
+                    table.string("token", 501).notNullable().unique();
+
+                }).then(() => {
+                    lanjut();
+                })
+            })
+        }
+
+
+    })
+
+    const lanjut = () => check.cek(req.body.secret, darkMatter).then(data => {
         console.log(data)
         if (data) {
             var dbObj = req.body
             delete dbObj["pwd2"]
             delete dbObj["secret"]
-
 
             gen(dbObj.pwd).then(hash => {
                 dbObj.pwd = hash
@@ -58,9 +90,6 @@ module.exports = (req, reply) => {
                             reply.send(new fail("username atau email sudah terdaftar", 403))
                         }
                     })
-
-
-
 
             })
 

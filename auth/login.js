@@ -1,5 +1,6 @@
 const check = require("./passcheck").cek
 const db = require('../db/db')
+const nJwt = require("njwt")
 
 class success {
     constructor(content) {
@@ -17,6 +18,13 @@ class fail {
     }
 }
 
+class ObjectID {
+    constructor() {
+        var tss = Math.floor(Date.now() / 1000)
+        var genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+        this.id = tss.toString(16) + genRanHex(16)
+    }
+}
 
 
 module.exports = (req, reply) => {
@@ -30,12 +38,45 @@ module.exports = (req, reply) => {
         .then(data => {
             if (data.length > 0) {
                 var d = data[0]
+                console.log(d)
 
                 check(dbObj.pwd, d.pwd).then(hsl => {
                     if (hsl) {
 
-                        reply.send(new success("berhasil login"))
+
+
+                        var signingKey = new ObjectID().id
+                        console.log(signingKey)
+                        var claims = {
+
+                            username: d.username,    // The UID of the user in your system
+                            fullname: d.fullname,
+                            role: d.role
+                        }
+
+                        var jwt = nJwt.create(claims, signingKey);
+                        jwt.setExpiration(new Date().getTime() + (60*60*1000)); 
+                        console.log(jwt)
+                        var token = jwt.compact();
+                        console.log(token);
+
+                        var dbObj = {
+                            signing_key : signingKey, token : token
+                        }
+                        db('signon').insert(dbObj).then(hsl=>{
+
+                            if(hsl){
+                                  Object.assign(claims, {token:token})
+                            reply.send(new success(claims))
+                            } else {
+                                reply.send(new fail("internal error 500"))
+                            }
+                          
+                        })
+
                         
+
+
 
                     } else {
                         reply.send(new fail("password salah atau username tidak ada"))
