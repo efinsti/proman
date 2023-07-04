@@ -103,7 +103,6 @@ var ref = {
     },
 
 
-
     tunda: (fungsi, msLama) => {
         var myStopFunction = () => {
             clearTimeout(myTimeout);
@@ -114,29 +113,7 @@ var ref = {
         }
         var myTimeout = setTimeout(munculkan, msLama);
     },
-    checkpass: (cabac) => {
 
-        const secret = "$2y$10$ocjiVRZkNTDccxnHqidnhOL7L0YakaxWLRogFDUNdlsTkhWL3leEW"
-        var text
-        var pass = prompt("Masukkan Password:", "rahasiaOemoem");
-        if (pass == null || pass == "") {
-            text = "User cancelled the prompt";
-            ref.tell('error', text, 1236, () => { })
-            cabac(text)
-
-        } else {
-            var param = { arep: "takonmeneh", opo: pass, secret: secret }
-            var cb = () => {
-                text = ref.dataReturn.message
-                if (text) {
-                    ref.tell('success', 'Hasil ' + pass + ' adalah:' + text, 1236, () => { })
-                    cabac(text)
-                } else { cabac(text) }
-            }
-            ref.comm(param, cb)
-        }
-
-    },
 
     withThis: (obj, cb) => cb(obj),
     username: null,
@@ -151,7 +128,7 @@ var ref = {
         }
         const item = JSON.parse(itemStr)
         const now = new Date()
-        console.log(item.expiry, ref.username)
+       // console.log(item.expiry, ref.username)
 
         var difference = item.expiry - now.getTime();
 
@@ -297,6 +274,7 @@ var ref = {
     islogged: (diam) => {
 
         var item = ref.getls(ref.lsname);
+        //  console.log("lsitem, ",item)
 
         if (item === null) {
             ref.logged = null
@@ -507,22 +485,7 @@ var ref = {
 
         responseType ? responseType : responseType = "json";
 
-
-        var tableName
-        var ops
-
-        var arepArr = ["golek", "ngisi", "owah", "busak"]
-        var arepObj = { "golek": null, "ngisi": "simpan", "owah": "update", "busak": "hapus" }
-        if (arepArr.includes(operation.arep)) {
-            tableName = operation.nang
-        } else tableName = null
-
-        arepArr.map(a => { a == operation.arep ? ops = arepObj[a] : null })
-
-        //   console.log(responseType)
-
-        // mrikso, golek, ngisi -> nang = table name
-        //   console.log(operation, typeof (operation))
+       console.log('calling ref comm')
 
         var lstor = ref.islogged(true)
 
@@ -530,13 +493,13 @@ var ref = {
 
             m.request({
                 method: "POST",
-                url: "./api/gerbang",
-                headers: { "Authorization": "Bearer " + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*' },
+                url: "./api/gate",
+                headers: { "Authorization": "SHAK " + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*' },
                 body: operation,
                 responseType: responseType
             }).then(data => {
 
-                console.log(operation)
+              
                 console.log(data)
 
                 if (data) {
@@ -547,24 +510,15 @@ var ref = {
                         throw new errHandle(data.status);
                     } else {
 
-                        console.log("data ok", ops)
-                        if (tableName && ops) {
-                            //  ref.tell("success", ops +  " berhasil", 1200, () => {
-                            ref.dataReturn = data
-                            cb()
-                            // })
-                        } else {
-                            ref.dataReturn = data
-                            cb()
+                        console.log("data ok", operation)
 
-                        }
+                        ref.dataReturn = data
+                        cb()
 
                     }
                 } else {
                     console.log("data not exist/syntax error")
-                    if (tableName && ops) {
-                        ref.tell("error", ops + " data pada table " + tableName + " gagal", 1200, () => { })
-                    }
+
                     ref.dataReturn = data
                     cb()
                 }

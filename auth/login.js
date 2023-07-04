@@ -31,6 +31,7 @@ function delete_token(token) {
         .where('token', token)
         .del().then(hsl => {
             console.log(hsl)
+            return
         })
 }
 
@@ -60,7 +61,7 @@ function clear_token(user, token) {
 
 module.exports = (req, reply) => {
 
-    //  console.log("in the body", req.body)
+     console.log("in the body", req.body)
     var dbObj = req.body
 
     db.select('*')
@@ -84,7 +85,7 @@ module.exports = (req, reply) => {
                         }
 
                         var jwt = nJwt.create(claims, signingKey);
-                        jwt.setExpiration(new Date().getTime() + (60 * 60 * 1000));
+                        jwt.setExpiration(new Date().getTime() + (720 * 60 * 1000));
                         console.log(jwt)
                         var token = jwt.compact();
                         console.log(token);
@@ -109,6 +110,8 @@ module.exports = (req, reply) => {
                     }
                 })
 
+            } else {
+                reply.send(new fail("password salah atau username tidak ada"))
             }
         })
 

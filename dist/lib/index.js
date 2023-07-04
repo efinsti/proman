@@ -5,6 +5,8 @@ import footer from "./footer.js"
  
 import noway from "./noway.js"  
 import login from "./login.js"
+
+import testGate from "./testGate.js"
  
  console.log("loaded index")
 
@@ -124,14 +126,14 @@ m.route(ref.getById('content'), '/', {
 
         }
     },
-    '/entitas': {
+    '/testgate': {
         render: () => {
 
-            return m(Layout, m(entitas));
+            return m(Layout, m(testGate));
         },
         onmatch: () => {
 
-            document.title = "Data Pemda - " + tag
+            document.title = "Testing - " + tag
 
         }
     },

@@ -1,11 +1,16 @@
 import r from './ref.js'
 
 
- 
+class errHandle {
+  constructor(code) {
+    this.code = code;
+    this.name = 'errHandle';
+  }
+}
 
 var isAdmin
 
- 
+
 function reply_click(e, msg) {
   var el = r.getById(e.target.id)
 
@@ -38,56 +43,28 @@ var loginFire = () => {
     }
   }
 
-  unfilled.length > 0 ? r.tell("warning", unfilled.join(', ') + " belum diisi") : null
-
-  if (unfilled.length == 0) {
-
-console.log('process')
-    var json = tempArr[0]
-
-    m.request({
-      method: "POST",
-      url: "./api/login",
-      body: json
-
-    }).then(data => {
-      console.log(data)
-      if (data.success == 0) {
-        r.tell("error", data.message)
-      } else {
-
-        console.log(data.message)
-
-        var arrRoles = data.message.role.split(" ");
-        var newRoles = []
-        arrRoles.map(r => {
-          r == "superadmin" || r == "admin" ? isAdmin = true : isAdmin = false
-          newRoles.push(r)
-
-        })
-        var item = {}
-        var now = new Date()
-        Object.assign(item, { fullname: data.message.fullname, user: data.message.username, token: data.message.token, roles: newRoles, expiry: now.getTime() + 3600000 })
-
-        r.setls(JSON.stringify(item))
 
 
-        r.tell("success", "login berhasil", 896, () => {
-          console.log("checkadm")
-          r.checkAdm(() => { console.log('check done') })
-          m.redraw()
-          m.route.set("/")
-        })
-      }
-    })
+  console.log('process')
+  var json = {fullname:"Adminata Nagari Jaya"}
+  console.log(json)
+
+  var param = { method: "delete", tableName: "users",   id:2 }
+  var cb = () => {
+    console.log('return')
+    console.log(r.dataReturn)
   }
+  r.comm(param, cb)
+
+
+
 }
 
 const login = {
 
   oncreate: () => {
     document.onkeydown = function (e) {
- 
+
       if (e.key == "Enter") {
         loginFire()
       }
@@ -140,7 +117,7 @@ const login = {
 
 
                           m("input", {
-                            "class": inputClassDefault, "id": "username", "data-name": "Nama User", "type": "text", "required": "required", onblur: (e) => {
+                            "class": inputClassDefault, "id": "signing_key", "data-name": "Nama User", "type": "text", "required": "required", onblur: (e) => {
 
                               reply_click(e, "Nama User harus diisi")
                             }
@@ -160,7 +137,7 @@ const login = {
                             ]),
                           m("div", { "class": "mt-2" },
                             m("input", {
-                              "class": inputClassDefault, "id": "pwd", "data-name": "Password", "type": "password", "required": "required", onblur: (e) => {
+                              "class": inputClassDefault, "id": "token", "data-name": "Password", "type": "password", "required": "required", onblur: (e) => {
 
                                 reply_click(e, "Password harus diisi")
                               }
