@@ -3131,20 +3131,12 @@ html {
   inset-inline-start: 0.5rem;
 }
 
-.z-\[1\] {
-  z-index: 1;
-}
-
-.z-30 {
-  z-index: 30;
-}
-
 .z-10 {
   z-index: 10;
 }
 
-.z-20 {
-  z-index: 20;
+.z-\[1\] {
+  z-index: 1;
 }
 
 .m-1 {
@@ -3288,11 +3280,6 @@ html {
   background-color: hsl(var(--b3) / var(--tw-bg-opacity));
 }
 
-.bg-violet-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(221 214 254 / var(--tw-bg-opacity));
-}
-
 .stroke-current {
   stroke: currentColor;
 }
@@ -3318,11 +3305,6 @@ html {
 .py-12 {
   padding-top: 3rem;
   padding-bottom: 3rem;
-}
-
-.py-6 {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
 }
 
 .text-center {

@@ -3,7 +3,7 @@ import r from './ref.js'
 var lo = () => {
   r.tell('query', 'Anda yakin akan keluar?', 20000, () => {
     localStorage.removeItem(r.lsname)
-    ;(r.admMenu = null), (r.logged = null)
+      ; (r.admMenu = null), (r.logged = null)
     r.username = null
     r.loginBtnDisabled = false
     r.tell('success', 'User telah log out', 877, () => {
@@ -22,18 +22,22 @@ var nav = {
 
   oncreate: () => {
 
-    document.documentElement.addEventListener('click', ()=>{
+    document.documentElement.addEventListener('click', (e) => {
 
-      var tags = [...r.getByTag('details')]
-     
-      if(tags){
-        var sums = [...r.getByTag('summary')]
-        if(sums && sums.length>0){
-          tags[0].removeAttribute('open')
+      if (e.target.tagName == "HTML") {
+        var tags = [...r.getByTag('details')]
+
+        if (tags) {
+          var sums = [...r.getByTag('summary')]
+          if (sums && sums.length > 0) {
+            tags[0].removeAttribute('open')
+          }
         }
       }
 
-    }, true); 
+
+
+    }, true);
 
   },
 
@@ -41,7 +45,7 @@ var nav = {
 
     m('a', 'Obyek Transaksi'),
     m('ul', { class: 'p-2' }, [
-      m('li', m('a', 'Karyawan')),
+      m('li', m('a', { onclick: () => m.route.set('/md_employees') }, 'Karyawan')),
       m('li', m('a', 'Vendor/Supplier'))
     ]),
     m('li', m('a', 'Item 1')),
@@ -56,12 +60,12 @@ var nav = {
   ],
 
   admMenu: [
- 
-    m(      'li',      { tabindex: '0' },
+
+    m('li', { tabindex: '0' },
       m('details', [
         m('summary', 'Obyek Transaksi'),
         m('ul', { class: 'p-2' }, [
-          m('li', m('a', {onclick:()=>m.route.set('/md_employees')}, "Daftar Karyawan")),
+          m('li', m('a', { onclick: () => m.route.set('/md_employees') }, "Daftar Karyawan")),
           m('li', m('a', "Supplier/Vendors"))
         ])
       ])
@@ -103,13 +107,15 @@ var nav = {
             r.admMenu ? nav.admBurger : null
           )
         ]),
-        m('a', { class: 'btn btn-ghost normal-case text-xl', onclick:()=>{
+        m('a', {
+          class: 'btn btn-ghost normal-case text-xl', onclick: () => {
 
-          r.username ? r.loginBtnDisabled = true : r.loginBtnDisabled = false
+            r.username ? r.loginBtnDisabled = true : r.loginBtnDisabled = false
 
-          m.route.set('/')
+            m.route.set('/')
 
-        } }, 'veniCe')
+          }
+        }, 'veniCe')
       ]),
       m(
         'div',
@@ -131,36 +137,38 @@ var nav = {
             var tog = [...r.getByCN('toggle')]
 
             if (tog[0].checked) {
-              document.documentElement.setAttribute('data-theme', 'dark')  
+              document.documentElement.setAttribute('data-theme', 'dark')
             } else {
               document.documentElement.removeAttribute('data-theme')
             }
           }
         }),
 
-        r.username? m("div", {"class":"dropdown dropdown-end ml-2"},
-        [
-          m("label", {"class":"btn m-1","tabindex":"0"}, 
-            r.username
-          ),
-          m("ul", {"class":"dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52","tabindex":"0"},
-            [
-              m("li", 
-                m("a", {onclick:()=>lo()},
-                  "Log out"
-                )
-              ),
-              // m("li", 
-              //   m("a", 
-              //     "Item 2"
-              //   )
-              // )
-            ]
-          )
-        ]
-      ) : m('a', { class: 'btn ml-2', disabled :r.loginBtnDisabled, onclick: ()=>{
-        m.route.set('/login')
-      } }, 'Sign in')
+        r.username ? m("div", { "class": "dropdown dropdown-end ml-2" },
+          [
+            m("label", { "class": "btn m-1", "tabindex": "0" },
+              r.username
+            ),
+            m("ul", { "class": "dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52", "tabindex": "0" },
+              [
+                m("li",
+                  m("a", { onclick: () => lo() },
+                    "Log out"
+                  )
+                ),
+                // m("li", 
+                //   m("a", 
+                //     "Item 2"
+                //   )
+                // )
+              ]
+            )
+          ]
+        ) : m('a', {
+          class: 'btn ml-2', disabled: r.loginBtnDisabled, onclick: () => {
+            m.route.set('/login')
+          }
+        }, 'Sign in')
       )
     ])
   }
