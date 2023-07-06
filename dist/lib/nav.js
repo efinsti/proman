@@ -20,9 +20,25 @@ var nav = {
     })
   },
 
-  onupdate: () => {},
+  oncreate: () => {
+
+    document.documentElement.addEventListener('click', ()=>{
+
+      var tags = [...r.getByTag('details')]
+     
+      if(tags){
+        var sums = [...r.getByTag('summary')]
+        if(sums && sums.length>0){
+          tags[0].removeAttribute('open')
+        }
+      }
+
+    }, true); 
+
+  },
 
   admBurger: [
+
     m('a', 'Obyek Transaksi'),
     m('ul', { class: 'p-2' }, [
       m('li', m('a', 'Karyawan')),
@@ -40,26 +56,13 @@ var nav = {
   ],
 
   admMenu: [
-    m(
-      'li.z-10',
-      { tabindex: '1' },
+ 
+    m(      'li',      { tabindex: '0' },
       m('details', [
         m('summary', 'Obyek Transaksi'),
         m('ul', { class: 'p-2' }, [
-          m('li', {onclick:()=>m.route.set('/md_employee')}, m('a', 'Karyawan')),
-          m('li', m('a', 'Supplier/Vendor'))
-        ])
-      ])
-    ),
-    m('li', m('a', 'Item 1')),
-    m(
-      'li.z-10',
-      { tabindex: '2' },
-      m('details', [
-        m('summary', 'Parent'),
-        m('ul', { class: 'p-2' }, [
-          m('li', m('a', 'Submenu 1')),
-          m('li', m('a', 'Submenu 2'))
+          m('li', m('a', {onclick:()=>m.route.set('/md_employees')}, "Daftar Karyawan")),
+          m('li', m('a', "Supplier/Vendors"))
         ])
       ])
     ),
@@ -67,7 +70,7 @@ var nav = {
   ],
 
   view: () => {
-    return m('div', { class: 'navbar bg-base-100' }, [
+    return m('div', { class: 'navbar bg-base-200' }, [
       m('div', { class: 'navbar-start' }, [
         m('div', { class: 'dropdown' }, [
           m(
@@ -113,7 +116,7 @@ var nav = {
         { class: 'navbar-center hidden lg:flex' },
         m(
           'ul',
-          { class: 'menu menu-horizontal px-1' },
+          { class: 'menu menu-horizontal px-1 z-10' },
           r.admMenu ? nav.admMenu : null
         )
       ),

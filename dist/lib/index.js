@@ -6,6 +6,7 @@ import noway from './noway.js'
 import login from './login.js'
 
 import testGate from './testGate.js'
+import md_employees from "./md_employees.js"
 
 console.log('loaded index')
 
@@ -14,11 +15,15 @@ var showNews = () => {
 }
 
 var Home = {
-  oninit: () => {
-    ref.checkAdm()
 
-    //   !item?  ref.loginBtnDisabled = false
-    //  : ref.loginBtnDisabled = true
+   
+  oninit: () => {
+    
+    ref.checkAdm()
+    console.log(ref.fullname)
+
+  
+
   },
 
   onupdate: () => {
@@ -28,64 +33,24 @@ var Home = {
     //  : ref.loginBtnDisabled = true
   },
 
+  content: ()=>{
+
+   var hi = ref.fullname ? ref.fullname.charAt(0).toUpperCase() + ref.fullname.slice(1) : "Silakan login"
+    return   [
+
+           m('p', { class: 'text-3xl font-bold' }, 'Selamat Datang'), m('br'), m('p', { class: 'text-2xl  ' },  hi)
+    ]
+ 
+  },
+
+
   view: () => {
-    return m(
-      'div',
-      { class: 'hero min-h-fit bg-base-200' },
-      m(
-        'div',
-        { class: 'hero-content text-center' },
-        m('div', { class: 'max-w-lg' }, [
-          m('p',
-            { class: 'text-3xl font-bold' }, 'Selamat Datang'),
-          [m('br'), m('p', { class: 'text-2xl  ' }, ref.logged
-            ? ref.fullname.charAt(0).toUpperCase() + ref.fullname.slice(1) : "Silakan login")]
 
-          //   m("p", {"class":"py-6"},
-          //     "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi."
-          //   ),
-          //   m("button", {"class":"btn btn-primary"},
-          //     "Get Started"
-          //   )
-        ])
-      )
-    )
+    return ref.header(Home.content())
 
-    m(
-      '.section is-medium',
-      m(
-        '.columns',
-        { style: 'text-align:center;' },
-        m(
-          '.column',
-          { class: 'is-full' },
 
-          // ref.logged ? "Selamat datang " + ref.username.charAt(0).toUpperCase() + ref.username.slice(1) :
-          //     m.route.set("/login")
-          // ref.logged ? m("video", { "height": "", "muted": "muted", "autoplay": "autoplay", "loop": "loop", "style": { "width": "100%" } },
-          //     m("source", { "src": "/views/assets/images/elppd.mp4", "type": "video/mp4" })) : m.route.set("/login")
-          // ref.logged ? showdash() : showNews()
-          m('div', { class: 'alert alert-success' }, [
-            m(
-              'svg',
-              {
-                class: 'stroke-current shrink-0 h-6 w-6',
-                xmlns: 'http://www.w3.org/2000/svg',
-                fill: 'none',
-                viewBox: '0 0 24 24'
-              },
-              m('path', {
-                'stroke-linecap': 'round',
-                'stroke-linejoin': 'round',
-                'stroke-width': '2',
-                d: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
-              })
-            ),
-            m('span', 'Your purchase has been confirmed!')
-          ])
-        )
-      )
-    )
+
+
   }
 }
 
@@ -143,12 +108,12 @@ m.route(ref.getById('content'), '/', {
     }
   },
 
-  '/wilayah': {
+  '/md_employees': {
     render: () => {
-      return m(Layout, m(wilayah))
+      return m(Layout, m(md_employees))
     },
     onmatch: () => {
-      document.title = 'Data Desa - ' + tag
+      document.title = 'Master Data: Employees - ' + tag
     }
   },
 

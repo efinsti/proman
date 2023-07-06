@@ -3,7 +3,7 @@ const footer =  {
 
     view : () =>  {
 
-        return m("footer", {"class":"footer p-10 bg-base-300 text-base-content"},
+        return m("footer", {"class":"footer p-10 bg-base-200 text-base-content"},
         [
           m("div",
             [
