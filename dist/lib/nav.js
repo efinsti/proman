@@ -1,152 +1,165 @@
- 
-import r from "./ref.js"
-
-
-var state = { "Hamung": "Hamung Keagungan Katresnan" }
-var count = [1, 2, 3]
-var burgerItem = []
-count.map(o => { burgerItem.push(m("span", { "aria-hidden": "true" })) })
+import r from './ref.js'
 
 var lo = () => {
-
-  r.tell("question", "Anda yakin akan keluar?", 20000, () => {
-    localStorage.removeItem(ref.lsname);
-    r.admMenu = null,
-      r.logged = null
+  r.tell('query', 'Anda yakin akan keluar?', 20000, () => {
+    localStorage.removeItem(r.lsname)
+    ;(r.admMenu = null), (r.logged = null)
     r.username = null
     r.loginBtnDisabled = false
-    r.tell("success", "User telah log out", 877, () => {
-      m.redraw();
-      m.route.set("/");
-
+    r.tell('success', 'User telah log out', 877, () => {
+      m.redraw()
+      m.route.set('/')
     })
   })
 }
 
-
-
 var nav = {
-
   oninit: () => {
-    Object.assign(state, { burgerMenu: null })
+    r.checkAdm(() => {
+      console.log(r.logged, r.admMenu, r.admin)
+    })
   },
 
-  onupdate: ()=>{
+  onupdate: () => {},
 
-  },
+  admBurger: [
+    m('a', 'Obyek Transaksi'),
+    m('ul', { class: 'p-2' }, [
+      m('li', m('a', 'Karyawan')),
+      m('li', m('a', 'Vendor/Supplier'))
+    ]),
+    m('li', m('a', 'Item 1')),
+    m('li', [
+      m('a', 'Parent'),
+      m('ul', { class: 'p-2' }, [
+        m('li', m('a', 'Submenu 1')),
+        m('li', m('a', 'Submenu 2'))
+      ])
+    ]),
+    m('li', m('a', 'Item 3'))
+  ],
+
+  admMenu: [
+    m(
+      'li.z-10',
+      { tabindex: '1' },
+      m('details', [
+        m('summary', 'Obyek Transaksi'),
+        m('ul', { class: 'p-2' }, [
+          m('li', {onclick:()=>m.route.set('/md_employee')}, m('a', 'Karyawan')),
+          m('li', m('a', 'Supplier/Vendor'))
+        ])
+      ])
+    ),
+    m('li', m('a', 'Item 1')),
+    m(
+      'li.z-10',
+      { tabindex: '2' },
+      m('details', [
+        m('summary', 'Parent'),
+        m('ul', { class: 'p-2' }, [
+          m('li', m('a', 'Submenu 1')),
+          m('li', m('a', 'Submenu 2'))
+        ])
+      ])
+    ),
+    m('li', m('a', 'Item 3'))
+  ],
 
   view: () => {
-    return m("div", {"class":"navbar bg-base-200"},
-    [
-      m("div", {"class":"navbar-start"},
+    return m('div', { class: 'navbar bg-base-100' }, [
+      m('div', { class: 'navbar-start' }, [
+        m('div', { class: 'dropdown' }, [
+          m(
+            'label',
+            { class: 'btn btn-ghost lg:hidden', tabindex: '0' },
+            m(
+              'svg',
+              {
+                class: 'h-5 w-5',
+                xmlns: 'http://www.w3.org/2000/svg',
+                fill: 'none',
+                viewBox: '0 0 24 24',
+                stroke: 'currentColor'
+              },
+              m('path', {
+                'stroke-linecap': 'round',
+                'stroke-linejoin': 'round',
+                'stroke-width': '2',
+                d: 'M4 6h16M4 12h8m-8 6h16'
+              })
+            )
+          ),
+          m(
+            'ul',
+            {
+              class:
+                'menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52',
+              tabindex: '0'
+            },
+            r.admMenu ? nav.admBurger : null
+          )
+        ]),
+        m('a', { class: 'btn btn-ghost normal-case text-xl', onclick:()=>{
+
+          r.username ? r.loginBtnDisabled = true : r.loginBtnDisabled = false
+
+          m.route.set('/')
+
+        } }, 'veniCe')
+      ]),
+      m(
+        'div',
+        { class: 'navbar-center hidden lg:flex' },
+        m(
+          'ul',
+          { class: 'menu menu-horizontal px-1' },
+          r.admMenu ? nav.admMenu : null
+        )
+      ),
+      m(
+        'div',
+        { class: 'navbar-end' },
+
+        m('input', {
+          class: 'toggle',
+          type: 'checkbox',
+          onclick: () => {
+            var tog = [...r.getByCN('toggle')]
+
+            if (tog[0].checked) {
+              document.documentElement.setAttribute('data-theme', 'dark')  
+            } else {
+              document.documentElement.removeAttribute('data-theme')
+            }
+          }
+        }),
+
+        r.username? m("div", {"class":"dropdown dropdown-end ml-2"},
         [
-          m("div", {"class":"dropdown"},
+          m("label", {"class":"btn m-1","tabindex":"0"}, 
+            r.username
+          ),
+          m("ul", {"class":"dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52","tabindex":"0"},
             [
-              m("label", {"class":"btn btn-ghost lg:hidden","tabindex":"0"}, 
-                m("svg", {"class":"h-5 w-5","xmlns":"http://www.w3.org/2000/svg","fill":"none","viewBox":"0 0 24 24","stroke":"currentColor"}, 
-                  m("path", {"stroke-linecap":"round","stroke-linejoin":"round","stroke-width":"2","d":"M4 6h16M4 12h8m-8 6h16"})
+              m("li", 
+                m("a", {onclick:()=>lo()},
+                  "Log out"
                 )
               ),
-              m("ul", {"class":"menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52","tabindex":"0"},
-                [
-                  m("li", 
-                    m("a", 
-                      "Item 1"
-                    )
-                  ),
-                  m("li",
-                    [
-                      m("a", 
-                        "Parent"
-                      ),
-                      m("ul", {"class":"p-2"},
-                        [
-                          m("li", 
-                            m("a", 
-                              "Submenu 1"
-                            )
-                          ),
-                          m("li", 
-                            m("a", 
-                              "Submenu 2"
-                            )
-                          )
-                        ]
-                      )
-                    ]
-                  ),
-                  m("li", 
-                    m("a", 
-                      "Item 3"
-                    )
-                  )
-                ]
-              )
+              // m("li", 
+              //   m("a", 
+              //     "Item 2"
+              //   )
+              // )
             ]
-          ),
-          m("a", {"class":"btn btn-ghost normal-case text-xl"}, 
-            "daisyUI"
           )
         ]
-      ),
-      m("div", {"class":"navbar-center hidden lg:flex"}, 
-        m("ul", {"class":"menu menu-horizontal px-1"},
-          [
-            m("li", 
-              m("a", 
-                "Item 1"
-              )
-            ),
-            m("li", {"tabindex":"0"}, 
-              m("details",
-                [
-                  m("summary", 
-                    "Parent"
-                  ),
-                  m("ul", {"class":"p-2"},
-                    [
-                      m("li", 
-                        m("a", 
-                          "Submenu 1"
-                        )
-                      ),
-                      m("li", 
-                        m("a", 
-                          "Submenu 2"
-                        )
-                      )
-                    ]
-                  )
-                ]
-              )
-            ),
-            m("li", 
-              m("a", 
-                "Item 3"
-              )
-            )
-          ]
-        )
-      ),
-      m("div", {"class":"navbar-end"}, 
-
-      m("input", {"class":"toggle","type":"checkbox", onclick:()=>{
-        var tog = [...r.getByCN('toggle')]
-       
-        if(tog[0].checked){
-          document.documentElement.setAttribute("data-theme", "dark")      //changes "data-myval" to "20"
-        } else {
-          document.documentElement.removeAttribute("data-theme") 
-        }
-      }}),
-
-        m("a", {"class":"btn ml-2"}, 
-          "Button"
-        )
+      ) : m('a', { class: 'btn ml-2', disabled :r.loginBtnDisabled, onclick: ()=>{
+        m.route.set('/login')
+      } }, 'Sign in')
       )
-    ]
-  )
-
+    ])
   }
 }
 

@@ -1,7 +1,7 @@
 const db = require('./db')
 
 class success {
-  constructor (content) {
+  constructor(content) {
     this.message = content
     this.success = 1
     this.status = 200
@@ -9,7 +9,7 @@ class success {
 }
 
 class fail {
-  constructor (err, errCode) {
+  constructor(err, errCode) {
     this.message = err
     this.success = 0
     this.status = errCode
@@ -17,31 +17,31 @@ class fail {
 }
 
 class service {
-  constructor (tableName, id, json) {
+  constructor(tableName, id, json) {
     this.tableName = tableName
     this.id = id
     this.json = json
   }
 
-  async getAll () {
+  async getAll() {
     const a = await db(this.tableName)
     return a
   }
 
-  async getById () {
+  async getById() {
     const b = await db(this.tableName).where('id', this.id)
     return b
   }
 
-  async create () {
+  async create() {
     const c = await db(this.tableName).insert(this.json)
     return c
   }
-  async update () {
+  async update() {
     const d = await db(this.tableName).where('id', this.id).update(this.json)
     return d
   }
-  async delete () {
+  async delete() {
     const e = await db(this.tableName).where('id', this.id).del()
     return e
   }
@@ -67,8 +67,8 @@ var controller = (req, res) => {
           res.send(new fail('table empty', 204))
         }
       })
-  } 
-  
+  }
+
   else if (method == 'getById') {
     var rtn = new service(tableName, id)
     rtn.getById().then(data => {
@@ -79,8 +79,8 @@ var controller = (req, res) => {
         res.send(new fail('table empty', 204))
       }
     })
-  } 
-  
+  }
+
   else if (method == 'create') {
     var rtn = new service(tableName, null, json)
     rtn.create().then(data => {
@@ -115,7 +115,7 @@ var controller = (req, res) => {
         res.send(new fail('delete fail', 403))
       }
     })
-  } 
+  }
 
 }
 

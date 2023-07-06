@@ -60,13 +60,6 @@ module.exports = (req, res) => {
                   service(req, res)
                     
 
-
-
-
-
-
-
-
                 }
             });
         })

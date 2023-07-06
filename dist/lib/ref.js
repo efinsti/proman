@@ -87,11 +87,11 @@ var ref = {
         cb == undefined ? cb = () => { } : null
         if (ref.islogged(true)) {
             ref.logged.map(l => {
-                (l == "superadmin" || l == "admin") ? (ref.admMenu = true, ref.kecMenu = false, ref.desMenu = false) : false
-                l.length == 8 ? (ref.kecMenu = true, ref.admMenu = false, ref.desMenu = false) : true
-                l.length == 13 ? (ref.kecMenu = false, ref.admMenu = false, ref.desMenu = true) : true
-                console.log(l, ref.admMenu, ref.kecMenu, ref.desMenu)
-                ref.entitasAktif = l
+                (l == "superadmin" || l == "admin") ? (ref.admMenu = true) : false
+                // l.length == 8 ? (ref.kecMenu = true, ref.admMenu = false, ref.desMenu = false) : true
+                // l.length == 13 ? (ref.kecMenu = false, ref.admMenu = false, ref.desMenu = true) : true
+                // console.log(l, ref.admMenu, ref.kecMenu, ref.desMenu)
+                // ref.entitasAktif = l
 
             })
         }
@@ -140,7 +140,7 @@ var ref = {
         if (minutesDifference < 15) {
             var newItem = {}
 
-            Object.assign(newItem, { fullname: item.fullname, user: item.user, token: item.token, roles: item.roles, expiry: now.getTime() + 1800000 })
+            Object.assign(newItem, { fullname: item.fullname, user: item.user, token: item.token, roles: item.roles, expiry: now.getTime() + 3600000 })
 
             if (item.opd) {
                 Object.assign(newItem, { opd: item.opd })
@@ -150,7 +150,6 @@ var ref = {
             ref.setls(JSON.stringify(newItem))
 
         }
-
 
         if (now.getTime() > item.expiry) {
             localStorage.removeItem(k)
@@ -280,6 +279,10 @@ var ref = {
             ref.logged = null
             diam == undefined ?
                 ref.tell("error", 'waktu login habis, atau anda belum login, mohon login kembali', 1500, () => {
+                    ref.username = null
+                    ref.fullname = null
+                    ref.loginBtnDisabled = false
+                    ref.logged = null
                     m.route.set('/')
                 }) : null
 
