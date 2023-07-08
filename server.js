@@ -1,4 +1,6 @@
-var r = require('./ref/ref')
+
+require("dotenv").config()
+
 
 const fastify = require('fastify');
 const path = require("path");
@@ -14,7 +16,7 @@ var connect = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "root",
-    database: 'venice'
+    database: process.env.DB_NAME
 });
 
 connect.query('SELECT 1212 + 2014 AS solution', function (error, results, fields) {
