@@ -81,7 +81,9 @@ module.exports = (req, reply) => {
 
                             username: d.username,    // The UID of the user in your system
                             fullname: d.fullname,
-                            role: d.role
+                            role: d.role,
+                            duget: dbObj.duget,
+                            dupa: dbObj.dupa
                         }
 
                         var jwt = nJwt.create(claims, signingKey);
@@ -90,10 +92,10 @@ module.exports = (req, reply) => {
                         var token = jwt.compact();
                         console.log(token);
 
-                        var dbObj = {
+                        var toDB = {
                             signing_key: signingKey, token: token
                         }
-                        db('signon').insert(dbObj).then(hsl => {
+                        db('signon').insert(toDB).then(hsl => {
 
                             if (hsl) {
                                 Object.assign(claims, { token: token })

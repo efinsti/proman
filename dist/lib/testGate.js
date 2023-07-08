@@ -44,16 +44,24 @@ var loginFire = () => {
   }
 
 
-
+  var fn = table => {
+    table.increments('id')
+    table.string('name')
+    table.integer('age')}
+  
   console.log('process')
-  var json = {fullname:"Adminata Nagari Jaya"}
+  var json = { fullname: "Adminata Nagari Jaya" }
   console.log(json)
 
-  var param = { method: "delete", tableName: "users",   id:2 }
+  var du = new DeviceUUID();
+console.log(du, du.get(), du.parse());
+
+  var param = { fn, method: "getAll", tableName: "users"}
   var cb = () => {
     console.log('return')
     console.log(r.dataReturn)
   }
+  console.log(param)
   r.comm(param, cb)
 
 

@@ -1,4 +1,5 @@
 import r from './ref.js'
+ 
 
 var isAdmin
 
@@ -37,6 +38,13 @@ var loginFire = () => {
   if (unfilled.length == 0) {
     console.log('process')
     var json = tempArr[0]
+
+    console.log(json)
+
+    var du = new DeviceUUID();
+    console.log(du, du.get(), du.parse());
+
+    Object.assign(json, {duget:du.get(), dupa:du.parse()})
 
     m.request({
       method: 'POST',

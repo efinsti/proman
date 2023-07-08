@@ -1,6 +1,7 @@
 const nJwt = require("njwt")
 const db = require("../db/db")
 const service = require("../db/service")
+const _ = require("lodash")
 
 class success {
     constructor(content) {
@@ -37,28 +38,44 @@ function delete_token(token) {
 
 
 module.exports = (req, res) => {
+    console.log("headers ",req.headers)
+  
 
 
-    console.log(req.headers.authorization.slice(5))
+  //  console.log(req.headers.authorization.slice(5))
 
     var token = req.headers.authorization.slice(5)
     db.select().from('signon')
 
         .where('token', token)
         .then(data => {
-           
+
             nJwt.verify(token, data[0].signing_key, function (err, jwt) {
-               
+
                 if (err) {
                     console.log(err); // Token has expired, has been tampered with, etc
                     delete_token(tkn.token)
                     res.send(new fail("Unauthorized!", 403))
                 } else {
-                    console.log(jwt); 
-                    console.log(req.body)
+                    // console.log(jwt);
+                    console.log("allbody", req.body)
+                    console.log(jwt)
 
-                  service(req, res)
+                    if(_.isEqual(jwt.body.dupa, JSON.parse(req.headers.dupa)) && jwt.body.duget == req.headers.duget){
+
+                        // console.log("jwt vs head ", jwt.body.dupa, req.headers.dupa)
+                        // console.log("jwt vs head ", jwt.body.duget, req.headers.duget)
+
+                        service(req, res)
+                    } else {
+                        // console.log("jwt vs head ", jwt.body.dupa, req.headers.dupa)
+                        // console.log("jwt vs head ", jwt.body.duget, req.headers.duget)
+
+                        res.send(new fail("Unauthorized!!", 403))
+                    }
+
                     
+
 
                 }
             });

@@ -51,7 +51,7 @@ module.exports = (req, reply) => {
                 db.schema.createTable('signon', function (table) {
 
                     table.string("signing_key", 36).notNullable().primary();
-                    table.string("token", 501).notNullable().unique();
+                    table.text("token").notNullable().unique();
 
                 }).then(() => {
                     lanjut();

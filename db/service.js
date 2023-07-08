@@ -1,5 +1,14 @@
 const db = require('./db')
 
+
+class ObjectID {
+  constructor() {
+      var tss = Math.floor(Date.now() / 1000)
+      var genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+      this.id = tss.toString(16) + genRanHex(16)
+  }
+}
+
 class success {
   constructor(content) {
     this.message = content
@@ -17,10 +26,11 @@ class fail {
 }
 
 class service {
-  constructor(tableName, id, json) {
+  constructor(tableName, id, json, fn) {
     this.tableName = tableName
     this.id = id
     this.json = json
+    this.fn = fn
   }
 
   async getAll() {
@@ -46,13 +56,32 @@ class service {
     return e
   }
 
+  async make() {
+    const e = await db.schema
+
+      .hasTable(this.tableName).then(exists => {
+
+        if (!exists) {
+          db.schema.createTable(this.tableName, this.fn)
+            .then(() => { return e })
+        }
+      }
+      )
+
+  }
+
 }
 
+
 var controller = (req, res) => {
+  console.log(req.body)
   var method = req.body.method
   var tableName = req.body.tableName
   var id = req.body.id
   var json = req.body.json
+  var fn =  req.body.fn
+
+  
 
   if (method == 'getAll') {
     var rtn = new service(tableName)
@@ -108,6 +137,21 @@ var controller = (req, res) => {
   else if (method == 'delete') {
     var rtn = new service(tableName, id)
     rtn.delete().then(data => {
+      console.log(data)
+      if (data) {
+        res.send(new success(data))
+      } else {
+        res.send(new fail('delete fail', 403))
+      }
+    })
+  }
+
+  
+  else if (method == 'make') {
+
+    
+    var rtn = new service(tableName, null, null, fn)
+    rtn.make().then(data => {
       console.log(data)
       if (data) {
         res.send(new success(data))

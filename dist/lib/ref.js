@@ -496,10 +496,12 @@ var ref = {
 
         if (lstor) {
 
+            var du = new DeviceUUID();
+            
             m.request({
                 method: "POST",
                 url: "./api/gate",
-                headers: { "Authorization": "SHAK " + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*' },
+                headers: { "Authorization": "SHAK " + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*', 'duget':du.get(), 'dupa':JSON.stringify(du.parse()) },
                 body: operation,
                 responseType: responseType
             }).then(data => {

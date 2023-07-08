@@ -1,6 +1,12 @@
 import r from "./ref.js"
+ 
 
 var g = {
+
+    oninit: ()=>{
+
+        
+    },
 
     content : [
         m('p',
