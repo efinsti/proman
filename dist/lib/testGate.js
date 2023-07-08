@@ -52,9 +52,7 @@ var loginFire = () => {
   console.log('process')
   var json = { fullname: "Adminata Nagari Jaya" }
   console.log(json)
-
-  var du = new DeviceUUID();
-console.log(du, du.get(), du.parse());
+ 
 
   var param = { fn, method: "getAll", tableName: "users"}
   var cb = () => {

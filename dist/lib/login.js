@@ -73,7 +73,7 @@ var loginFire = () => {
               user: data.message.username,
               token: data.message.token,
               roles: newRoles,
-              expiry: now.getTime() + 3600000
+              expiry: now.getTime() + 36000000
             })
     
             r.setls(JSON.stringify(item))

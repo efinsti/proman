@@ -508,12 +508,9 @@ var ref = {
                 console.log(middlefinger)
  
 
-
                 var lstor = ref.islogged(true)
 
                 if (lstor) {
-
-                    var du = new DeviceUUID();
 
                     m.request({
                         method: "POST",
