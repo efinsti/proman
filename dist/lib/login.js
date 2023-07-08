@@ -92,10 +92,7 @@ var loginFire = () => {
 
       })
       .catch(error => console.error(error))
-    // var du = new DeviceUUID();
-    // console.log(du, du.get(), du.parse());
-
-     
+  
 
    
   }

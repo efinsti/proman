@@ -82,8 +82,6 @@ module.exports = (req, reply) => {
                             username: d.username,    // The UID of the user in your system
                             fullname: d.fullname,
                             role: d.role,
-                            // duget: dbObj.duget,
-                            // dupa: dbObj.dupa
                             mf : dbObj.middlefinger2u
                         }
 
