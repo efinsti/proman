@@ -1,3 +1,7 @@
+const fpPromise = import('./fingerprint.js')
+    .then(FingerprintJS => FingerprintJS.load())
+
+// Get the visitor identifier when you need it.
 
 
 // const AutoNumeric = require('autonumeric')
@@ -19,7 +23,7 @@ class ObjectID {
 
 var ref = {
 
-    header : (x)=>  [m('div', { class: 'hero min-h-fit bg-base-100' }, m('div', { class: 'hero-content text-center' }, m('div', { class: 'max-w-lg' }, m({view:()=>x}))))],
+    header: (x) => [m('div', { class: 'hero min-h-fit bg-base-100' }, m('div', { class: 'hero-content text-center' }, m('div', { class: 'max-w-lg' }, m({ view: () => x }))))],
     getVar(str) {
         return str.match(/(\b[^\s]+\b)/g);
     },
@@ -74,7 +78,7 @@ var ref = {
     desMenu: false,
     entitasAktif: null,
     logout: () => {
-        localStorage.removeItem(ref.lsname);
+        sessionStorage.removeItem(ref.lsname);
         ref.admMenu = null,
             ref.logged = null
         ref.username = null
@@ -124,13 +128,13 @@ var ref = {
     logged: null,
     lsname: "googlechrome",
     getls: (k) => {
-        const itemStr = localStorage.getItem(k)
+        const itemStr = sessionStorage.getItem(k)
         if (!itemStr) {
             return null
         }
         const item = JSON.parse(itemStr)
         const now = new Date()
-       // console.log(item.expiry, ref.username)
+        // console.log(item.expiry, ref.username)
 
         var difference = item.expiry - now.getTime();
 
@@ -148,19 +152,19 @@ var ref = {
                 Object.assign(newItem, { opd: item.opd })
             }
 
-            localStorage.removeItem(k)
+            sessionStorage.removeItem(k)
             ref.setls(JSON.stringify(newItem))
 
         }
 
         if (now.getTime() > item.expiry) {
-            localStorage.removeItem(k)
+            sessionStorage.removeItem(k)
             return null
         }
         return item
     },
     setls: (i) => {
-        localStorage.setItem(ref.lsname, i)
+        sessionStorage.setItem(ref.lsname, i)
     },
 
     tell: (type, msg, time, cb) => {
@@ -486,65 +490,101 @@ var ref = {
         return regExp.test(str)
 
     },
+
+    fpGen: fpPromise,
+
     comm: (operation, cb, responseType) => {
+
 
         responseType ? responseType : responseType = "json";
 
-       console.log('calling ref comm')
+        console.log('calling ref comm')
 
-        var lstor = ref.islogged(true)
+        fpPromise
+            .then(fp => fp.get())
+            .then(result => {
 
-        if (lstor) {
+                const middlefinger = result.visitorId
+                console.log(middlefinger)
+ 
 
-            var du = new DeviceUUID();
-            
-            m.request({
-                method: "POST",
-                url: "./api/gate",
-                headers: { "Authorization": "SHAK " + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*', 'duget':du.get(), 'dupa':JSON.stringify(du.parse()) },
-                body: operation,
-                responseType: responseType
-            }).then(data => {
 
-              
-                console.log(data)
+                var lstor = ref.islogged(true)
 
-                if (data) {
+                if (lstor) {
 
-                    if (data.success == 0) {
-                        console.log("return warning/error")
+                    var du = new DeviceUUID();
 
-                        throw new errHandle(data.status);
-                    } else {
+                    m.request({
+                        method: "POST",
+                        url: "./api/gate",
+                        //      headers: { "Authorization": "SHAK " + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*', 'duget': du.get(), 'dupa': JSON.stringify(du.parse()) },
+                        headers: { "Authorization": "SHAK " + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*', 'middlefinger2u': middlefinger },
+                        body: operation,
+                        responseType: responseType
+                    }).then(data => {
 
-                        console.log("data ok", operation)
 
-                        ref.dataReturn = data
+                        console.log(data)
+
+                        if (data) {
+
+                            if (data.success == 0) {
+                                console.log("return warning/error")
+
+                                throw new errHandle(data.status);
+                            } else {
+
+                                console.log("data ok", operation)
+
+                                ref.dataReturn = data
+                                cb()
+
+                            }
+                        } else {
+                            console.log("data not exist/syntax error")
+
+                            ref.dataReturn = data
+                            cb()
+                        }
+
+
+                    }).catch(err => {
+
+
+                        ref.dataReturn = err
                         cb()
 
-                    }
+                    })
                 } else {
-                    console.log("data not exist/syntax error")
 
-                    ref.dataReturn = data
-                    cb()
+                    var h = window.location.href
+                    var arr = h.split("/");
+                    var result = arr[0] + "//" + arr[2]
+                    ref.tell("error", "sesi login berakhir, mohon login kembali", 1699, () => { location.replace(result) })
                 }
 
 
-            }).catch(err => {
 
 
-                ref.dataReturn = err
-                cb()
+
+
+
+ 
+
+
+
+
 
             })
-        } else {
+            .catch(error => console.error(error))
 
-            var h = window.location.href
-            var arr = h.split("/");
-            var result = arr[0] + "//" + arr[2]
-            ref.tell("error", "sesi login berakhir, mohon login kembali", 1699, () => { location.replace(result) })
-        }
+
+
+
+
+
+
     },
 
     comm2: (operation, cb, responseType) => {

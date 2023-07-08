@@ -38,9 +38,9 @@ function delete_token(token) {
 
 
 module.exports = (req, res) => {
-    console.log("headers ",req.headers)
+    console.log("headers ",req.headers, "mf", req.headers.middlefinger2u)
   
-
+    const mf = req.headers.middlefinger2u
 
   //  console.log(req.headers.authorization.slice(5))
 
@@ -61,20 +61,30 @@ module.exports = (req, res) => {
                     console.log("allbody", req.body)
                     console.log(jwt)
 
-                    if(_.isEqual(jwt.body.dupa, JSON.parse(req.headers.dupa)) && jwt.body.duget == req.headers.duget){
+                    // if(_.isEqual(jwt.body.dupa, JSON.parse(req.headers.dupa)) && jwt.body.duget == req.headers.duget){
 
-                        // console.log("jwt vs head ", jwt.body.dupa, req.headers.dupa)
+                    //     // console.log("jwt vs head ", jwt.body.dupa, req.headers.dupa)
+                    //     // console.log("jwt vs head ", jwt.body.duget, req.headers.duget)
+
+                    //     service(req, res)
+                    // } else {
+                    //     // console.log("jwt vs head ", jwt.body.dupa, req.headers.dupa)
+                    //     // console.log("jwt vs head ", jwt.body.duget, req.headers.duget)
+
+                    //     res.send(new fail("Unauthorized!!", 403))
+                    // }
+
+                    if( jwt.body.mf == mf ){
+
+                         console.log("jwt vs headers ---->",jwt.body.mf,  mf)
                         // console.log("jwt vs head ", jwt.body.duget, req.headers.duget)
 
                         service(req, res)
                     } else {
-                        // console.log("jwt vs head ", jwt.body.dupa, req.headers.dupa)
-                        // console.log("jwt vs head ", jwt.body.duget, req.headers.duget)
+                        console.log("jwt vs headers ---->",jwt.body.mf,  mf)
 
-                        res.send(new fail("Unauthorized!!", 403))
+                        res.send(new fail("Unauthorized!!!", 403))
                     }
-
-                    
 
 
                 }

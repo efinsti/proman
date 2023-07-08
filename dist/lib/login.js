@@ -1,16 +1,16 @@
 import r from './ref.js'
- 
+
 
 var isAdmin
 
-function reply_click (e, msg) {
+function reply_click(e, msg) {
   var el = r.getById(e.target.id)
 
   if (el) {
     if (el.value.trim() == '') {
       el.classList.remove('input-accent')
       el.classList.add('input-error')
-      r.tell('error', msg, 5000, () => {})
+      r.tell('error', msg, 5000, () => { })
       el.focus()
     } else {
       el.classList.add('input-accent')
@@ -40,53 +40,64 @@ var loginFire = () => {
     var json = tempArr[0]
 
     console.log(json)
+    r.fpGen
+      .then(fp => fp.get())
+      .then(result => {
+        // This is the visitor identifier:
+        const middlefinger2u = result.visitorId
+        Object.assign(json, {middlefinger2u })
 
-    var du = new DeviceUUID();
-    console.log(du, du.get(), du.parse());
-
-    Object.assign(json, {duget:du.get(), dupa:du.parse()})
-
-    m.request({
-      method: 'POST',
-      url: './api/login',
-      body: json
-    }).then(data => {
-      console.log(data)
-      if (data.success == 0) {
-        r.tell('error', data.message)
-      } else {
-        console.log(data.message)
-
-        var arrRoles = data.message.role.split(' ')
-        var newRoles = []
-        arrRoles.map(r => {
-          r == 'superadmin' || r == 'admin'
-            ? (isAdmin = true)
-            : (isAdmin = false)
-          newRoles.push(r)
+        m.request({
+          method: 'POST',
+          url: './api/login',
+          body: json
+        }).then(data => {
+          console.log(data)
+          if (data.success == 0) {
+            r.tell('error', data.message)
+          } else {
+            console.log(data.message)
+    
+            var arrRoles = data.message.role.split(' ')
+            var newRoles = []
+            arrRoles.map(r => {
+              r == 'superadmin' || r == 'admin'
+                ? (isAdmin = true)
+                : (isAdmin = false)
+              newRoles.push(r)
+            })
+            var item = {}
+            var now = new Date()
+            Object.assign(item, {
+              fullname: data.message.fullname,
+              user: data.message.username,
+              token: data.message.token,
+              roles: newRoles,
+              expiry: now.getTime() + 3600000
+            })
+    
+            r.setls(JSON.stringify(item))
+    
+            r.tell('success', 'login berhasil', 896, () => {
+              console.log('checkadm')
+              r.checkAdm(() => {
+                console.log('check done')
+              })
+              m.redraw()
+              m.route.set('/')
+            })
+          }
         })
-        var item = {}
-        var now = new Date()
-        Object.assign(item, {
-          fullname: data.message.fullname,
-          user: data.message.username,
-          token: data.message.token,
-          roles: newRoles,
-          expiry: now.getTime() + 3600000
-        })
 
-        r.setls(JSON.stringify(item))
 
-        r.tell('success', 'login berhasil', 896, () => {
-          console.log('checkadm')
-          r.checkAdm(() => {
-            console.log('check done')
-          })
-          m.redraw()
-          m.route.set('/')
-        })
-      }
-    })
+      })
+      .catch(error => console.error(error))
+    // var du = new DeviceUUID();
+    // console.log(du, du.get(), du.parse());
+
+     
+
+   
   }
 }
 

@@ -2,9 +2,10 @@ import r from './ref.js'
 
 var lo = () => {
   r.tell('query', 'Anda yakin akan keluar?', 20000, () => {
-    localStorage.removeItem(r.lsname)
+    sessionStorage.removeItem(r.lsname)
       ; (r.admMenu = null), (r.logged = null)
     r.username = null
+    r.fullname = null
     r.loginBtnDisabled = false
     r.tell('success', 'User telah log out', 877, () => {
       m.redraw()
