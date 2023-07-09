@@ -7,6 +7,14 @@ const gen = require("./genhash").gen
 const darkMatter = process.env.SECRET
 const db = require('../db/db')
 
+class ObjectID {
+    constructor() {
+        var tss = Math.floor(Date.now() / 1000)
+        var genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+        this.id = tss.toString(16) + genRanHex(16)
+    }
+  }
+
 class success {
     constructor(content) {
         this.message = content;
@@ -37,7 +45,7 @@ module.exports = (req, reply) => {
 
             db.schema.createTable('users', function (table) {
 
-                table.increments("id").primary();
+                table.string("id").primary();
                 table.string("username").notNullable().unique();
                 table.string("fullname").notNullable();
                 table.string("email").notNullable().unique();
@@ -68,6 +76,8 @@ module.exports = (req, reply) => {
             var dbObj = req.body
             delete dbObj["pwd2"]
             delete dbObj["secret"]
+            var id = new ObjectID().id
+            Object.assign(dbObj, {id})
 
             gen(dbObj.pwd).then(hash => {
                 dbObj.pwd = hash
