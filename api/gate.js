@@ -1,5 +1,5 @@
 const nJwt = require("njwt")
-const db = require("../db/db")
+const { userModel, signonModel } = require('../db/schema')
 const service = require("../db/service")
 const _ = require("lodash")
 
@@ -13,14 +13,9 @@ class fail {
 }
 
  
-
 function delete_token(token) {
-    db('signon')
-        .where('token', token)
-        .del().then(hsl => {
-            console.log(hsl)
-            return
-        })
+
+    signonModel.where({ 'token': token }).findOneAndDelete()
 }
 
 
@@ -30,9 +25,7 @@ module.exports = (req, res) => {
     const mf = req.headers.middlefinger2u
 
     var token = req.headers.authorization.slice(5)
-    db.select().from('signon')
-
-        .where('token', token)
+    signonModel.find({'token': token})
         .then(data => {
 
             nJwt.verify(token, data[0].signing_key, function (err, jwt) {

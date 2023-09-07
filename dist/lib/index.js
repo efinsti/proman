@@ -22,8 +22,6 @@ var Home = {
     ref.checkAdm()
     console.log(ref.fullname)
 
-  
-
   },
 
   onupdate: () => {
@@ -47,8 +45,6 @@ var Home = {
   view: () => {
 
     return ref.header(Home.content())
-
-
 
 
   }

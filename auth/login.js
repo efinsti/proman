@@ -1,5 +1,5 @@
 const check = require("./passcheck").cek
-const db = require('../db/db')
+const { userModel, signonModel } = require('../db/schema')
 const nJwt = require("njwt")
 
 class success {
@@ -27,18 +27,15 @@ class ObjectID {
 }
 
 function delete_token(token) {
-    db('signon')
-        .where('token', token)
-        .del().then(hsl => {
-            console.log(hsl)
-            return
-        })
+
+    signonModel.findOneAndDelete({ 'token': token })
+    .then(hsl=>{console.log(hsl)})
 }
 
 function clear_token(user, token) {
 
     console.log(user, token)
-    db.select().from('signon').then(data => {
+    signonModel.find().then(data => {
         console.log(data)
         data.forEach(tkn => {
 
@@ -61,12 +58,11 @@ function clear_token(user, token) {
 
 module.exports = (req, reply) => {
 
-     console.log("in the body", req.body)
+    console.log("in the body", req.body)
     var dbObj = req.body
 
-    db.select('*')
-        .from('users')
-        .where('username', dbObj.username)
+    userModel.find({'username':dbObj.username})
+ 
         .then(data => {
             if (data.length > 0) {
                 var d = data[0]
@@ -82,7 +78,7 @@ module.exports = (req, reply) => {
                             username: d.username,    // The UID of the user in your system
                             fullname: d.fullname,
                             role: d.role,
-                            mf : dbObj.middlefinger2u
+                            mf: dbObj.middlefinger2u
                         }
 
                         var jwt = nJwt.create(claims, signingKey);
@@ -94,7 +90,10 @@ module.exports = (req, reply) => {
                         var toDB = {
                             signing_key: signingKey, token: token
                         }
-                        db('signon').insert(toDB).then(hsl => {
+
+                        signonModel.create(toDB)
+
+                       .then(hsl => {
 
                             if (hsl) {
                                 Object.assign(claims, { token: token })
@@ -116,4 +115,4 @@ module.exports = (req, reply) => {
             }
         })
 
-    }
+}

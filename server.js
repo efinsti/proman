@@ -1,32 +1,20 @@
 
-require("dotenv").config()
 
 
 const fastify = require('fastify');
 const path = require("path");
-const mysql = require('mysql');
-const bikin = require('./db/init.js');
+const connect = require("./db/db")
+
+
+// const bikin = require('./db/init.js');
 
 const daftar = require('./auth/daftar')
-const login = require('./auth/login')
-const gate = require('./api/gate')
+ const login = require('./auth/login')
+// const gate = require('./api/gate')
 
 
-var connect = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "root",
-    database: process.env.DB_NAME
-});
+connect().catch(err => console.log(err));
 
-connect.query('SELECT 1212 + 2014 AS solution', function (error, results, fields) {
-    if (error) {
-        bikin(() => console.log('DB created'))
-    } else {
-        console.log('DB exists, the solution is: ', results[0].solution);
-    }
-    connect.destroy();
-});
 
 const app = fastify({
     logger: {
@@ -46,13 +34,13 @@ app.register(require("@fastify/view"), {
     },
 });
 
-app.post('/api/daftar', daftar)
-app.post('/api/login', login)
-app.post('/api/gate', gate)
+ app.post('/api/daftar', daftar)
+ app.post('/api/login', login)
+// app.post('/api/gate', gate)
 
 
 app.get('/', (abrakadabracilukbaaaaaaa, res) => {
-    res.view("/dist/index.pug", { Hamung: "Sang Hyang Agung Katresnan" });
+    res.view("/dist/index.pug", { Be: "Being" });
 })
 
 
@@ -67,3 +55,11 @@ app.listen({ port: 3000 }, (err, address) => {
 
 
  
+//const {gen} = require("./auth/genhash")
+// var word = " "
+
+
+// gen(word).then(hash=>{
+//     console.log(hash)})
+
+

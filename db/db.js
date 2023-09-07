@@ -1,5 +1,22 @@
-const knex = require("knex");
-const knexFile = require("../knexfile.js");
-const environment = process.env.NODE_ENV || "development";
 
-module.exports = knex(knexFile[environment]);
+const mongoose = require('mongoose');
+require("dotenv").config()
+
+const db = process.env.DB_URI;
+ 
+async function connect() {
+   
+  try {
+       mongoose.set('strictQuery', true);
+    
+    const conn = await mongoose.connect(db, {
+        useNewUrlParser: true,
+      });
+    console.log(`MongoDB Connected: ${conn.connection.host}`)
+   
+} catch (error) {
+    console.log(error);
+    process.exit(1);
+}}
+
+module.exports = connect
