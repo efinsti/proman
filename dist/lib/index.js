@@ -5,6 +5,8 @@ import footer from './footer.js'
 import noway from './noway.js'
 import login from './login.js'
 
+import dash from './dash.js'
+
 import testGate from './testGate.js'
 import md_employees from "./md_employees.js"
 
@@ -72,7 +74,7 @@ var tag = 'Venetian'
 m.route(ref.getById('content'), '/', {
   '/': {
     render: () => {
-      return m(Layout, m(Home))
+      return m(Layout, m(dash))
     },
     onmatch: () => {
       document.title = 'DashBoard - ' + tag

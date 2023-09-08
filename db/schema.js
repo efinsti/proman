@@ -20,6 +20,22 @@ const signonSchema = new Schema({
  
 });
 
+const pemdaSchema = new Schema ({
+  kode: String, // String is shorthand for {type: String}
+  nama: String,
+})
+
+const kegiatanSchema = new Schema ({
+  kode: String, // String is shorthand for {type: String}
+  nama: String,
+})
+
+const taSchema = new Schema ({
+  kode: String, // String is shorthand for {type: String}
+  nama: String,
+})
+
+
 const userModel = mongoose.model('user', userSchema);
 const signonModel = mongoose.model('signon', signonSchema);
  

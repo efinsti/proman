@@ -21,7 +21,36 @@ class ObjectID {
     }
 }
 
+function getDates(startDate, stopDate) {
+    var dateArray = [];
+    var currentDate = moment(startDate);
+    var stopDate = moment(stopDate);
+    while (currentDate <= stopDate) {
+        dateArray.push( moment(currentDate).format('YYYY-MM-DD') )
+        currentDate = moment(currentDate).add(1, 'days');
+    }
+    return dateArray;
+}
+
 var ref = {
+
+    makeDatesArr : (startDate, stopDate)=> {
+        var dateArray = [];
+        var currentDate = moment(startDate);
+        var stopDate = moment(stopDate);
+        while (currentDate <= stopDate) {
+            dateArray.push( moment(currentDate).format('YYYY-MM-DD') )
+            currentDate = moment(currentDate).add(1, 'days');
+        }
+        return dateArray;
+    },
+
+    intersect : (arr1, arr2)=>{
+        var  newArray = _.intersection(
+            arr1, arr2);
+        return newArray
+    },
+   
 
     header: (x) => [m('div', { class: 'hero min-h-fit bg-base-100' }, m('div', { class: 'hero-content text-center' }, m('div', { class: 'max-w-lg' }, m({ view: () => x }))))],
     getVar(str) {
