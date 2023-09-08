@@ -26,7 +26,7 @@ var tasks = [
     id: 'Task 3',
     name: 'Ir. Sukarno',
     start: '2023-03-28',
-    end: '2023-05-30',
+    end: '2023-03-30',
     progress: 100,
     dependencies: 'Task 2',
     custom_class: 'bar-milestone' // optional
@@ -71,7 +71,7 @@ var g = {
 content : () => [
   
   m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'),  m('p', { class: 'text-2xl mb-4 text-center ' },  "Manajemen Tenaga Ahli"),
-  m('div', {id:"gantt"}),
+  m('svg', {id:"gantt"}),
   m('div', {id:"viewMode"})
 ],
 

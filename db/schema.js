@@ -21,25 +21,37 @@ const signonSchema = new Schema({
 });
 
 const pemdaSchema = new Schema ({
-  kode: String, // String is shorthand for {type: String}
+  kode: { type: String , unique:true}, // String is shorthand for {type: String}
   nama: String,
 })
 
 const kegiatanSchema = new Schema ({
-  kode: String, // String is shorthand for {type: String}
+  kode: { type: String , unique:true}, // String is shorthand for {type: String}
   nama: String,
 })
 
 const taSchema = new Schema ({
-  kode: String, // String is shorthand for {type: String}
+  kode: { type: String , unique:true}, // String is shorthand for {type: String}
   nama: String,
+})
+
+const taskSchema = new Schema ({
+  id: { type: String , unique:true},
+  name: String,
+  start: Date,
+  end: Date,
+  progress: Number,
+  dependencies: String,
+
 })
 
 
 const userModel = mongoose.model('user', userSchema);
 const signonModel = mongoose.model('signon', signonSchema);
+const pemdaModel = mongoose.model('pemda', pemdaSchema)
+
  
 
 
-module.exports = {userModel, signonModel}
+module.exports = {userModel, signonModel, pemdaModel}
 
