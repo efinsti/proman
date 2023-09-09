@@ -1,6 +1,7 @@
 import r from './ref.js'
 
- 
+var modal
+
 var tasks = [
   {
     id: 'Task 1',
@@ -8,7 +9,7 @@ var tasks = [
     start: '2023-03-28',
     end: '2023-12-31',
     progress: 100,
-    
+
     custom_class: 'bar-milestone' // optional
   },
 
@@ -42,8 +43,8 @@ var tasks = [
     custom_class: 'bar-milestone' // optional
   },
 
- 
-  
+
+
 ];
 
 
@@ -66,29 +67,94 @@ var ganttOpts = {
 
 var g = {
 
- 
- 
-content : () => [
-  
-  m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'),  m('p', { class: 'text-2xl mb-4 text-center ' },  "Manajemen Tenaga Ahli"),
-  m('svg', {id:"gantt"}),
-  m('div', {id:"viewMode"})
-],
+  modal: null,
 
-  oninit : ()=>{
-    ganttOpts.view_mode = 'Month'
+  pemdaList: () => {
+
+    var title = []
+    var line = [{ c: 'Daftar Pemerintah Daerah', d: { "colspan": "3", "class": "text-center font-bold" } }]
+    title.push(line)
+
+    var body = [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]]
+
+
+    var foot = []
+
+    line = [{
+      d: { colspan: 3 }, c: m("p", { "class": "buttons" },
+        [
+          m("button", { "class": "btn-primary btn-sm", onclick: () => { } },
+            m("span", { "class": "icon is-small" },
+              m("i", { "class": "fa-solid fa-file-circle-plus" })
+            )
+          ),
+          m("button", { "class": "btn-warning btn-sm", onclick: () => { } },
+            m("span", { "class": "icon is-small" },
+              m("i", { "class": "fa-solid fa-folder-open" })
+            )
+          ),
+          m("button", { "class": "btn-error btn-sm" },
+            m("span", { "class": "icon is-small" },
+              m("i", { "class": "fas fa-trash" })
+            )
+          )
+        ]
+      )
+    }
+    ]
+
+    foot.push(line)
+
+
+
+    var comp = r.gTab("histori", { title, body, SHAK: foot })
+    g.modal = r.makeModal(comp, () => console.log('wasu'), true)
+    modal.showModal()
+    m.redraw()
+
+    console.log('done')
+
+
   },
 
-oncreate: ()=>{
+  modal: r.makeModal(),
+  content: (hi) => [
 
-  var gantt = new Gantt("#gantt", tasks, g.opts);
-  gantt.change_view_mode('Month')
+    m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
+    hi == null ? m('p', { class: "text-xl text-center mb-5" }, "Silakan login") : m('div',
+      m('svg', { id: "gantt" }),
+      m('div', { id: "viewMode" }),
+      g.modal,)
 
-},
+  ],
+  oninit: () => {
 
-  view:  ()  => {
+    if (r.logged) {
+      ganttOpts.view_mode = 'Month'
+    } else m.route.set("/login")
 
-    return  g.content()
+
+
+  },
+
+  oncreate: () => {
+
+    if (r.logged) {
+
+      var gantt = new Gantt("#gantt", tasks, g.opts);
+      gantt.change_view_mode('Month')
+      modal = r.getById('modalicious')
+    }
+
+
+
+  },
+
+  view: () => {
+
+    var hi = r.fullname ? r.fullname.charAt(0).toUpperCase() + r.fullname.slice(1) : null
+
+    return g.content(hi)
 
   }
 }

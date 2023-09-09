@@ -9,8 +9,8 @@ const connect = require("./db/db")
 // const bikin = require('./db/init.js');
 
 const daftar = require('./auth/daftar')
- const login = require('./auth/login')
-// const gate = require('./api/gate')
+const login = require('./auth/login')
+const gate = require('./api/gate')
 
 
 connect().catch(err => console.log(err));
@@ -34,9 +34,9 @@ app.register(require("@fastify/view"), {
     },
 });
 
- app.post('/api/daftar', daftar)
- app.post('/api/login', login)
-// app.post('/api/gate', gate)
+app.post('/api/daftar', daftar)
+app.post('/api/login', login)
+app.post('/api/gate', gate)
 
 
 app.get('/', (abrakadabracilukbaaaaaaa, res) => {
@@ -54,7 +54,7 @@ app.listen({ port: 3000 }, (err, address) => {
 })
 
 
- 
+
 //const {gen} = require("./auth/genhash")
 // var word = " "
 

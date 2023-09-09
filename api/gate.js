@@ -24,7 +24,7 @@ module.exports = (req, res) => {
 
     const mf = req.headers.middlefinger2u
 
-    var token = req.headers.authorization.slice(5)
+    var token = req.headers.authorization.slice(6)
     signonModel.find({'token': token})
         .then(data => {
 

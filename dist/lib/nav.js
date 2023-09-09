@@ -1,4 +1,6 @@
 import r from './ref.js'
+import a from './pemda.js'
+import g from "./dash.js"
 
 var lo = () => {
   r.tell('query', 'Anda yakin akan keluar?', 20000, () => {
@@ -64,9 +66,9 @@ var nav = {
 
     m('li', { tabindex: '0' },
       m('details', [
-        m('summary', 'Obyek Transaksi'),
+        m('summary', 'Data Dasar'),
         m('ul', { class: 'p-2' }, [
-          m('li', m('a', { onclick: () => m.route.set('/md_employees') }, "Daftar Karyawan")),
+          m('li', m('a', { onclick: () =>m.route.set('/pemda')}, "Pemda")),
           m('li', m('a', "Supplier/Vendors"))
         ])
       ])

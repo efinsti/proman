@@ -1,4 +1,6 @@
-const db = require('./db')
+ 
+
+const db = require('../db/schema')
 
 
 class ObjectID {
@@ -34,7 +36,7 @@ class service {
   }
 
   async getAll() {
-    const a = await db(this.tableName)
+    const a = await db[this.tableName].find()
     return a
   }
 

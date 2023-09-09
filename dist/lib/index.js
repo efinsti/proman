@@ -6,6 +6,7 @@ import noway from './noway.js'
 import login from './login.js'
 
 import dash from './dash.js'
+import pemda from './pemda.js'
 
 import testGate from './testGate.js'
 import md_employees from "./md_employees.js"
@@ -69,7 +70,7 @@ var Layout = {
   }
 }
 
-var tag = 'Venetian'
+var tag = 'SISTA'
 
 m.route(ref.getById('content'), '/', {
   '/': {
@@ -95,6 +96,15 @@ m.route(ref.getById('content'), '/', {
     },
     onmatch: () => {
       document.title = 'Login - ' + tag
+    }
+  },
+
+  '/pemda': {
+    render: () => {
+      return m(Layout, m(pemda))
+    },
+    onmatch: () => {
+      document.title = 'Daftar Pemerintah Daerah - ' + tag
     }
   },
   '/testgate': {
