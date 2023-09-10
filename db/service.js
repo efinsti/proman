@@ -1,13 +1,13 @@
- 
+
 
 const db = require('../db/schema')
 
 
 class ObjectID {
   constructor() {
-      var tss = Math.floor(Date.now() / 1000)
-      var genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
-      this.id = tss.toString(16) + genRanHex(16)
+    var tss = Math.floor(Date.now() / 1000)
+    var genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+    this.id = tss.toString(16) + genRanHex(16)
   }
 }
 
@@ -41,49 +41,66 @@ class service {
   }
 
   async getById() {
-    const b = await db(this.tableName).where('id', this.id)
+    const b = await db[this.tableName].findOne({ 'id': this.id })
     return b
   }
 
   async create() {
-    const c = await db(this.tableName).insert(this.json)
+    const c = await db[this.tableName].create(this.json)
     return c
   }
   async update() {
-    const d = await db(this.tableName).where('id', this.id).update(this.json)
+    const d = await db[this.tableName].findOneAndUpdate({ 'id': this.id }, this.json)
     return d
   }
   async delete() {
-    const e = await db(this.tableName).where('id', this.id).del()
+    const e = await db[this.tableName].deleteOne(this.json)
     return e
   }
 
-  async make() {
-    const e = await db.schema
-
-      .hasTable(this.tableName).then(exists => {
-
-        if (!exists) {
-          db.schema.createTable(this.tableName, this.fn)
-            .then(() => { return e })
-        }
-      }
-      )
-
+  async get() {
+    const f = await db[this.tableName].findOne(this.json)
+    return f
   }
+
+  // async make() {
+  //   const e = await db.schema
+
+  //     .hasTable(this.tableName).then(exists => {
+
+  //       if (!exists) {
+  //         db.schema.createTable(this.tableName, this.fn)
+  //           .then(() => { return e })
+  //       }
+  //     }
+  //     )
+
+  // }
 
 }
 
 
 var controller = (req, res) => {
-  console.log(req.body)
+  console.log("any json???",req.body)
+
+  const idUser = req.headers.id
   var method = req.body.method
   var tableName = req.body.tableName
   var id = req.body.id
   var json = req.body.json
-  var fn =  req.body.fn
+  var fn = req.body.fn
 
-  
+
+  console.log(json, idUser)
+
+  if (json !== undefined) {
+    Object.assign(json, { "created_by": idUser })
+  }
+
+
+
+
+
 
   if (method == 'getAll') {
     var rtn = new service(tableName)
@@ -116,7 +133,7 @@ var controller = (req, res) => {
     var rtn = new service(tableName, null, json)
     rtn.create().then(data => {
       console.log(data)
-      if (data.length > 0) {
+      if (data != {}) {
         res.send(new success(data))
       } else {
         res.send(new fail('insert fail', 503))
@@ -148,17 +165,17 @@ var controller = (req, res) => {
     })
   }
 
-  
-  else if (method == 'make') {
 
-    
-    var rtn = new service(tableName, null, null, fn)
-    rtn.make().then(data => {
+  else if (method == 'get') {
+
+
+    var rtn = new service(tableName, null, json)
+    rtn.get().then(data => {
       console.log(data)
       if (data) {
         res.send(new success(data))
       } else {
-        res.send(new fail('delete fail', 403))
+        res.send(new fail('not found', 204))
       }
     })
   }

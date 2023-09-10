@@ -23,6 +23,7 @@ const signonSchema = new Schema({
 const pemdaSchema = new Schema({
   kode: { type: String, unique: true }, // String is shorthand for {type: String}
   nama: String,
+  created_by: String
 
 })
 

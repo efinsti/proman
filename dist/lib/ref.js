@@ -21,26 +21,35 @@ class ObjectID {
     }
 }
 
- 
+
 var ref = {
 
-    makeDatesArr : (startDate, stopDate)=> {
+    closeDDowns: () => {
+
+        [...ref.getByTag('details')].forEach(el => {
+            el.removeAttribute("open");
+        })
+
+
+    },
+
+    makeDatesArr: (startDate, stopDate) => {
         var dateArray = [];
         var currentDate = moment(startDate);
         var stopDate = moment(stopDate);
         while (currentDate <= stopDate) {
-            dateArray.push( moment(currentDate).format('YYYY-MM-DD') )
+            dateArray.push(moment(currentDate).format('YYYY-MM-DD'))
             currentDate = moment(currentDate).add(1, 'days');
         }
         return dateArray;
     },
 
-    intersect : (arr1, arr2)=>{
-        var  newArray = _.intersection(
+    intersect: (arr1, arr2) => {
+        var newArray = _.intersection(
             arr1, arr2);
         return newArray
     },
-   
+
 
     header: (x) => [m('div', { class: 'hero min-h-fit bg-base-100' }, m('div', { class: 'hero-content text-center' }, m('div', { class: 'max-w-lg' }, m({ view: () => x }))))],
     getVar(str) {
@@ -78,10 +87,23 @@ var ref = {
 
         var tempObj = {}
         var tempObj2 = {}
+
+        var zeroVal = []
         ids.forEach(i => {
-            Object.assign(tempObj, { [i]: ref.getById(i).value })
+
+            var theVal = ref.getById(i).value.trim()
+
+            Object.assign(tempObj, { [i]: theVal })
             Object.assign(tempObj2, { [i]: ref.getById(i).dataset.name })
+
+            if (theVal == '' || theVal == null) {
+                zeroVal.push(1)
+            }
         })
+
+        if (zeroVal.length > 0) {
+            ref.tell('warning', 'Ada isian yang masih kosong', 2121)
+        }
 
 
 
@@ -379,9 +401,31 @@ var ref = {
             )
         )
     },
- 
 
-    makeModal2: name => m('.modal',
+    showModal: () => {
+        var Theo = ref.getById('modalicious')
+        Theo.showModal()
+    },
+
+
+    makeModalToo: name => [
+
+        m("dialog", { "class": "modal", "id": "modalicious" },
+            m("div", { "class": "modal-box w-11/12 max-w-5xl" },
+                [
+                    m("form", { "method": "dialog" },
+                        m("button", { "class": "btn btn-sm btn-circle btn-ghost absolute right-2 top-2" },
+                            "✕"
+                        )
+                    ),
+                    name,
+
+                ]
+            )
+        )
+    ],
+
+    makeModal5: name => m('.modal',
         { class: ref.mdl[name] && 'is-active' },
         m('.modal-background'),
         m('.modal-content', m(ref.mdl[name])),
@@ -529,7 +573,7 @@ var ref = {
 
     fpGen: fpPromise,
 
-   
+
 
     comm: (operation, cb, responseType) => {
 
@@ -543,18 +587,20 @@ var ref = {
             .then(result => {
 
                 const middlefinger = result.visitorId
-                console.log(middlefinger)
- 
+              //  console.log(middlefinger)
+
 
                 var lstor = ref.islogged(true)
 
                 if (lstor) {
 
+                  //  console.log(lstor)
+
                     m.request({
                         method: "POST",
                         url: "./api/gate",
-                        //      headers: { "Authorization": "SHAK " + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*', 'duget': du.get(), 'dupa': JSON.stringify(du.parse()) },
-                        headers: { "Authorization": "Guntur" + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*', 'middlefinger2u': middlefinger },
+                        //      headers: { "Authorization": "Guntur " + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*', 'duget': du.get(), 'dupa': JSON.stringify(du.parse()) },
+                        headers: { "Authorization": "Guntur" + lstor.token, 'Accept': 'Accept:text/html,application/json,*/*', 'middlefinger2u': middlefinger, id: lstor.id },
                         body: operation,
                         responseType: responseType
                     }).then(data => {
@@ -605,7 +651,7 @@ var ref = {
 
 
 
- 
+
 
 
 
@@ -999,17 +1045,17 @@ var ref = {
         return g
     },
 
-    showModal: (x) => {
+    // showModal: (x) => {
 
-        var g = m({
-            view: () => m('.modal.is-active', m('.modal-background'), m('.modal-content', m({ view: () => x })), m('.modal-close.is-large', {
-                "aria-label": "close", onclick: () => ref.removeMdl()
-            }))
-        })
+    //     var g = m({
+    //         view: () => m('.modal.is-active', m('.modal-background'), m('.modal-content', m({ view: () => x })), m('.modal-close.is-large', {
+    //             "aria-label": "close", onclick: () => ref.removeMdl()
+    //         }))
+    //     })
 
-        m.redraw()
-        return g
-    },
+    //     m.redraw()
+    //     return g
+    // },
 
     showModalToo: (title, x, svbtn) => {
 
@@ -1174,7 +1220,8 @@ var ref = {
                         onclick: (e) => {
 
                             ref.getById(id).querySelectorAll('tr').forEach(el => {
-                                el.classList.remove('is-selected')
+                                el.classList.remove("bg-base-200")
+                                el.classList.remove("rowSel")
                             })
                             // var selEl = ref.getById('theRow' + idx)
                             // selEl.classList.add('is-selected')
@@ -1187,7 +1234,10 @@ var ref = {
                                 target = target.parentNode;
                             }
 
-                            if (target) { target.classList.add('is-selected') }
+                            if (target) {
+                                target.classList.add('bg-base-200')
+                                target.classList.add('rowSel')
+                            }
 
 
                         }
@@ -1212,178 +1262,181 @@ var ref = {
 
     },
 
-      /*
-        gForm params = (
-        
-            title,
-            sub-title,
-            bodyArr [{
-                        type: text | textarea | file | select | checkbox | radio 
-            cbr: [ {                   
-                    label: //also as id and name
-                    lblHelper: 
-                    checked            } ]
-            id:
-            selectOpt: []
-            dataMsg:
-            label: 
-            required :
-            col : length (1-6)
-            colstart : 
-            val :         }]
-        } 
-        */
-        gForm: (title, subtitle, bodyArr, xFn, vFn) => {
+    /*
+      gForm params = (
+      
+          title,
+          sub-title,
+          bodyArr [{
+                      type: text | textarea | file | select | checkbox | radio 
+          cbr: [ {                   
+                  label: //also as id and name
+                  lblHelper: 
+                  checked            } ]
+          id:
+          selectOpt: []
+          dataMsg:
+          label: 
+          required :
+          col : length (1-6)
+          colstart : 
+          val :         }]
+      } 
+      */
+    gForm: (title, subtitle, bodyArr, xFn, vFn) => {
 
-            var lines = []
-    
-            var lead = (content) => {
-                return [m("form",
-                    m("div", { "class": "space-y-12" },
-                        m("div", { "class": "border-b border-gray-900/10 pb-12" },
-                            [
-                                m("h2", { "class": "text-base font-semibold leading-7 text-gray-900" },
-                                    title
-                                ),
-                                m("p", { "class": "mt-1 text-sm leading-6 text-gray-600" },
-                                    subtitle
-                                ),
-                                m("div", { "class": "mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" }),
-                                content
-                            ]
-                        )
-                    ),
-                    m("div", { "class": "mt-6 flex items-center justify-end gap-x-6" },
+        xFn == undefined ? xFn = false : true
+        vFn == undefined ? vFn = false : true
+
+        var lines = []
+
+        var lead = (content) => {
+            return [m("form",
+                m("div", { "class": "space-y-12" },
+                    m("div", { "class": "border-b border-gray-900/10 pb-12" },
                         [
-                            m("button", {
-                                "class": "button text-sm font-semibold leading-6 text-gray-900", "type": "button", onclick: () => {
-                                    xFn()
-                                }
-                            },
-                                "Cancel"
+                            m("h2", { "class": "text-base font-semibold leading-7 text-gray-900" },
+                                title
                             ),
-                            m("button", { "class": "button rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", "type": "submit", onclick: () => { vFn() } },
-                                "Save"
-                            )
+                            m("p", { "class": "mt-1 text-sm leading-6 text-gray-600" },
+                                subtitle
+                            ),
+                            m("div", { "class": "mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" }),
+                            content
                         ]
                     )
-                )
-                ]
-            }
-    
-            var lineStart = (col, colStart, label, inputComp, id) => {
-                var lengthClass
-                var colSt = " sm:col-start-" + colStart
-    
-                col < 6 ? lengthClass = 'sm:col-span-' + col + colSt : lengthClass = 'col-span-full' + colSt
-    
-                return [m("div", { "class": lengthClass },
-    
-                    m("label", { "class": "block text-sm font-medium leading-6 text-gray-900", "for": id },
-                        label
-                    ), inputComp
-    
-                )]
-            }
-    
-            var cbrHeader = (label, cbrLines) => {
-    
-                return m("fieldset",
-    
-                    m("legend", { "class": "text-sm font-semibold leading-6 text-gray-900" },
-                        label
-                    ),
-                    m("div", { "class": "mt-6 space-y-6" },
-    
-                        m("div", { "class": "relative flex gap-x-3" }, cbrLines)))
-    
-            }
-    
-    
-    
-            var compClass = "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6  "
-    
-            bodyArr.forEach(b => {
-    
-    
-                if ((["text", "email", "textarea", "file", "tel"].includes(b.type))) {
-    
-                    compClass += "input "
-                    b.autoNum ? compClass += "autoNum " : null
-    
-                    b.type == "file" ?  compClass = "file-input file-input-bordered w-full max-w-xs" : null
-    
-                    var inputComp = m("input", {
-                        "class": compClass, "id": b.id, "name": b.id, "type": b.type, required: b.required, "data-msg": b.dataMsg, "placeholder": b.dataMsg, onblur: b.required ? (e) => {
-    
-                            r.lockInput(e, b.dataMsg + " harus diisi!")
-    
-                        } : null
-                    })
-    
-                    lines.push(lineStart(b.col, b.colStart, b.label, inputComp, b.id))
-    
-    
-                } else if (b.type == "cbr") {
-                    compClass = "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-    
-                    var cbrLines = []
-    
-                    b.forEach(cbr => {
-                        cbr.type == "radio" ? compClass += "radio" : compClass += "checkbox"
-                        cbr.checked == undefined ? cbr.checked == false : null
-    
-                        cbrLines.push(
-                            m("div", { "class": "flex h-6 items-center" },
-                                m("input", { "class": compClass, "id": cbr.label, "name": cbr.label, "data-msg": cbr.lblHelper, "type": cbr.type, "checked": b.value == cbr.label ? true : cbr.checked })
-                            ),
-                            m("div", { "class": "text-sm leading-6" },
-                                [
-                                    m("label", { "class": "font-medium text-gray-900", "for": cbr.label },
-                                        cbr.label
-                                    ),
-                                    m("p", { "class": "text-gray-500" },
-                                        cbr.lblHelper
-                                    )
-                                ]
-                            )
-                        )
-                    })
-    
-                    lines.push(cbrHeader(cbrLines))
-    
-                } else if (b.type == "select") {
-    
-                    compClass += "select"
-                    optionFill = () => {
-                        var opts = []
-                        b.selectOpt.forEach(opt => {
-                            opts.push(
-                                m("option", { selected: b.value == opt ? true : false },
-                                    opt
+                ),
+                vFn || xFn ? m("div", { "class": "mt-6 flex items-center justify-end gap-x-6" },
+                    [
+                        xFn ? m("button", {
+                            "class": "btn text-sm font-semibold leading-6 text-gray-900", "type": "button", onclick: () => {
+                                xFn()
+                            }
+                        },
+                            "Batal"
+                        ) : null, vFn ?
+                            m("button", { "class": "btn rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", "type": "button", onclick: () => { vFn() } },
+                                "Simpan"
+                            ) : null
+                    ]
+                ) : null
+            )
+            ]
+        }
+
+        var lineStart = (col, colStart, label, inputComp, id) => {
+            var lengthClass
+            var colSt = " sm:col-start-" + colStart
+
+            col < 6 ? lengthClass = 'sm:col-span-' + col + colSt : lengthClass = 'col-span-full' + colSt
+
+            return [m("div", { "class": lengthClass },
+
+                m("label", { "class": "block text-sm font-medium leading-6 text-gray-900 mt-2", "for": id },
+                    label
+                ), inputComp
+
+            )]
+        }
+
+        var cbrHeader = (label, cbrLines) => {
+
+            return m("fieldset",
+
+                m("legend", { "class": "text-sm font-semibold leading-6 text-gray-900 mt-2" },
+                    label
+                ),
+                m("div", { "class": "mt-6 space-y-6" },
+
+                    m("div", { "class": "relative flex gap-x-3" }, cbrLines)))
+
+        }
+
+
+
+        var compClass = "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6  "
+
+        bodyArr.forEach(b => {
+
+
+            if ((["text", "email", "textarea", "file", "tel"].includes(b.type))) {
+
+                compClass += "input "
+                b.autoNum ? compClass += "autoNum " : null
+
+                b.type == "file" ? compClass = "file-input file-input-bordered w-full max-w-xs" : null
+
+                var inputComp = m("input", {
+                    "class": compClass, "id": b.id, "name": b.id, "type": b.type, required: b.required, "data-msg": b.dataMsg, "placeholder": b.dataMsg, onblur: b.required ? (e) => {
+
+                        ref.lockInput(e, b.dataMsg + " harus diisi!")
+
+                    } : null
+                })
+
+                lines.push(lineStart(b.col, b.colStart, b.label, inputComp, b.id))
+
+
+            } else if (b.type == "cbr") {
+                compClass = "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+
+                var cbrLines = []
+
+                b.forEach(cbr => {
+                    cbr.type == "radio" ? compClass += "radio" : compClass += "checkbox"
+                    cbr.checked == undefined ? cbr.checked == false : null
+
+                    cbrLines.push(
+                        m("div", { "class": "flex h-6 items-center" },
+                            m("input", { "class": compClass, "id": cbr.label, "name": cbr.label, "data-msg": cbr.lblHelper, "type": cbr.type, "checked": b.value == cbr.label ? true : cbr.checked })
+                        ),
+                        m("div", { "class": "text-sm leading-6" },
+                            [
+                                m("label", { "class": "font-medium text-gray-900 mt-2", "for": cbr.label },
+                                    cbr.label
                                 ),
-                            )
-                        })
-                        return opts
-                    }
-    
-                    var inputComp = m("div", { "class": "mt-2" },
-                        m("select", { "class": compClass, "id": b.id, "name": b.id, "data-msg": b.label },
-                            optionFill()
+                                m("p", { "class": "text-gray-500" },
+                                    cbr.lblHelper
+                                )
+                            ]
                         )
                     )
-    
-                    lines.push(lineStart(b.col, b.colStart, b.label, inputComp, b.id))
-    
+                })
+
+                lines.push(cbrHeader(cbrLines))
+
+            } else if (b.type == "select") {
+
+                compClass += "select"
+                optionFill = () => {
+                    var opts = []
+                    b.selectOpt.forEach(opt => {
+                        opts.push(
+                            m("option", { selected: b.value == opt ? true : false },
+                                opt
+                            ),
+                        )
+                    })
+                    return opts
                 }
-    
-            })
-    
-    
-    
-            return lead(lines)
-    
-        }
+
+                var inputComp = m("div", { "class": "mt-2" },
+                    m("select", { "class": compClass, "id": b.id, "name": b.id, "data-msg": b.label },
+                        optionFill()
+                    )
+                )
+
+                lines.push(lineStart(b.col, b.colStart, b.label, inputComp, b.id))
+
+            }
+
+        })
+
+
+
+        return lead(lines)
+
+    }
 
 }
 

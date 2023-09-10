@@ -1,10 +1,10 @@
 import r from './ref.js'
 var modal
 
-var a = {
+var g = {
 
     body: null,
-    modal : null,
+    modal: null,
 
     pemdaList: () => {
 
@@ -12,7 +12,7 @@ var a = {
         var line = [{ c: 'Daftar Pemerintah Daerah', d: { "colspan": "3", "class": "text-center font-bold" } }]
         title.push(line)
 
-        var body = a.body == null?[[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]]:"hahah"
+        var body = g.body == null || g.body == false ? [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center  " } }]] : g.body
 
 
         var foot = []
@@ -20,9 +20,15 @@ var a = {
         line = [{
             d: { colspan: 3 }, c: m("p", { "class": "buttons" },
                 [
-                    m("button", { "class": "btn btn-success btn-sm", onclick: () => { } },
+                    m("button", {
+                        "class": "btn btn-success btn-sm", onclick: () => {
+
+                            g.body == null ? r.tell('warning', 'still loading', 2500) : g.addPemda()
+
+                        }
+                    },
                         m("span", { "class": "icon w-8" },
-                            m("i", { "class": "fa-regular fa-file" }) //<i class="fa-regular fa-file"></i>
+                            m("i", { "class": "fa-solid fa-file-circle-plus" }) //<i class="fa-solid fa-file-circle-plus"></i>
                         )
                     ),
                     m("button", { "class": "btn btn-warning btn-sm ml-1", onclick: () => { } },
@@ -42,14 +48,125 @@ var a = {
 
         foot.push(line)
 
-        return r.gTab("histori", { title, body, SHAK: foot })
+        return r.gTab("histori", { title, body, bandeng: foot })
 
 
     },
 
-    addPemda:()=>{
+    addPemda: () => {
+
+        modal = r.getById('modalicious')
+
+        /*
+    gForm params = (
+    
+        title,
+        sub-title,
+        bodyArr [{
+                    type: text | textarea | file | select | checkbox | radio 
+        cbr: [ {                   
+                label: //also as id and name
+                lblHelper: 
+                checked            } ]
+        id:
+        selectOpt: []
+        dataMsg:
+        label: 
+        required :
+        col : length (1-6)
+        colstart : 
+        val :         }]
+    } 
+    */
+
+        var bodyArr = [{
+            type: 'text', label: "Kode Pemda", id: "kode", dataMsg: "Kode Pemda", required: true, col: 6, colstart: 1, val: null
+        }, {
+            type: 'text', label: "Nama Pemda", id: "nama", dataMsg: "Nama Pemda", required: true, col: 6, colstart: 1, val: null
+        },
+
+        ]
+
+        var xFn = () => {
+            modal.close()
+        }
+
+        var vFn = (e) => {
+
+            var theArr = r.getValues()
+            console.log(theArr)
+
+            var data = theArr[0]
+            var param = {
+                method: "get", json: { kode: data.kode }, tableName: "pemdaModel"
+            }
+
+            r.comm(param, () => {
+                console.log(r.dataReturn)
+                if (r.dataReturn.success == 0) {
+                    var svparam = {
+                        method: "create",
+                        tableName: "pemdaModel",
+                        json: data
+
+                    }
+                    r.comm(svparam, () => {
+                        if (r.dataReturn.success == 0) {
+                            r.tell('error', 'gagal menyimpan data Pemda', 3500)
+                        } else {
+                            r.tell('success', "data Pemda berhasil disimpan", 2000, () => {
+
+                                modal.close()
+                                g.showTab()
 
 
+                            })
+                        }
+                    })
+                } else {
+                    r.tell('error', 'Kode Pemda sudah digunakan', 3500)
+                }
+            })
+
+
+        }
+
+        var comp = r.gForm("Pemda Baru", "Kode dan Nama wajib diisi", bodyArr, xFn, vFn)
+        g.modal = r.makeModalToo(m({ view: () => comp }))
+        modal.showModal()
+
+
+    },
+
+    showTab: () => {
+
+        g.body = [[{ c: 'LOADING ... ', d: { "colspan": "3", "class": "text-center font-bold " } }]]
+        m.redraw()
+
+        var param = {
+            method: "getAll", tableName: "pemdaModel"
+        }
+
+        r.comm(param, () => {
+            console.log(r.dataReturn)
+            if (r.dataReturn.success == 0) {
+                g.body = false
+            } else {
+             //   [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]] 
+
+           
+
+             var line = []
+
+                r.dataReturn.message.forEach(d=>{
+                    var row = [{c:d.kode, r:{id:d._id}}, {c:d.nama}]
+                    line.push(row)
+                })
+
+                g.body = line
+
+            }
+        })
 
     },
 
@@ -63,19 +180,16 @@ var a = {
         // var json = req.body.json
         // var fn =  req.body.fn
 
-        var param = {
-            method: "getAll", tableName: "pemdaModel"
-        }
+        g.showTab()
 
-        r.comm(param, () => {
-            console.log(r.dataReturn)
-            if (r.dataReturn.success == 0) {
-                a.body = null
-            }
-        })
+
+    },
+
+    oncreate: () => {
 
         g.modal = r.makeModal()
-        modal = r.getById('modalicious')
+
+        // r.urutFn(() => { g.modal = r.makeModal() }, () => { modal = r.getById('modalicious') })
 
     },
 
@@ -84,7 +198,7 @@ var a = {
         return [
 
             m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
-            a.pemdaList(),
+            g.pemdaList(),
             g.modal
         ]
 
@@ -92,4 +206,4 @@ var a = {
 
 }
 
-export default a
+export default g

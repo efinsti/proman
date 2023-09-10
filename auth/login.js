@@ -97,6 +97,7 @@ module.exports = (req, reply) => {
 
                             if (hsl) {
                                 Object.assign(claims, { token: token })
+                                Object.assign(claims, { id: d._id })
                                 clear_token(claims.username, token)
                                 reply.send(new success(claims))
 

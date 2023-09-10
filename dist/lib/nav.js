@@ -68,7 +68,16 @@ var nav = {
       m('details', [
         m('summary', 'Data Dasar'),
         m('ul', { class: 'p-2' }, [
-          m('li', m('a', { onclick: () =>m.route.set('/pemda')}, "Pemda")),
+          m('li', m('a', {
+            onclick: () => {
+              r.closeDDowns();
+              m.route.set('/pemda');
+      
+            }
+
+
+
+          }, "Pemda")),
           m('li', m('a', "Supplier/Vendors"))
         ])
       ])

@@ -69,6 +69,7 @@ var loginFire = () => {
             var item = {}
             var now = new Date()
             Object.assign(item, {
+              id: data.message.id,
               fullname: data.message.fullname,
               user: data.message.username,
               token: data.message.token,
