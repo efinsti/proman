@@ -9,7 +9,9 @@ var g = {
     pemdaList: () => {
 
         var title = []
-        var line = [{ c: 'Daftar Pemerintah Daerah', d: { "colspan": "3", "class": "text-center font-bold" } }]
+        var line = [{ c: 'Daftar Pemerintah Daerah', d: { "colspan": "3", "class": "text-center font-bold text-lg" } } ]
+        title.push(line)
+        var line = [{ c: 'No.'}, {c:"Kode Pemda"}, {c:"Nama Pemda"}, {r:{class:"font-black "}} ]
         title.push(line)
 
         var body = g.body == null || g.body == false ? [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center  " } }]] : g.body
@@ -18,7 +20,7 @@ var g = {
         var foot = []
 
         line = [{
-            d: { colspan: 3 }, c: m("p", { "class": "buttons" },
+            d: { colspan: 3 }, c: m("p", { "class": "buttons text-center" },
                 [
                     m("button", {
                         "class": "btn btn-success btn-sm", onclick: () => {
@@ -158,8 +160,10 @@ var g = {
 
              var line = []
 
+             var no = 0
                 r.dataReturn.message.forEach(d=>{
-                    var row = [{c:d.kode, r:{id:d._id}}, {c:d.nama}]
+                    no++
+                    var row = [{c:no},{c:d.kode, r:{id:d._id}}, {c:d.nama}]
                     line.push(row)
                 })
 

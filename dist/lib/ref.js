@@ -1252,7 +1252,7 @@ var ref = {
         }
 
 
-        table.push(m('div', { class: "overflow-x-auto flex items-center justify-center" }, m("table", { class: "table m-auto", id: id },
+        table.push(m('div', { class: "overflow-x-auto flex items-center justify-center" }, m("table", { class: "table table-md m-auto", id: id },
             m("thead", { class: "is-size-6" }, titlePart),
             m("tbody", { class: "is-size-6" }, bodyPart),
             m("tfoot", { class: "is-size-6" }, footerPart),

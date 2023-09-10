@@ -3666,6 +3666,18 @@ html {
   margin-right: auto;
 }
 
+.table-md :not(thead):not(tfoot) tr {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.table-md :where(th, td) {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -4091,6 +4103,11 @@ html {
   line-height: 1.5rem;
 }
 
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -4111,6 +4128,10 @@ html {
 
 .font-semibold {
   font-weight: 600;
+}
+
+.font-black {
+  font-weight: 900;
 }
 
 .capitalize {
