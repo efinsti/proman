@@ -72,13 +72,14 @@ var nav = {
             onclick: () => {
               r.closeDDowns();
               m.route.set('/pemda');
-      
             }
-
-
-
           }, "Pemda")),
-          m('li', m('a', "Supplier/Vendors"))
+          m('li', m('a', {
+            onclick: () => {
+              r.closeDDowns();
+              m.route.set('/kegiatan');
+            }
+          },"Kegiatan"))
         ])
       ])
     ),

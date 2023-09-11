@@ -30,6 +30,8 @@ const pemdaSchema = new Schema({
 const kegiatanSchema = new Schema({
   kode: { type: String, unique: true }, // String is shorthand for {type: String}
   nama: String,
+  pemda_ref : String,
+  created_by: String
 
 })
 

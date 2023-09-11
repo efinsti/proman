@@ -1220,8 +1220,9 @@ var ref = {
                         onclick: (e) => {
 
                             ref.getById(id).querySelectorAll('tr').forEach(el => {
-                                el.classList.remove("bg-base-200")
-                                el.classList.remove("rowSel")
+                                el.classList.remove("bg-accent")
+                                el.classList.remove("rowSel") 
+                                el.classList.remove("text-white")
                             })
                             // var selEl = ref.getById('theRow' + idx)
                             // selEl.classList.add('is-selected')
@@ -1235,8 +1236,9 @@ var ref = {
                             }
 
                             if (target) {
-                                target.classList.add('bg-base-200')
+                                target.classList.add('bg-accent')
                                 target.classList.add('rowSel')
+                                target.classList.add('text-white')
                             }
 
 
@@ -1252,7 +1254,7 @@ var ref = {
         }
 
 
-        table.push(m('div', { class: "overflow-x-auto flex items-center justify-center" }, m("table", { class: "table table-md m-auto", id: id },
+        table.push(m('div', { class: "overflow-x-auto flex items-center justify-center" }, m("table", { class: "mx-6 table table-md table-auto m-auto", id: id },
             m("thead", { class: "is-size-6" }, titlePart),
             m("tbody", { class: "is-size-6" }, bodyPart),
             m("tfoot", { class: "is-size-6" }, footerPart),

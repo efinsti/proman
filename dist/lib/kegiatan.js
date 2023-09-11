@@ -6,12 +6,12 @@ var g = {
     body: null,
     modal: null,
 
-    pemdaList: () => {
+    kegList: () => {
 
         var title = []
-        var line = [{ c: 'Daftar Pemerintah Daerah', d: { "colspan": "3", "class": "text-center font-bold text-lg bg-base-200" } } ]
+        var line = [{ c: 'Daftar Kegiatan', d: { "colspan": "3", "class": "text-center font-bold text-lg bg-base-200" } }]
         title.push(line)
-        var line = [{ c: 'No.'}, {c:"Kode Pemda"}, {c:"Nama Pemda"}, {r:{class:"font-black "}} ]
+        var line = [{ c: 'No.' }, { c: "Kode Pemda" }, { c: "Nama Pemda" }, { r: { class: "font-black " } }]
         title.push(line)
 
         var body = g.body == null || g.body == false ? [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center  " } }]] : g.body
@@ -140,13 +140,47 @@ var g = {
 
     },
 
+    kegAkorCr: (kegObj) => {
+
+        var line = [[{ c: kegObj.no }, { c: kegObj.kode, r: { id: kegObj._id } }, { c: kegObj.nama }]]
+
+        var content = r.gTab(kegObj._id, { body: line })
+
+        return m("div", { "class": "collapse-content" },
+            content
+        )
+
+    },
+
+    pemdaAkorCr: (pemdaObj) => {
+
+        var line = [[{ c: pemdaObj.no }, { c: pemdaObj.kode, r: { id: pemdaObj._id } }, { c: pemdaObj.nama }]]
+
+        var content = r.gTab("table" + pemdaObj._id, { body: line })
+
+
+        return [
+
+            m("div", { "class": "collapse collapse-plus bg-base-200" },
+                [
+                    m("input", { "type": "radio", "name": "my-accordion-3", "checked": "checked" }),
+                    m("div", { "class": "collapse-title text-xl font-medium" },
+                        content
+                    ),
+                    m('div', { id: "ctn" + pemdaObj._id })
+                ]
+            ),
+        ]
+
+    },
+
     showTab: () => {
 
         g.body = [[{ c: 'LOADING ... ', d: { "colspan": "3", "class": "text-center font-bold " } }]]
         m.redraw()
 
         var param = {
-            method: "getAll", tableName: "pemdaModel"
+            method: "getAll", tableName: "kegiatanModel"
         }
 
         r.comm(param, () => {
@@ -154,16 +188,16 @@ var g = {
             if (r.dataReturn.success == 0) {
                 g.body = false
             } else {
-             //   [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]] 
+                //   [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]] 
 
-           
 
-             var line = []
 
-             var no = 0
-                r.dataReturn.message.forEach(d=>{
+                var line = []
+
+                var no = 0
+                r.dataReturn.message.forEach(d => {
                     no++
-                    var row = [{c:no},{c:d.kode, r:{id:d._id}}, {c:d.nama}]
+                    var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }]
                     line.push(row)
                 })
 
@@ -202,7 +236,7 @@ var g = {
         return [
 
             m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
-            g.pemdaList(),
+            g.kegList(),
             g.modal
         ]
 

@@ -7,6 +7,7 @@ import login from './login.js'
 
 import dash from './dash.js'
 import pemda from './pemda.js'
+import kegiatan from './kegiatan.js'
 
 import testGate from './testGate.js'
 import md_employees from "./md_employees.js"
@@ -107,6 +108,16 @@ m.route(ref.getById('content'), '/', {
       document.title = 'Daftar Pemerintah Daerah - ' + tag
     }
   },
+
+  '/kegiatan': {
+    render: () => {
+      return m(Layout, m(kegiatan))
+    },
+    onmatch: () => {
+      document.title = 'Daftar Kegiatan - ' + tag
+    }
+  },
+
   '/testgate': {
     render: () => {
       return m(Layout, m(testGate))
