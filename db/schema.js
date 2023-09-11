@@ -38,16 +38,21 @@ const kegiatanSchema = new Schema({
 const taSchema = new Schema({
   kode: { type: String, unique: true }, // String is shorthand for {type: String}
   nama: String,
+  created_by: String
 
 })
 
 const taskSchema = new Schema({
-  id: { type: String, unique: true },
-  name: String,
+  // id
+  idTask: { type: String, unique: true },
+  level : Number,
+  idLevel : { type: String, unique: true },
+ // name: String,
   start: Date,
   end: Date,
   progress: Number,
   dependencies: String,
+  created_by: String
 
 
 })
