@@ -143,7 +143,6 @@ var g = {
     kegAkorCr: (kegObj) => {
 
         var line = [[{ c: kegObj.no }, { c: kegObj.kode, r: { id: kegObj._id } }, { c: kegObj.nama }]]
-
         var content = r.gTab(kegObj._id, { body: line })
 
         return m("div", { "class": "collapse-content" },
@@ -155,7 +154,6 @@ var g = {
     pemdaAkorCr: (pemdaObj) => {
 
         var line = [[{ c: pemdaObj.no }, { c: pemdaObj.kode, r: { id: pemdaObj._id } }, { c: pemdaObj.nama }]]
-
         var content = r.gTab("table" + pemdaObj._id, { body: line })
 
 
@@ -171,6 +169,13 @@ var g = {
                 ]
             ),
         ]
+
+    },
+
+    showAkor:()=>{
+
+        
+
 
     },
 
