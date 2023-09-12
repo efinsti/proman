@@ -12,8 +12,13 @@ const daftar = require('./auth/daftar')
 const login = require('./auth/login')
 const gate = require('./api/gate')
 
+var nyambung = false
 
-connect().catch(err => console.log(err));
+connect()
+.then(smartTheo=>{
+    nyambung = smartTheo
+})
+.catch(err => console.log(err));
 
 
 const app = fastify({
@@ -40,7 +45,13 @@ app.post('/api/gate', gate)
 
 
 app.get('/', (abrakadabracilukbaaaaaaa, res) => {
-    res.view("/dist/index.pug", { Be: "Being" });
+ 
+    if(nyambung){
+       res.view("/dist/index.pug", { so: "Sally can't wait"}); 
+    }  else {
+        res.view("/dist/wait.pug", { so: "Sally can wait"}); 
+    }
+        
 })
 
 

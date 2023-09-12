@@ -9,9 +9,9 @@ var g = {
     pemdaList: () => {
 
         var title = []
-        var line = [{ c: 'Daftar Pemerintah Daerah', d: { "colspan": "3", "class": "text-center font-bold text-lg bg-base-200" } } ]
+        var line = [{ c: 'Daftar Pemerintah Daerah', d: { "colspan": "3", "class": "text-center font-bold text-lg bg-base-200" } }]
         title.push(line)
-        var line = [{ c: 'No.'}, {c:"Kode Pemda"}, {c:"Nama Pemda"}, {r:{class:"font-black "}} ]
+        var line = [{ c: 'No.' }, { c: "Kode Pemda" }, { c: "Nama Pemda", r: { class: "font-black " }  }]
         title.push(line)
 
         var body = g.body == null || g.body == false ? [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center  " } }]] : g.body
@@ -154,16 +154,16 @@ var g = {
             if (r.dataReturn.success == 0) {
                 g.body = false
             } else {
-             //   [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]] 
+                //   [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]] 
 
-           
 
-             var line = []
 
-             var no = 0
-                r.dataReturn.message.forEach(d=>{
+                var line = []
+
+                var no = 0
+                r.dataReturn.message.forEach(d => {
                     no++
-                    var row = [{c:no},{c:d.kode, r:{id:d._id}}, {c:d.nama}]
+                    var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }]
                     line.push(row)
                 })
 
@@ -202,7 +202,8 @@ var g = {
         return [
 
             m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
-            g.pemdaList(),
+            m('div', { class: "flex justify-center items-center overflow-x-auto" },
+              g.pemdaList()),
             g.modal
         ]
 

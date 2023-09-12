@@ -1,0 +1,15 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  link(rel='icon' type='image/x-icon' href='/img/favicon.ico')
+ 
+ 
+  title waiting for connection
+ 
+#wait
+  p establishing connection to database server, please wait...
+  progress#progressBar(value="0", max="10")
+ 
+script(src='/lib/mithril.min.js')
+script(src='/lib/wait.js' type='module')

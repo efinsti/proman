@@ -13,6 +13,7 @@ async function connect() {
         useNewUrlParser: true,
       });
     console.log(`MongoDB Connected: ${conn.connection.host}`)
+    return true
    
 } catch (error) {
     console.log(error);

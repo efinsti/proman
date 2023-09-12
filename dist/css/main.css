@@ -3880,6 +3880,18 @@ details.collapse summary::-webkit-details-marker {
   padding-bottom: 0.75rem;
 }
 
+.table-lg :not(thead):not(tfoot) tr {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.table-lg :where(th, td) {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -4087,6 +4099,10 @@ details.collapse summary::-webkit-details-marker {
   width: 100%;
 }
 
+.w-3\/4 {
+  width: 75%;
+}
+
 .max-w-5xl {
   max-width: 64rem;
 }
@@ -4139,6 +4155,14 @@ details.collapse summary::-webkit-details-marker {
 
 .flex-col {
   flex-direction: column;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.content-center {
+  align-content: center;
 }
 
 .items-center {

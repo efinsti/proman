@@ -12,7 +12,13 @@ import kegiatan from './kegiatan.js'
 import testGate from './testGate.js'
 import md_employees from "./md_employees.js"
 
+
+// import test from './test.js'
+
 console.log('loaded index')
+
+
+
 
 var showNews = () => {
   return m(Layout, m(news))
@@ -118,14 +124,14 @@ m.route(ref.getById('content'), '/', {
     }
   },
 
-  '/testgate': {
-    render: () => {
-      return m(Layout, m(testGate))
-    },
-    onmatch: () => {
-      document.title = 'Testing - ' + tag
-    }
-  },
+  // '/test': {
+  //   render: () => {
+  //     return m(Layout, m(test))
+  //   },
+  //   onmatch: () => {
+  //     document.title = 'Testing - ' + tag
+  //   }
+  // },
 
   '/md_employees': {
     render: () => {
