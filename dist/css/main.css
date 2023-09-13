@@ -3877,30 +3877,6 @@ details.collapse summary::-webkit-details-marker {
   margin-right: auto;
 }
 
-.table-md :not(thead):not(tfoot) tr {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.table-md :where(th, td) {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-}
-
-.table-lg :not(thead):not(tfoot) tr {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
-.table-lg :where(th, td) {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
 .sr-only {
   position: absolute;
   width: 1px;
@@ -3959,15 +3935,6 @@ details.collapse summary::-webkit-details-marker {
 
 .m-1 {
   margin: 0.25rem;
-}
-
-.m-auto {
-  margin: auto;
-}
-
-.mx-6 {
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
 }
 
 .mx-auto {
@@ -4055,13 +4022,13 @@ details.collapse summary::-webkit-details-marker {
   height: auto;
 }
 
+.min-h-\[6rem\] {
+  min-height: 6rem;
+}
+
 .min-h-fit {
   min-height: -moz-fit-content;
   min-height: fit-content;
-}
-
-.min-h-\[6rem\] {
-  min-height: 6rem;
 }
 
 .w-1\/3 {
@@ -4112,20 +4079,12 @@ details.collapse summary::-webkit-details-marker {
   width: 100%;
 }
 
-.w-3\/4 {
-  width: 75%;
-}
-
-.w-96 {
-  width: 24rem;
-}
-
-.min-w-\[18rem\] {
-  min-width: 18rem;
-}
-
 .min-w-\[36rem\] {
   min-width: 36rem;
+}
+
+.max-w-4xl {
+  max-width: 56rem;
 }
 
 .max-w-5xl {
@@ -4144,10 +4103,6 @@ details.collapse summary::-webkit-details-marker {
   max-width: 20rem;
 }
 
-.max-w-4xl {
-  max-width: 56rem;
-}
-
 .shrink {
   flex-shrink: 1;
 }
@@ -4158,10 +4113,6 @@ details.collapse summary::-webkit-details-marker {
 
 .grow {
   flex-grow: 1;
-}
-
-.table-auto {
-  table-layout: auto;
 }
 
 .rotate-180 {
@@ -4188,14 +4139,6 @@ details.collapse summary::-webkit-details-marker {
 
 .flex-wrap {
   flex-wrap: wrap;
-}
-
-.flex-nowrap {
-  flex-wrap: nowrap;
-}
-
-.content-center {
-  align-content: center;
 }
 
 .items-center {
@@ -4284,6 +4227,11 @@ details.collapse summary::-webkit-details-marker {
   border-style: none;
 }
 
+.border-base-300 {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--b3) / var(--tw-border-opacity));
+}
+
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
@@ -4291,11 +4239,6 @@ details.collapse summary::-webkit-details-marker {
 
 .border-gray-900\/10 {
   border-color: rgb(17 24 39 / 0.1);
-}
-
-.border-base-300 {
-  --tw-border-opacity: 1;
-  border-color: hsl(var(--b3) / var(--tw-border-opacity));
 }
 
 .bg-accent {

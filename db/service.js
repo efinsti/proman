@@ -168,7 +168,6 @@ var controller = (req, res) => {
 
   else if (method == 'get') {
 
-
     var rtn = new service(tableName, null, json)
     rtn.get().then(data => {
       console.log(data)

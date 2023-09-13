@@ -172,9 +172,9 @@ var g = {
 
     },
 
-    showAkor:()=>{
+    showAkor: () => {
 
-        
+
 
 
     },
@@ -213,18 +213,48 @@ var g = {
 
     },
 
-    pemdaList:null,
-    getPemda:()=>{
+    pemdaList: null,
+    allData: null,
+    getData: (cb) => {
 
 
         var param = {
             method: "getAll", tableName: "pemdaModel"
         }
 
-        r.comm(param, ()=>{
-            if(r.dataReturn.success!==0){
+        r.comm(param, () => {
+            if (r.dataReturn.success !== 0) {
                 g.pemdaList = [...r.dataReturn.message]
-                console.log(g.pemdaList)
+
+
+                g.allData = []
+
+                var count = 0
+
+                g.pemdaList.forEach(p => {
+                    count++
+                    var idPemda = p._id
+                    var prm = {
+                        method: "get",
+                        tableName: "kegModel",
+                        json: { pemda_ref: idPemda }
+                    }
+
+                    r.comm(prm, () => {
+                        if (r.dataReturn.success != 0) {
+                            Object.assign(p, { kegiatan: [...r.dataReturn.message] })
+                        } else {
+                            Object.assign(p, { kegiatan: [] })
+                        }
+
+                        g.allData.push(p)
+                    })
+
+                })
+
+                if (count == g.pemdaList.length) {
+                    cb ? cb() : null
+                }
             }
         })
 
@@ -240,7 +270,7 @@ var g = {
         // var json = req.body.json
         // var fn =  req.body.fn
 
-        g.getPemda()
+        g.getData(()=>console.log(g.allData))
 
 
 
