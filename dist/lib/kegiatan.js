@@ -174,7 +174,9 @@ var g = {
 
     showAkor: () => {
 
-
+g.allData.forEach(p=>{
+    
+})
 
 
     },
