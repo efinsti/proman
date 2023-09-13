@@ -185,7 +185,7 @@ var g = {
         m.redraw()
 
         var param = {
-            method: "getAll", tableName: "kegiatanModel"
+            method: "getAll", tableName: "kegModel"
         }
 
         r.comm(param, () => {
@@ -213,6 +213,23 @@ var g = {
 
     },
 
+    pemdaList:null,
+    getPemda:()=>{
+
+
+        var param = {
+            method: "getAll", tableName: "pemdaModel"
+        }
+
+        r.comm(param, ()=>{
+            if(r.dataReturn.success!==0){
+                g.pemdaList = [...r.dataReturn.message]
+                console.log(g.pemdaList)
+            }
+        })
+
+    },
+
 
     //------------------------
     oninit: () => {
@@ -223,7 +240,8 @@ var g = {
         // var json = req.body.json
         // var fn =  req.body.fn
 
-        g.showTab()
+        g.getPemda()
+
 
 
     },
