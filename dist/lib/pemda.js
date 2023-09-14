@@ -52,8 +52,8 @@ var g = {
 
         foot.push(line)
 
-        g.tabelPemda = r.gTab("pemdaList", { title, body, bandeng: foot })
-        m.redraw()
+        g.tabelPemda = m({view:()=>r.gTab("pemdaList", { title, body, bandeng: foot })})
+     
 
 
     },
@@ -213,7 +213,7 @@ var g = {
         return [
 
             m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
-            m('div', { class: "flex justify-center items-center " }, m('div', {class:"wpreview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4"},  g.tabelPemda)
+            m('div', { class: "flex justify-center items-center my-6" }, m('div', {class:"preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4"},  g.tabelPemda)
              ),
             g.modal
         ]

@@ -103,16 +103,7 @@ var g = {
 
     },
 
-    kegAkorCr: (kegObj) => {
 
-        var line = [[{ c: kegObj.no }, { c: kegObj.kode, r: { id: kegObj._id } }, { c: kegObj.nama }]]
-        var content = r.gTab("kegtab" + kegObj._id, { body: line })
-
-        return m("div", { "class": "collapse-content" },
-            content
-        )
-
-    },
 
     pemdaAkorCr: (pemdaObj, ctnKeg, checked) => {
 
@@ -123,7 +114,7 @@ var g = {
 
         return [
 
-            m("div", { "class": "collapse collapse-arrow join-item border  border-base-300  " },
+            m("div", { "class": "collapse collapse-arrow", style:{"background-color":"F3FDE8"} },
                 [
                     m("input", { "type": "radio", "name": "nve", "checked": checked ? true : false }),
                     m("div", { "class": "collapse-title text-xl font-medium" },
@@ -152,6 +143,9 @@ var g = {
                 Object.assign(p, { no: idx + 1 })
 
                 var kegComp = (i) => m("div", { "class": "collapse-content" }, i)
+
+                
+
                 var insertComp
 
                 if (p.kegiatan.length > 0) {
@@ -182,9 +176,9 @@ var g = {
 
 
 
-                theAkor.push(g.pemdaAkorCr(p, kegComp(insertComp)))
-                g.mainAkor = m("div", { "class": "join join-vertical w-full my-5" }, theAkor)
-             
+                theAkor.push(g.pemdaAkorCr(p, kegComp(m('div', { class: "flex justify-center items-center" },insertComp))))
+                g.mainAkor = m({ view: () => theAkor })
+
 
             })
         }
@@ -223,7 +217,7 @@ var g = {
         var title = []
         var line = [{ c: 'Daftar Kegiatan Pemda ' + namaPemda, d: { "colspan": "3", "class": "text-center font-bold text-lg  " } }]
         title.push(line)
-        var line = [{ c: 'No.' }, { c: "Kode Kegiatan" }, { c: "Nama Kegiatan" }, { r: { class: "font-black " } }]
+        var line = [{ c: 'No.' }, { c: "Kode Kegiatan" }, { c: "Nama Kegiatan",  r: { class: "font-black " } }]
         title.push(line)
 
         var body = g.bodykeg == null || g.bodykeg == false ? [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center  " } }]] : g.bodykeg
@@ -264,7 +258,8 @@ var g = {
 
         foot.push(line)
 
-        return r.gTab("tab" + idPemda, { title, body, bandeng: foot })
+        return m('div', {class:"preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4"},
+        r.gTab("tab" + idPemda, { title, body, bandeng: foot }))
 
 
     },
@@ -320,7 +315,7 @@ var g = {
 
                 })
 
-              
+
             } else {
 
                 r.tell('warning', "Silakan isi data Pemda terlebih dahulu", 2222, () => {
