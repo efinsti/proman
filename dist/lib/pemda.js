@@ -8,6 +8,8 @@ var g = {
 
     pemdaList: () => {
 
+        console.log('pemdaList called')
+
         var title = []
         var line = [{ c: 'Daftar Pemerintah Daerah', d: { "colspan": "3", "class": "text-center font-bold text-lg bg-base-200" } }]
         title.push(line)
@@ -25,7 +27,7 @@ var g = {
                     m("button", {
                         "class": "btn btn-success btn-sm", onclick: () => {
 
-                            g.body == null ? r.tell('warning', 'still loading', 2500) : g.addPemda()
+                            g.body == null ? r.tell('warning', 'still loading', 2500) : r.showModal()
 
                         }
                     },
@@ -50,14 +52,15 @@ var g = {
 
         foot.push(line)
 
-        return r.gTab("histori", { title, body, bandeng: foot })
+        g.tabelPemda = r.gTab("pemdaList", { title, body, bandeng: foot })
+        m.redraw()
 
 
     },
 
     addPemda: () => {
 
-        modal = r.getById('modalicious')
+      //  modal = r.getById('modalicious')
 
         /*
     gForm params = (
@@ -98,7 +101,8 @@ var g = {
             var theArr = r.getValues()
             console.log(theArr)
 
-            var data = theArr[0]
+            if(theArr){
+                    var data = theArr[0]
             var param = {
                 method: "get", json: { kode: data.kode }, tableName: "pemdaModel"
             }
@@ -129,14 +133,16 @@ var g = {
                     r.tell('error', 'Kode Pemda sudah digunakan', 3500)
                 }
             })
+            }
+
+        
 
 
         }
 
         var comp = r.gForm("Pemda Baru", "Kode dan Nama wajib diisi", bodyArr, xFn, vFn)
-        g.modal = r.makeModalToo(m({ view: () => comp }))
-        modal.showModal()
-
+        return r.makeModalToo(m({ view: () => comp }))
+       
 
     },
 
@@ -151,6 +157,7 @@ var g = {
 
         r.comm(param, () => {
             console.log(r.dataReturn)
+            modal = r.getById('modalicious')
             if (r.dataReturn.success == 0) {
                 g.body = false
             } else {
@@ -170,9 +177,13 @@ var g = {
                 g.body = line
 
             }
+
+             g.pemdaList()
         })
 
     },
+
+    tabelPemda:null,
 
 
     //------------------------
@@ -191,7 +202,7 @@ var g = {
 
     oncreate: () => {
 
-        g.modal = r.makeModal()
+        g.modal = g.addPemda()
 
         // r.urutFn(() => { g.modal = r.makeModal() }, () => { modal = r.getById('modalicious') })
 
@@ -202,7 +213,7 @@ var g = {
         return [
 
             m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
-            m('div', { class: "flex justify-center items-center " }, m('div', {class:"wpreview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4"},  g.pemdaList())
+            m('div', { class: "flex justify-center items-center " }, m('div', {class:"wpreview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4"},  g.tabelPemda)
              ),
             g.modal
         ]

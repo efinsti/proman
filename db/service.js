@@ -59,7 +59,7 @@ class service {
   }
 
   async get() {
-    const f = await db[this.tableName].findOne(this.json)
+    const f = await db[this.tableName].find(this.json)
     return f
   }
 
@@ -171,7 +171,7 @@ var controller = (req, res) => {
     var rtn = new service(tableName, null, json)
     rtn.get().then(data => {
       console.log(data)
-      if (data) {
+      if (data.length>0) {
         res.send(new success(data))
       } else {
         res.send(new fail('not found', 204))

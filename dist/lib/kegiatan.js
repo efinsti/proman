@@ -3,59 +3,14 @@ var modal
 
 var g = {
 
-    body: null,
+    bodykeg: null,
     modal: null,
 
-    kegList: () => {
-
-        var title = []
-        var line = [{ c: 'Daftar Kegiatan', d: { "colspan": "3", "class": "text-center font-bold text-lg bg-base-200" } }]
-        title.push(line)
-        var line = [{ c: 'No.' }, { c: "Kode Pemda" }, { c: "Nama Pemda" }, { r: { class: "font-black " } }]
-        title.push(line)
-
-        var body = g.body == null || g.body == false ? [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center  " } }]] : g.body
 
 
-        var foot = []
+    addKeg: (idPemda, kodePemda) => {
 
-        line = [{
-            d: { colspan: 3 }, c: m("p", { "class": "buttons text-center" },
-                [
-                    m("button", {
-                        "class": "btn btn-success btn-sm", onclick: () => {
-
-                            g.body == null ? r.tell('warning', 'still loading', 2500) : g.addPemda()
-
-                        }
-                    },
-                        m("span", { "class": "icon w-8" },
-                            m("i", { "class": "fa-solid fa-file-circle-plus" }) //<i class="fa-solid fa-file-circle-plus"></i>
-                        )
-                    ),
-                    m("button", { "class": "btn btn-warning btn-sm ml-1", onclick: () => { } },
-                        m("span", { "class": "icon w-8" },
-                            m("i", { "class": "fa-solid fa-folder-open" })
-                        )
-                    ),
-                    m("button", { "class": "btn btn-error btn-sm ml-1" },
-                        m("span", { "class": "w-8" },
-                            m("i", { "class": "fas fa-trash" })
-                        )
-                    )
-                ]
-            )
-        }
-        ]
-
-        foot.push(line)
-
-        return r.gTab("histori", { title, body, bandeng: foot })
-
-
-    },
-
-    addPemda: () => {
+        console.log('addKeg called')
 
         modal = r.getById('modalicious')
 
@@ -82,15 +37,15 @@ var g = {
     */
 
         var bodyArr = [{
-            type: 'text', label: "Kode Pemda", id: "kode", dataMsg: "Kode Pemda", required: true, col: 6, colstart: 1, val: null
+            type: 'text', label: "Kode Kegiatan", id: "kode", dataMsg: "Kode Kegiatan", required: true, col: 6, colstart: 1, val: null
         }, {
-            type: 'text', label: "Nama Pemda", id: "nama", dataMsg: "Nama Pemda", required: true, col: 6, colstart: 1, val: null
+            type: 'text', label: "Nama Kegiatan", id: "nama", dataMsg: "Nama Kegiatan", required: true, col: 6, colstart: 1, val: null
         },
 
         ]
 
         var xFn = () => {
-            modal.close()
+            r.closeMdl()
         }
 
         var vFn = (e) => {
@@ -98,44 +53,52 @@ var g = {
             var theArr = r.getValues()
             console.log(theArr)
 
-            var data = theArr[0]
-            var param = {
-                method: "get", json: { kode: data.kode }, tableName: "pemdaModel"
+            if (theArr) {
+                var data = theArr[0]
+                data.kode = kodePemda + "." + data.kode
+                Object.assign(data, { pemda_ref: idPemda })
+
+                var param = {
+                    method: "get", json: { kode: data.kode }, tableName: "kegModel"
+                }
+
+                r.comm(param, () => {
+                    console.log(r.dataReturn)
+                    if (r.dataReturn.success == 0) {
+                        var svparam = {
+                            method: "create",
+                            tableName: "kegModel",
+                            json: data
+
+                        }
+                        r.comm(svparam, () => {
+                            if (r.dataReturn.success == 0) {
+                                r.tell('error', 'gagal menyimpan data Kegiatan', 3500)
+                            } else {
+                                r.tell('success', "data Kegiatan berhasil disimpan", 2000, () => {
+
+                                    r.closeMdl()
+                                    g.getData(() => g.showAkor()) // not triggered, safe
+
+
+                                })
+                            }
+                        })
+                    } else {
+                        r.tell('error', 'Kode Kegiatan sudah digunakan', 3500)
+                    }
+                })
             }
 
-            r.comm(param, () => {
-                console.log(r.dataReturn)
-                if (r.dataReturn.success == 0) {
-                    var svparam = {
-                        method: "create",
-                        tableName: "pemdaModel",
-                        json: data
 
-                    }
-                    r.comm(svparam, () => {
-                        if (r.dataReturn.success == 0) {
-                            r.tell('error', 'gagal menyimpan data Pemda', 3500)
-                        } else {
-                            r.tell('success', "data Pemda berhasil disimpan", 2000, () => {
-
-                                modal.close()
-                                g.showTab()
-
-
-                            })
-                        }
-                    })
-                } else {
-                    r.tell('error', 'Kode Pemda sudah digunakan', 3500)
-                }
-            })
 
 
         }
 
-        var comp = r.gForm("Pemda Baru", "Kode dan Nama wajib diisi", bodyArr, xFn, vFn)
+        var comp = r.gForm("Kegiatan Baru", "Kode dan Nama wajib diisi", bodyArr, xFn, vFn)
         g.modal = r.makeModalToo(m({ view: () => comp }))
-        modal.showModal()
+
+        r.tunda(() => r.showModal(), 250)
 
 
     },
@@ -143,7 +106,7 @@ var g = {
     kegAkorCr: (kegObj) => {
 
         var line = [[{ c: kegObj.no }, { c: kegObj.kode, r: { id: kegObj._id } }, { c: kegObj.nama }]]
-        var content = r.gTab(kegObj._id, { body: line })
+        var content = r.gTab("kegtab" + kegObj._id, { body: line })
 
         return m("div", { "class": "collapse-content" },
             content
@@ -151,21 +114,23 @@ var g = {
 
     },
 
-    pemdaAkorCr: (pemdaObj) => {
+    pemdaAkorCr: (pemdaObj, ctnKeg, checked) => {
 
-        var line = [[{ c: pemdaObj.no }, { c: pemdaObj.kode, r: { id: pemdaObj._id } }, { c: pemdaObj.nama }]]
-        var content = r.gTab("table" + pemdaObj._id, { body: line })
+
+        var line = [[{ c: pemdaObj.no + ".", d: { width: "50px", } }, { c: pemdaObj.kode, r: { id: pemdaObj._id }, d: { width: "210px", class: "text-accent-focus italic" } }, { c: pemdaObj.nama, d: { class: "text-accent-focus italic" } }]]
+        var content = r.gTab("pemtab" + pemdaObj._id, { body: line }, "table-fixed")
 
 
         return [
 
-            m("div", { "class": "collapse collapse-plus bg-base-200" },
+            m("div", { "class": "collapse collapse-arrow join-item border  border-base-300  " },
                 [
-                    m("input", { "type": "radio", "name": "my-accordion-3", "checked": "checked" }),
+                    m("input", { "type": "radio", "name": "nve", "checked": checked ? true : false }),
                     m("div", { "class": "collapse-title text-xl font-medium" },
                         content
                     ),
-                    m('div', { id: "ctn" + pemdaObj._id })
+                    //m('div', { id: "ctn" + pemdaObj._id })
+                    ctnKeg
                 ]
             ),
         ]
@@ -174,44 +139,133 @@ var g = {
 
     showAkor: () => {
 
-g.allData.forEach(p=>{
-    
-})
+        console.log('showAkor called')
+
+        var theAkor = []
+
+
+
+        if (g.allData != null) {
+            g.allData = r.customSort(g.allData, "kode")
+            g.allData.forEach((p, idx) => {
+
+                Object.assign(p, { no: idx + 1 })
+
+                var kegComp = (i) => m("div", { "class": "collapse-content" }, i)
+                var insertComp
+
+                if (p.kegiatan.length > 0) {
+
+                    g.bodyKegCr(p.kegiatan, () => { insertComp = g.kegList(p._id, p.kode, p.nama) })
+
+                } else {
+
+                    insertComp = [
+                        m('p', "Belum memiliki kegiatan"),
+                        m("button", {
+                            "class": "btn btn-success btn-sm", onclick: () => {
+
+
+                                g.addKeg(p._id, p.kode)
+
+                            }
+                        },
+                            m("span", { "class": "icon w-8" },
+                                m("i", { "class": "fa-solid fa-file-circle-plus" }) //<i class="fa-solid fa-file-circle-plus"></i>
+                            )
+                        ),
+                    ]
+
+
+
+                }
+
+
+
+                theAkor.push(g.pemdaAkorCr(p, kegComp(insertComp)))
+                g.mainAkor = m("div", { "class": "join join-vertical w-full my-5" }, theAkor)
+             
+
+            })
+        }
+
+
+
 
 
     },
 
-    showTab: () => {
+    bodyKegCr: (dataKeg, cb) => {
 
-        g.body = [[{ c: 'LOADING ... ', d: { "colspan": "3", "class": "text-center font-bold " } }]]
-        m.redraw()
-
-        var param = {
-            method: "getAll", tableName: "kegModel"
-        }
-
-        r.comm(param, () => {
-            console.log(r.dataReturn)
-            if (r.dataReturn.success == 0) {
-                g.body = false
-            } else {
-                //   [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]] 
+        console.log(dataKeg)
 
 
+        var line = []
 
-                var line = []
+        var no = 0
+        dataKeg.forEach(d => {
 
-                var no = 0
-                r.dataReturn.message.forEach(d => {
-                    no++
-                    var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }]
-                    line.push(row)
-                })
-
-                g.body = line
-
-            }
+            no++
+            var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }]
+            line.push(row)
         })
+
+        g.bodykeg = line
+
+        console.log(g.bodykeg)
+        cb()
+
+
+    },
+
+    kegList: (idPemda, kodePemda, namaPemda) => {
+
+        var title = []
+        var line = [{ c: 'Daftar Kegiatan Pemda ' + namaPemda, d: { "colspan": "3", "class": "text-center font-bold text-lg  " } }]
+        title.push(line)
+        var line = [{ c: 'No.' }, { c: "Kode Kegiatan" }, { c: "Nama Kegiatan" }, { r: { class: "font-black " } }]
+        title.push(line)
+
+        var body = g.bodykeg == null || g.bodykeg == false ? [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center  " } }]] : g.bodykeg
+
+        console.log(body)
+
+
+        var foot = []
+
+        line = [{
+            d: { colspan: 3 }, c: m("p", { "class": "buttons text-center" },
+                [
+                    m("button", {
+                        "class": "btn btn-success btn-sm", onclick: () => {
+
+                            g.bodykeg == null ? r.tell('warning', 'still loading', 2500) : g.addKeg(idPemda, kodePemda)
+
+                        }
+                    },
+                        m("span", { "class": "icon w-8" },
+                            m("i", { "class": "fa-solid fa-file-circle-plus" }) //<i class="fa-solid fa-file-circle-plus"></i>
+                        )
+                    ),
+                    m("button", { "class": "btn btn-warning btn-sm ml-1", onclick: () => { } },
+                        m("span", { "class": "icon w-8" },
+                            m("i", { "class": "fa-solid fa-folder-open" })
+                        )
+                    ),
+                    m("button", { "class": "btn btn-error btn-sm ml-1" },
+                        m("span", { "class": "w-8" },
+                            m("i", { "class": "fas fa-trash" })
+                        )
+                    )
+                ]
+            )
+        }
+        ]
+
+        foot.push(line)
+
+        return r.gTab("tab" + idPemda, { title, body, bandeng: foot })
+
 
     },
 
@@ -228,7 +282,6 @@ g.allData.forEach(p=>{
             if (r.dataReturn.success !== 0) {
                 g.pemdaList = [...r.dataReturn.message]
 
-
                 g.allData = []
 
                 var count = 0
@@ -244,23 +297,42 @@ g.allData.forEach(p=>{
 
                     r.comm(prm, () => {
                         if (r.dataReturn.success != 0) {
-                            Object.assign(p, { kegiatan: [...r.dataReturn.message] })
+
+
+                            var kegData
+
+                            kegData = [...r.dataReturn.message]
+
+
+                            // console.log(kegData)
+
+                            Object.assign(p, { kegiatan: kegData })
+                            // console.log(p)
                         } else {
                             Object.assign(p, { kegiatan: [] })
                         }
 
                         g.allData.push(p)
+                        if (count == g.pemdaList.length) {
+                            cb ? cb() : null
+                        }
                     })
 
                 })
 
-                if (count == g.pemdaList.length) {
-                    cb ? cb() : null
-                }
+              
+            } else {
+
+                r.tell('warning', "Silakan isi data Pemda terlebih dahulu", 2222, () => {
+                    m.route.set("/pemda")
+                })
+
             }
         })
 
     },
+
+    mainAkor: null,
 
 
     //------------------------
@@ -272,7 +344,7 @@ g.allData.forEach(p=>{
         // var json = req.body.json
         // var fn =  req.body.fn
 
-        g.getData(()=>console.log(g.allData))
+        g.getData(() => g.showAkor())
 
 
 
@@ -291,7 +363,7 @@ g.allData.forEach(p=>{
         return [
 
             m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
-            g.kegList(),
+            g.allData ? g.mainAkor : m('div', { class: "flex justify-center items-center my-3" }, m("span", { "class": "loading loading-spinner  loading-xl" })),
             g.modal
         ]
 

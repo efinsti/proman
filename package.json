@@ -1,7 +1,7 @@
 {
  "private": true,
  "scripts": {
-  "start": "nodemon server.js",
+  "start": "nodemon server.js -e *",
   "wp_start": "webpack --config webpack.config.js --watch",
   "tw": "tailwindcss -i ./dist/css/input.css -o ./dist/css/main.css --watch",
   "build": "webpack --config webpack.config.js s -p"
@@ -19,7 +19,7 @@
   "pug": "^3.0.2"
  },
  "devDependencies": {
-  "daisyui": "^3.1.6",
+  "daisyui": "^3.7.4",
   "tailwindcss": "^3.3.2",
   "webpack": "^5.88.0",
   "webpack-cli": "^5.1.4"

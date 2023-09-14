@@ -101,13 +101,15 @@ var ref = {
             }
         })
 
+        var data2send = [tempObj, tempObj2]
+
         if (zeroVal.length > 0) {
-            ref.tell('warning', 'Ada isian yang masih kosong', 2121)
+            data2send = null
+
+            ref.tell('warning', 'Ada isian yang masih kosong', 2121, ()=>{return null})
         }
 
-
-
-        return [tempObj, tempObj2]
+        return data2send
     },
 
 
@@ -403,8 +405,14 @@ var ref = {
     },
 
     showModal: () => {
-        var Theo = ref.getById('modalicious')
-        Theo.showModal()
+        ref.mdl = ref.getById('modalicious')
+        ref.mdl.showModal()
+      
+        console.log('modal shown')
+    },
+
+    closeMdl : ()=>{
+        ref.mdl.close()
     },
 
 
@@ -1173,9 +1181,9 @@ var ref = {
     },
 
 
-    gTab: (id, tab) => {
+    gTab: (id, tab, kelas) => {
 
-
+        kelas == undefined ? kelas = "table" : null
 
         var table = []
 
@@ -1254,10 +1262,10 @@ var ref = {
         }
 
 
-        table.push(m("table", { class: "table", id: id },
-            m("thead", { class: "is-size-6" }, titlePart),
-            m("tbody", { class: "is-size-6" }, bodyPart),
-            m("tfoot", { class: "is-size-6" }, footerPart),
+        table.push(m("table", { class: kelas, id: id },
+            m("thead", { class: "" }, titlePart),
+            m("tbody", { class: "" }, bodyPart),
+            m("tfoot", { class: "" }, footerPart),
         ))
 
         return table
