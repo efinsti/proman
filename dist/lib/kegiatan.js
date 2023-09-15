@@ -114,7 +114,7 @@ var g = {
 
         return [
 
-            m("div", { "class": "collapse collapse-arrow", style:{"background-color":"F3FDE8"} },
+            m("div", { "class": "collapse collapse-arrow", style: { "background-color": "F3FDE8" } },
                 [
                     m("input", { "type": "radio", "name": "nve", "checked": checked ? true : false }),
                     m("div", { "class": "collapse-title text-xl font-medium" },
@@ -144,7 +144,7 @@ var g = {
 
                 var kegComp = (i) => m("div", { "class": "collapse-content" }, i)
 
-                
+
 
                 var insertComp
 
@@ -155,7 +155,7 @@ var g = {
                 } else {
 
                     insertComp = [
-                        m('p', "Belum memiliki kegiatan"),
+                        m('span', "Belum memiliki kegiatan"), 
                         m("button", {
                             "class": "btn btn-success btn-sm", onclick: () => {
 
@@ -176,7 +176,7 @@ var g = {
 
 
 
-                theAkor.push(g.pemdaAkorCr(p, kegComp(m('div', { class: "flex justify-center items-center" },insertComp))))
+                theAkor.push(g.pemdaAkorCr(p, kegComp(m('div', { class: "flex flex-col justify-center items-center" }, insertComp))))
                 g.mainAkor = m({ view: () => theAkor })
 
 
@@ -217,7 +217,7 @@ var g = {
         var title = []
         var line = [{ c: 'Daftar Kegiatan Pemda ' + namaPemda, d: { "colspan": "3", "class": "text-center font-bold text-lg  " } }]
         title.push(line)
-        var line = [{ c: 'No.' }, { c: "Kode Kegiatan" }, { c: "Nama Kegiatan",  r: { class: "font-black " } }]
+        var line = [{ c: 'No.' }, { c: "Kode Kegiatan" }, { c: "Nama Kegiatan", r: { class: "font-black " } }]
         title.push(line)
 
         var body = g.bodykeg == null || g.bodykeg == false ? [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center  " } }]] : g.bodykeg
@@ -258,8 +258,8 @@ var g = {
 
         foot.push(line)
 
-        return m('div', {class:"preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4"},
-        r.gTab("tab" + idPemda, { title, body, bandeng: foot }))
+        return m('div', { class: "preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4" },
+            r.gTab("tab" + idPemda, { title, body, bandeng: foot }))
 
 
     },
@@ -357,7 +357,7 @@ var g = {
 
         return [
 
-            m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
+            m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Master Kegiatan"),
             g.allData ? g.mainAkor : m('div', { class: "flex justify-center items-center my-3" }, m("span", { "class": "loading loading-spinner  loading-xl" })),
             g.modal
         ]

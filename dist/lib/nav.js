@@ -66,7 +66,7 @@ var nav = {
 
     m('li', { tabindex: '0' },
       m('details', [
-        m('summary', 'Data Dasar'),
+        m('summary', 'Master/Setup'),
         m('ul', { class: 'p-2' }, [
           m('li', m('a', {
             onclick: () => {
@@ -79,7 +79,13 @@ var nav = {
               r.closeDDowns();
               m.route.set('/kegiatan');
             }
-          },"Kegiatan"))
+          },"Kegiatan")),
+          m('li', m('a', {
+            onclick: () => {
+              r.closeDDowns();
+              m.route.set('/ta');
+            }
+          },"Tenaga Ahli"))
         ])
       ])
     ),

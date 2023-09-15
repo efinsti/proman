@@ -1369,7 +1369,7 @@ var ref = {
         bodyArr.forEach(b => {
 
 
-            if ((["text", "email", "textarea", "file", "tel"].includes(b.type))) {
+            if ((["text", "email", "textarea", "file", "tel", "number"].includes(b.type))) {
 
                 compClass += "input "
                 b.autoNum ? compClass += "autoNum " : null

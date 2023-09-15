@@ -8,6 +8,7 @@ import login from './login.js'
 import dash from './dash.js'
 import pemda from './pemda.js'
 import kegiatan from './kegiatan.js'
+import ta from './ta.js'
 
 import testGate from './testGate.js'
 import md_employees from "./md_employees.js"
@@ -121,6 +122,15 @@ m.route(ref.getById('content'), '/', {
     },
     onmatch: () => {
       document.title = 'Daftar Kegiatan - ' + tag
+    }
+  },
+
+  '/ta': {
+    render: () => {
+      return m(Layout, m(ta))
+    },
+    onmatch: () => {
+      document.title = 'Daftar Tenaga Ahli - ' + tag
     }
   },
 

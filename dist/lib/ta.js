@@ -6,23 +6,22 @@ var g = {
     body: null,
     modal: null,
 
-    pemdaList: () => {
+    taList: () => {
 
-        console.log('pemdaList called')
-
+      
         var title = []
-        var line = [{ c: 'Daftar Pemerintah Daerah', d: { "colspan": "3", "class": "text-center font-bold text-lg bg-base-200" } }]
+        var line = [{ c: 'Daftar Tenaga Ahli ', d: { "colspan": "4", "class": "text-center font-bold text-lg bg-base-200" } }]
         title.push(line)
-        var line = [{ c: 'No.' }, { c: "Kode Pemda" }, { c: "Nama Pemda", r: { class: "font-black " }  }]
+        var line = [{ c: 'No.' }, { c: "NIK" }, { c: "Nama Tenaga Ahli", r: { class: "font-black " }  }, {c:"Nomor Kontak"}]
         title.push(line)
 
-        var body = g.body == null || g.body == false ? [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center  " } }]] : g.body
+        var body = g.body == null || g.body == false ? [[{ c: 'Data masih kosong', d: { "colspan": "4", "class": "text-center  " } }]] : g.body
 
 
         var foot = []
 
         line = [{
-            d: { colspan: 3 }, c: m("p", { "class": "buttons text-center" },
+            d: { colspan: 4 }, c: m("p", { "class": "buttons text-center" },
                 [
                     m("button", {
                         "class": "btn btn-success btn-sm", onclick: () => {
@@ -52,13 +51,13 @@ var g = {
 
         foot.push(line)
 
-        g.tabelPemda = m({view:()=>r.gTab("pemdaList", { title, body, bandeng: foot })})
+        g.tabelPemda = m({view:()=>r.gTab("taList", { title, body, bandeng: foot })})
      
 
 
     },
 
-    addPemda: () => {
+    addTA: () => {
 
       //  modal = r.getById('modalicious')
 
@@ -85,9 +84,11 @@ var g = {
     */
 
         var bodyArr = [{
-            type: 'text', label: "Kode Pemda", id: "kode", dataMsg: "Kode Pemda", required: true, col: 6, colstart: 1, val: null
+            type: 'number', label: "NIK", id: "kode", dataMsg: "NIK", required: true, col: 6, colstart: 1, val: null
         }, {
-            type: 'text', label: "Nama Pemda", id: "nama", dataMsg: "Nama Pemda", required: true, col: 6, colstart: 1, val: null
+            type: 'text', label: "Nama Tenaga Ahli", id: "nama", dataMsg: "Nama Tenaga Ahli", required: true, col: 6, colstart: 1, val: null
+        }, {
+            type: 'tel', label: "Contact Number", id: "nama", dataMsg: "Contact Number", required: true, col: 6, colstart: 1, val: null
         },
 
         ]
@@ -104,7 +105,7 @@ var g = {
             if(theArr){
                     var data = theArr[0]
             var param = {
-                method: "get", json: { kode: data.kode }, tableName: "pemdaModel"
+                method: "get", json: { kode: data.kode }, tableName: "taModel"
             }
 
             r.comm(param, () => {
@@ -112,15 +113,15 @@ var g = {
                 if (r.dataReturn.success == 0) {
                     var svparam = {
                         method: "create",
-                        tableName: "pemdaModel",
+                        tableName: "taModel",
                         json: data
 
                     }
                     r.comm(svparam, () => {
                         if (r.dataReturn.success == 0) {
-                            r.tell('error', 'gagal menyimpan data Pemda', 3500)
+                            r.tell('error', 'gagal menyimpan data Tenaga Ahli', 3500)
                         } else {
-                            r.tell('success', "data Pemda berhasil disimpan", 2000, () => {
+                            r.tell('success', "data Tenaga Ahli berhasil disimpan", 2000, () => {
 
                                 modal.close()
                                 g.showTab()
@@ -130,7 +131,7 @@ var g = {
                         }
                     })
                 } else {
-                    r.tell('error', 'Kode Pemda sudah digunakan', 3500)
+                    r.tell('error', 'NIK sudah terdaftar', 3500)
                 }
             })
             }
@@ -140,7 +141,7 @@ var g = {
 
         }
 
-        var comp = r.gForm("Pemda Baru", "Kode dan Nama wajib diisi", bodyArr, xFn, vFn)
+        var comp = r.gForm("Entry Tenaga Ahli", "Semua field wajib diisi", bodyArr, xFn, vFn)
         return r.makeModalToo(m({ view: () => comp }))
        
 
@@ -152,7 +153,7 @@ var g = {
         m.redraw()
 
         var param = {
-            method: "getAll", tableName: "pemdaModel"
+            method: "getAll", tableName: "taModel"
         }
 
         r.comm(param, () => {
@@ -178,7 +179,7 @@ var g = {
 
             }
 
-             g.pemdaList()
+             g.taList()
         })
 
     },
@@ -202,7 +203,7 @@ var g = {
 
     oncreate: () => {
 
-        g.modal = g.addPemda()
+        g.modal = g.addTA()
 
         // r.urutFn(() => { g.modal = r.makeModal() }, () => { modal = r.getById('modalicious') })
 
@@ -212,7 +213,7 @@ var g = {
 
         return [
 
-            m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Master Pemerintah Daerah"),
+            m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Daftar Tenaga Ahli"),
             m('div', { class: "flex justify-center items-center my-6" }, m('div', {class:"preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4"},  g.tabelPemda)
              ),
             g.modal

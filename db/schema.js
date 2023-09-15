@@ -30,7 +30,7 @@ const pemdaSchema = new Schema({
 const kegiatanSchema = new Schema({
   kode: { type: String, unique: true }, // String is shorthand for {type: String}
   nama: String,
-  pemda_ref : String,
+  pemda_ref: String,
   created_by: String
 
 })
@@ -38,6 +38,7 @@ const kegiatanSchema = new Schema({
 const taSchema = new Schema({
   kode: { type: String, unique: true }, // String is shorthand for {type: String}
   nama: String,
+  contact: String,
   created_by: String
 
 })
@@ -45,9 +46,10 @@ const taSchema = new Schema({
 const taskSchema = new Schema({
   // id
   idTask: { type: String, unique: true },
-  level : Number,
-  idLevel : { type: String, unique: true },
- // name: String,
+  level: Number,
+  idLevel: String,
+  idTA: String,
+  // name: String,
   start: Date,
   end: Date,
   progress: Number,
