@@ -8,11 +8,11 @@ var g = {
 
     taList: () => {
 
-      
+
         var title = []
         var line = [{ c: 'Daftar Tenaga Ahli ', d: { "colspan": "4", "class": "text-center font-bold text-lg bg-base-200" } }]
         title.push(line)
-        var line = [{ c: 'No.' }, { c: "NIK" }, { c: "Nama Tenaga Ahli", r: { class: "font-black " }  }, {c:"Nomor Kontak"}]
+        var line = [{ c: 'No.' }, { c: "NIK" }, { c: "Nama Tenaga Ahli", r: { class: "font-black " } }, { c: "Nomor Kontak" }]
         title.push(line)
 
         var body = g.body == null || g.body == false ? [[{ c: 'Data masih kosong', d: { "colspan": "4", "class": "text-center  " } }]] : g.body
@@ -51,15 +51,15 @@ var g = {
 
         foot.push(line)
 
-        g.tabelPemda = m({view:()=>r.gTab("taList", { title, body, bandeng: foot })})
-     
+        g.tabelPemda = m({ view: () => r.gTab("taList", { title, body, bandeng: foot }) })
+
 
 
     },
 
     addTA: () => {
 
-      //  modal = r.getById('modalicious')
+        //  modal = r.getById('modalicious')
 
         /*
     gForm params = (
@@ -88,7 +88,7 @@ var g = {
         }, {
             type: 'text', label: "Nama Tenaga Ahli", id: "nama", dataMsg: "Nama Tenaga Ahli", required: true, col: 6, colstart: 1, val: null
         }, {
-            type: 'tel', label: "Contact Number", id: "nama", dataMsg: "Contact Number", required: true, col: 6, colstart: 1, val: null
+            type: 'tel', label: "Contact Number", id: "contact", dataMsg: "Contact Number", required: true, col: 6, colstart: 1, val: null
         },
 
         ]
@@ -102,48 +102,67 @@ var g = {
             var theArr = r.getValues()
             console.log(theArr)
 
-            if(theArr){
-                    var data = theArr[0]
-            var param = {
-                method: "get", json: { kode: data.kode }, tableName: "taModel"
-            }
+            if (theArr) {
+                var data = theArr[0]
+                var param = {
+                    method: "get", json: { kode: data.kode }, tableName: "taModel"
+                }
 
-            r.comm(param, () => {
-                console.log(r.dataReturn)
-                if (r.dataReturn.success == 0) {
-                    var svparam = {
-                        method: "create",
-                        tableName: "taModel",
-                        json: data
+                console.log(data)
 
-                    }
-                    r.comm(svparam, () => {
+                var regExp = /[a-zA-Z]/g;
+                var testString = data.contact
+
+                var lanjut
+
+                if (regExp.test(testString)) {
+                    r.tell('error', 'No telepon mengandung huruf', 1233)
+                } else {
+                    lanjut = true
+                }
+
+                console.log(lanjut)
+
+                if (lanjut) {
+                    r.comm(param, () => {
+                        console.log(r.dataReturn)
                         if (r.dataReturn.success == 0) {
-                            r.tell('error', 'gagal menyimpan data Tenaga Ahli', 3500)
-                        } else {
-                            r.tell('success', "data Tenaga Ahli berhasil disimpan", 2000, () => {
+                            var svparam = {
+                                method: "create",
+                                tableName: "taModel",
+                                json: data
 
-                                modal.close()
-                                g.showTab()
+                            }
+                            r.comm(svparam, () => {
+                                if (r.dataReturn.success == 0) {
+                                    r.tell('error', 'gagal menyimpan data Tenaga Ahli', 3500)
+                                } else {
+                                    r.tell('success', "data Tenaga Ahli berhasil disimpan", 2000, () => {
+
+                                        modal.close()
+                                        g.showTab()
 
 
+                                    })
+                                }
                             })
+                        } else {
+                            r.tell('error', 'NIK sudah terdaftar', 3500)
                         }
                     })
-                } else {
-                    r.tell('error', 'NIK sudah terdaftar', 3500)
                 }
-            })
+
+
             }
 
-        
+
 
 
         }
 
         var comp = r.gForm("Entry Tenaga Ahli", "Semua field wajib diisi", bodyArr, xFn, vFn)
         return r.makeModalToo(m({ view: () => comp }))
-       
+
 
     },
 
@@ -171,7 +190,7 @@ var g = {
                 var no = 0
                 r.dataReturn.message.forEach(d => {
                     no++
-                    var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }]
+                    var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }, {c:d.contact}]
                     line.push(row)
                 })
 
@@ -179,12 +198,12 @@ var g = {
 
             }
 
-             g.taList()
+            g.taList()
         })
 
     },
 
-    tabelPemda:null,
+    tabelPemda: null,
 
 
     //------------------------
@@ -214,8 +233,9 @@ var g = {
         return [
 
             m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Daftar Tenaga Ahli"),
-            m('div', { class: "flex justify-center items-center my-6" }, m('div', {class:"preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4"},  g.tabelPemda)
-             ),
+            m('div', { class: "flex justify-center items-center my-6" }, m('div', { class: "preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4" },
+                g.tabelPemda ? g.tabelPemda : m('div', { class: "flex justify-center items-center my-3" }, m("span", { "class": "loading loading-spinner  loading-xl" })))
+            ),
             g.modal
         ]
 
