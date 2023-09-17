@@ -45,6 +45,8 @@ app.post('/api/gate', gate)
 
 
 app.get('/', (abrakadabracilukbaaaaaaa, res) => {
+
+//    res.view("/dist/wait.pug", { so: "Sally can wait"});
  
     if(nyambung){
        res.view("/dist/index.pug", { so: "Sally can't wait"}); 

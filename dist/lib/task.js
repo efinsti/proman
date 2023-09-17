@@ -203,6 +203,72 @@ var g = {
 
     tabelPemda: null,
 
+    pemdaList: null,
+    oneTwoLvlData: null,
+    getData: (cb) => {
+
+
+        var param = {
+            method: "getAll", tableName: "pemdaModel"
+        }
+
+        r.comm(param, () => {
+            if (r.dataReturn.success !== 0) {
+                g.pemdaList = [...r.dataReturn.message]
+
+                g.oneTwoLvlData = []
+
+                var count = 0
+
+                g.pemdaList.forEach(p => {
+                    count++
+                    var idPemda = p._id
+                    var prm = {
+                        method: "get",
+                        tableName: "kegModel",
+                        json: { pemda_ref: idPemda }
+                    }
+
+                    r.comm(prm, () => {
+                        if (r.dataReturn.success != 0) {
+
+
+                            var kegData
+
+                            kegData = [...r.dataReturn.message]
+
+
+                            // console.log(kegData)
+
+                            Object.assign(p, { kegiatan: kegData })
+                            // console.log(p)
+                        } else {
+                            Object.assign(p, { kegiatan: [] })
+                            r.tell('warning',"mohon lengkapi data kegiatan untuk Pemda "+p.nama+" dulu",1650,()=>m.route.set("/kegiatan"))
+                        }
+
+                        g.oneTwoLvlData.push(p)
+                        if (count == g.pemdaList.length) {
+                            cb ? cb() : null
+                        }
+                    })
+
+                })
+
+
+            } else {
+
+                r.tell('warning', "Silakan isi data Pemda terlebih dahulu", 2222, () => {
+                    m.route.set("/pemda")
+                })
+
+            }
+        })
+
+    },
+
+
+
 
     //------------------------
     oninit: () => {
@@ -213,7 +279,7 @@ var g = {
         // var json = req.body.json
         // var fn =  req.body.fn
 
-        g.showTab()
+        g.getData(()=>console.log(g.oneTwoLvlData))
 
 
     },
@@ -230,7 +296,7 @@ var g = {
 
         return [
 
-            m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Penugsan Tenaga Ahli"),
+            m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Penugasan Tenaga Ahli"),
             m('div', { class: "flex justify-center items-center my-6" }, m('div', { class: "preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4" },
                 g.tabelPemda ? g.tabelPemda : m('div', { class: "flex justify-center items-center my-3" }, m("span", { "class": "loading loading-spinner  loading-xl" })))
             ),

@@ -78,7 +78,7 @@ var g = {
                                 r.tell('success', "data Kegiatan berhasil disimpan", 2000, () => {
 
                                     r.closeMdl()
-                                    g.getData(() => g.showAkor()) // not triggered, safe
+                                    g.getData(() => g.showAkor(kodePemda)) // not triggered, safe
 
 
                                 })
@@ -104,7 +104,7 @@ var g = {
 
 
 
-    pemdaAkorCr: (pemdaObj, ctnKeg, checked) => {
+    pemdaAkorCr: (pemdaObj, ctnKeg, kode) => {
 
 
         var line = [[{ c: pemdaObj.no + ".", d: { width: "50px", } }, { c: pemdaObj.kode, r: { id: pemdaObj._id }, d: { width: "100px", class: "text-accent-focus italic" } }, { c: pemdaObj.nama, d: { class: "text-accent-focus italic" } }]]
@@ -115,7 +115,7 @@ var g = {
 
             m("div", { "class": "collapse collapse-arrow border border-base-300"  },
                 [
-                    m("input", { "type": "radio", "name": "nve", "checked": checked ? true : false }),
+                    m("input", { "type": "radio", "name": "nve", "checked": kode==pemdaObj.kode ? "checked" : false }),
                     m("div", { "class": "collapse-title text-xl font-medium" },
                         content
                     ),
@@ -127,9 +127,9 @@ var g = {
 
     },
 
-    showAkor: () => {
+    showAkor: (kodePemda) => {
 
-        console.log('showAkor called')
+        console.log('showAkor called', kodePemda)
 
         var theAkor = []
 
@@ -175,7 +175,7 @@ var g = {
 
 
 
-                theAkor.push(g.pemdaAkorCr(p, kegComp(m('div', { class: "flex flex-col justify-center items-center" }, insertComp))))
+                theAkor.push(g.pemdaAkorCr(p, kegComp(m('div', { class: "flex flex-col justify-center items-center" }, insertComp)), kodePemda))
                 g.mainAkor = m({ view: () => theAkor })
 
 
