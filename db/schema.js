@@ -45,10 +45,11 @@ const taSchema = new Schema({
 
 const taskSchema = new Schema({
   // id
-  idTask: { type: String, unique: true },
+  
   level: Number,
+  idTask: { type: String, unique: true }, //kodePemda/keg if TA code plus ObjectID
   idLevel: String,
-  idTA: String,
+   
   // name: String,
   start: Date,
   end: Date,

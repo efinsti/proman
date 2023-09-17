@@ -98,10 +98,6 @@ var controller = (req, res) => {
   }
 
 
-
-
-
-
   if (method == 'getAll') {
     var rtn = new service(tableName)
     rtn

@@ -9,6 +9,7 @@ import dash from './dash.js'
 import pemda from './pemda.js'
 import kegiatan from './kegiatan.js'
 import ta from './ta.js'
+import task from './task.js'
 
 import testGate from './testGate.js'
 import md_employees from "./md_employees.js"
@@ -17,7 +18,6 @@ import md_employees from "./md_employees.js"
 // import test from './test.js'
 
 console.log('loaded index')
-
 
 
 
@@ -134,6 +134,15 @@ m.route(ref.getById('content'), '/', {
     }
   },
 
+  '/task': {
+    render: () => {
+      return m(Layout, m(task))
+    },
+    onmatch: () => {
+      document.title = 'Penugasan Tenaga Ahli - ' + tag
+    }
+  },
+
   // '/test': {
   //   render: () => {
   //     return m(Layout, m(test))
@@ -151,123 +160,7 @@ m.route(ref.getById('content'), '/', {
       document.title = 'Master Data: Employees - ' + tag
     }
   },
-
-  '/umag': {
-    render: () => {
-      return m(Layout, m(umag))
-    },
-    onmatch: () => {
-      document.title = "Users' Management - " + tag
-    }
-  },
-
-  '/pagu': {
-    render: () => {
-      return m(Layout, m(pagu))
-    },
-    onmatch: () => {
-      document.title = 'Sumber Dana - ' + tag
-    }
-  },
-
-  '/alokasi': {
-    render: () => {
-      return m(Layout, m(alokasi))
-    },
-    onmatch: () => {
-      document.title = 'Alokasi Sumber Dana - ' + tag
-    }
-  },
-
-  '/pengajuan': {
-    render: () => {
-      return m(Layout, m(pengajuan))
-    },
-    onmatch: () => {
-      document.title = 'Pengajuan Transfer Dana - ' + tag
-    }
-  },
-
-  '/verifikasi': {
-    render: () => {
-      return m(Layout, m(verifikasi))
-    },
-    onmatch: () => {
-      document.title = 'Verifikasi Pengajuan Transfer Dana - ' + tag
-    }
-  },
-
-  '/transfer': {
-    render: () => {
-      return m(Layout, m(transfer))
-    },
-    onmatch: () => {
-      document.title = 'Transfer Sumber Dana - ' + tag
-    }
-  },
-
-  '/konfirmasi': {
-    render: () => {
-      return m(Layout, m(konfirmasi))
-    },
-    onmatch: () => {
-      document.title = 'Konfirmasi Transfer Sumber Dana - ' + tag
-    }
-  },
-
-  '/rekonsiliasi': {
-    render: () => {
-      return m(Layout, m(rekonsiliasi))
-    },
-    onmatch: () => {
-      document.title = 'Rekonsiliasi Transfer - ' + tag
-    }
-  },
-
-  '/belanja': {
-    render: () => {
-      return m(Layout, m(belanja))
-    },
-    onmatch: () => {
-      document.title = 'Realisasi Belanja - ' + tag
-    }
-  },
-
-  '/ds_dropping': {
-    render: () => {
-      return m(Layout, m(ds_dropping))
-    },
-    onmatch: () => {
-      document.title = 'Pengajuan Pengucuran Dana - ' + tag
-    }
-  },
-
-  '/ds_konfirmasi': {
-    render: () => {
-      return m(Layout, m(ds_konfirmasi))
-    },
-    onmatch: () => {
-      document.title = 'Konfirmasi Penerimaan Dana - ' + tag
-    }
-  },
-
-  '/ds_belanja': {
-    render: () => {
-      return m(Layout, m(ds_belanja))
-    },
-    onmatch: () => {
-      document.title = 'Konfirmasi Penerimaan Dana - ' + tag
-    }
-  },
-
-  '/kc_verify': {
-    render: () => {
-      return m(Layout, m(kc_verify))
-    },
-    onmatch: () => {
-      document.title = 'Verifikasi Pengajuan Pengucuran Dana - ' + tag
-    }
-  },
+ 
 
   '/userlist': {
     render: () => {

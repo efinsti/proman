@@ -100,7 +100,6 @@ var g = {
 
         r.tunda(() => r.showModal(), 250)
 
-
     },
 
 
@@ -108,13 +107,13 @@ var g = {
     pemdaAkorCr: (pemdaObj, ctnKeg, checked) => {
 
 
-        var line = [[{ c: pemdaObj.no + ".", d: { width: "50px", } }, { c: pemdaObj.kode, r: { id: pemdaObj._id }, d: { width: "210px", class: "text-accent-focus italic" } }, { c: pemdaObj.nama, d: { class: "text-accent-focus italic" } }]]
-        var content = r.gTab("pemtab" + pemdaObj._id, { body: line }, "table-fixed")
+        var line = [[{ c: pemdaObj.no + ".", d: { width: "50px", } }, { c: pemdaObj.kode, r: { id: pemdaObj._id }, d: { width: "100px", class: "text-accent-focus italic" } }, { c: pemdaObj.nama, d: { class: "text-accent-focus italic" } }]]
+        var content = r.gTab("pemtab" + pemdaObj._id, { body: line }, "table-fixed border-spacing-0.5 border-separate ")
 
 
         return [
 
-            m("div", { "class": "collapse collapse-arrow", style: { "background-color": "F3FDE8" } },
+            m("div", { "class": "collapse collapse-arrow border border-base-300"  },
                 [
                     m("input", { "type": "radio", "name": "nve", "checked": checked ? true : false }),
                     m("div", { "class": "collapse-title text-xl font-medium" },
@@ -155,9 +154,9 @@ var g = {
                 } else {
 
                     insertComp = [
-                        m('span', "Belum memiliki kegiatan"), 
+                        m('span', "Pemda "+p.nama +" belum memiliki kegiatan"), 
                         m("button", {
-                            "class": "btn btn-success btn-sm", onclick: () => {
+                            "class": "btn btn-success btn-sm mt-3", onclick: () => {
 
 
                                 g.addKeg(p._id, p.kode)
@@ -259,7 +258,7 @@ var g = {
         foot.push(line)
 
         return m('div', { class: "preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4" },
-            r.gTab("tab" + idPemda, { title, body, bandeng: foot }))
+            r.gTab("tab" + idPemda, { title, body, bandeng: foot }, ))
 
 
     },

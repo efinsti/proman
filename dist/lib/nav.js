@@ -89,7 +89,12 @@ var nav = {
         ])
       ])
     ),
-    m('li', m('a', 'Item 3'))
+    m('li', m('a', {
+      onclick: () => {
+        r.closeDDowns();
+        m.route.set('/task');
+      }
+    },'Penugasan'))
   ],
 
   view: () => {
