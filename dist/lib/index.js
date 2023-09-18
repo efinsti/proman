@@ -11,7 +11,7 @@ import kegiatan from './kegiatan.js'
 import ta from './ta.js'
 import task from './task.js'
 
-import testGate from './testGate.js'
+import test from './test.js'
 import md_employees from "./md_employees.js"
 
 
@@ -143,14 +143,14 @@ m.route(ref.getById('content'), '/', {
     }
   },
 
-  // '/test': {
-  //   render: () => {
-  //     return m(Layout, m(test))
-  //   },
-  //   onmatch: () => {
-  //     document.title = 'Testing - ' + tag
-  //   }
-  // },
+  '/test': {
+    render: () => {
+      return m(Layout, m(test))
+    },
+    onmatch: () => {
+      document.title = 'Testing - ' + tag
+    }
+  },
 
   '/md_employees': {
     render: () => {

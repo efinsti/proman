@@ -1,5 +1,6 @@
 
 
+const { result } = require('lodash');
 const db = require('../db/schema')
 
 
@@ -93,8 +94,15 @@ var controller = (req, res) => {
 
   console.log(json, idUser)
 
+
   if (json !== undefined) {
     Object.assign(json, { "created_by": idUser })
+  }
+
+  var dataSubmit = {
+    username : idUser,
+    method: method,
+    desc: json ? json : id
   }
 
 
@@ -131,6 +139,13 @@ var controller = (req, res) => {
       console.log(data)
       if (data != {}) {
         res.send(new success(data))
+
+        var log = new service("logModel", null, dataSubmit)
+            log.create().then(result=>{
+              console.log(result)
+            })
+
+
       } else {
         res.send(new fail('insert fail', 503))
       }
@@ -143,6 +158,10 @@ var controller = (req, res) => {
       console.log(data)
       if (data) {
         res.send(new success(data))
+        var log = new service("logModel", null, dataSubmit)
+        log.create().then(result=>{
+          console.log(result)
+        })
       } else {
         res.send(new fail('update failed', 503))
       }
@@ -155,6 +174,10 @@ var controller = (req, res) => {
       console.log(data)
       if (data) {
         res.send(new success(data))
+        var log = new service("logModel", null, dataSubmit)
+        log.create().then(result=>{
+          console.log(result)
+        })
       } else {
         res.send(new fail('delete fail', 403))
       }

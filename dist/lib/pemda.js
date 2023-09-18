@@ -93,7 +93,7 @@ var g = {
         ]
 
         var xFn = () => {
-            modal.close()
+            r.closeMdl()
         }
 
         var vFn = (e) => {

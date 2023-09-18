@@ -73,7 +73,8 @@ var ref = {
     },
     getValues() {
         var els = [...ref.getByTag('input')]
-        //   console.log(els)
+
+        console.log(els)
 
         var ids = []
 
@@ -106,13 +107,39 @@ var ref = {
         if (zeroVal.length > 0) {
             data2send = null
 
-            ref.tell('warning', 'Ada isian yang masih kosong', 2121, ()=>{return null})
+            ref.tell('warning', 'Ada isian yang masih kosong', 2121, () => { return null })
         }
 
         return data2send
     },
 
+    getSelected() {
+        var els = [...ref.getByTag('select')]
+        var ids = []
 
+        els.forEach(el => {
+            if (el.hasAttribute('id')) {
+                ids.push(el.id)
+            }
+        })
+
+        console.log(ids)
+
+       
+        var arrTemp = []
+
+        ids.forEach(i => {
+
+            var el = ref.getById(i)
+            var theVal = el.value.trim()
+            var text = el.options[el.selectedIndex].text;
+            var tempObj = { [i]: theVal, text }
+            arrTemp.push(tempObj)
+
+        })
+
+        return arrTemp
+    },
     mdlData: null,
     typeRumus: null,
     typeIKK: null,
@@ -374,12 +401,13 @@ var ref = {
 
 
     mdl: { "Joy": "lutju sekali" },
+    mdl_id: null,
 
     makeModal: (name, vFn, big) => {
 
         big == undefined || big == null || big == false ? big = "" : big = "w-11/12 max-w-5xl"
 
-        return m("dialog", { "class": "modal", "id": "modalicious" },
+        return m("dialog", { "class": "modal", id: "modalicious" },
             m("form", { "class": "modal-box " + big, "method": "dialog" },
 
                 [
@@ -407,18 +435,16 @@ var ref = {
     showModal: () => {
         ref.mdl = ref.getById('modalicious')
         ref.mdl.showModal()
-      
-        console.log('modal shown')
     },
 
-    closeMdl : ()=>{
+    closeMdl: () => {
         ref.mdl.close()
     },
 
 
     makeModalToo: name => [
 
-        m("dialog", { "class": "modal", "id": "modalicious" },
+        m("dialog", { "class": "modal", id: "modalicious" },
             m("div", { "class": "modal-box w-11/12 max-w-5xl" },
                 [
                     m("form", { "method": "dialog" },
@@ -595,14 +621,14 @@ var ref = {
             .then(result => {
 
                 const middlefinger = result.visitorId
-              //  console.log(middlefinger)
+                //  console.log(middlefinger)
 
 
                 var lstor = ref.islogged(true)
 
                 if (lstor) {
 
-                  //  console.log(lstor)
+                    //  console.log(lstor)
 
                     m.request({
                         method: "POST",
@@ -1229,7 +1255,7 @@ var ref = {
 
                             ref.getById(id).querySelectorAll('tr').forEach(el => {
                                 el.classList.remove("bg-accent")
-                                el.classList.remove("rowSel") 
+                                el.classList.remove("rowSel")
                                 el.classList.remove("text-white")
                             })
                             // var selEl = ref.getById('theRow' + idx)
@@ -1284,13 +1310,13 @@ var ref = {
                   lblHelper: 
                   checked            } ]
           id:
-          selectOpt: []
+          selectOpt: [{kode:any, nama:any}]
           dataMsg:
           label: 
           required :
           col : length (1-6)
           colstart : 
-          val :         }]
+          value :         }]
       } 
       */
     gForm: (title, subtitle, bodyArr, xFn, vFn) => {
@@ -1302,7 +1328,7 @@ var ref = {
 
         var lead = (content) => {
             return [m("form",
-                m("div", { "class": "space-y-12" },
+                m("div", { "class": "space-y-6" },
                     m("div", { "class": "border-b border-gray-900/10 pb-12" },
                         [
                             m("h2", { "class": "text-base font-semibold leading-7 text-gray-900" },
@@ -1311,8 +1337,8 @@ var ref = {
                             m("p", { "class": "mt-1 text-sm leading-6 text-gray-600" },
                                 subtitle
                             ),
-                            m("div", { "class": "mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" }),
-                            content
+                            m("div", { "class": "mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6" }, content), //grid-cols-1
+                            
                         ]
                     )
                 ),
@@ -1336,7 +1362,7 @@ var ref = {
 
         var lineStart = (col, colStart, label, inputComp, id) => {
             var lengthClass
-            var colSt = " sm:col-start-" + colStart
+            var colSt = colStart ? " sm:col-start-" + colStart : null
 
             col < 6 ? lengthClass = 'sm:col-span-' + col + colSt : lengthClass = 'col-span-full' + colSt
 
@@ -1369,15 +1395,14 @@ var ref = {
         bodyArr.forEach(b => {
 
 
-            if ((["text", "email", "textarea", "file", "tel", "number"].includes(b.type))) {
+            if ((["text", "email", "textarea", "file", "tel", "number", "date"].includes(b.type))) {
 
-                compClass += "input "
                 b.autoNum ? compClass += "autoNum " : null
 
                 b.type == "file" ? compClass = "file-input file-input-bordered w-full max-w-xs" : null
 
                 var inputComp = m("input", {
-                    "class": compClass, "id": b.id, "name": b.id, "type": b.type, required: b.required, "data-msg": b.dataMsg, "placeholder": b.dataMsg, onblur: b.required ? (e) => {
+                    "class": compClass + " input mt-2", "id": b.id, "name": b.id, "type": b.type, required: b.required, "data-msg": b.dataMsg, "placeholder": b.dataMsg, onblur: b.required ? (e) => {
 
                         ref.lockInput(e, b.dataMsg + " harus diisi!")
 
@@ -1417,13 +1442,13 @@ var ref = {
 
             } else if (b.type == "select") {
 
-                compClass += "select"
-                optionFill = () => {
+           
+                var optionFill = () => {
                     var opts = []
                     b.selectOpt.forEach(opt => {
                         opts.push(
-                            m("option", { selected: b.value == opt ? true : false },
-                                opt
+                            m("option", { selected: b.value == opt.kode ? true : false, value: opt.kode },
+                                opt.nama
                             ),
                         )
                     })
@@ -1431,7 +1456,7 @@ var ref = {
                 }
 
                 var inputComp = m("div", { "class": "mt-2" },
-                    m("select", { "class": compClass, "id": b.id, "name": b.id, "data-msg": b.label },
+                    m("select", { "class": compClass+" select select-bordered", "id": b.id, "name": b.id, "data-msg": b.label },
                         optionFill()
                     )
                 )

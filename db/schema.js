@@ -51,19 +51,23 @@ const taskSchema = new Schema({
   idLevel: String,
    
   // name: String,
+  role: String,
   start: Date,
   end: Date,
   progress: Number,
   dependencies: String,
-  created_by: String
+  created_by: String,
+  duration_unit: String
 
 
 })
 
 const logSchema = new Schema({
   username: String,
+  method: String,
   desc: Object,
 
+  timestamp: { type: Date, default: Date.now},
 })
 
 
@@ -74,10 +78,6 @@ const kegModel = mongoose.model('kegiatan', kegiatanSchema);
 const taModel = mongoose.model('ta', taSchema);
 const taskModel = mongoose.model('task', taskSchema);
 const logModel = mongoose.model('log', logSchema);
-
-
-
-
 
 
 module.exports = { userModel, signonModel, pemdaModel, kegModel, taModel, taskModel, logModel }
