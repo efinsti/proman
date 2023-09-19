@@ -61,7 +61,7 @@ var g = {
 
 
         var bodyArr = [{
-            type: 'select', label: "Pilih Pemda", id: "idLevel1", dataMsg: "Pemda", required: true, col: 6, colstart: 1, value: null, selectOpt: g.selectOptPemda()
+            type: 'select', label: "Pilih Pemda", id: "idLevel1", dataMsg: "Pemda", required: true, col: 6, colStart: 1, value: null, selectOpt: g.selectOptPemda()
         },
 
         ]
@@ -73,7 +73,7 @@ var g = {
         var vFn = (e) => {
 
             var arrSel = r.getSelected()
-           
+
             var kodePemda = arrSel[0].idLevel1
 
             r.closeMdl()
@@ -87,16 +87,16 @@ var g = {
                 type: 'select', label: "(semua field harus diisi)" + arrSel[0].text, id: "idLevel2", dataMsg: "Kegiatan", required: true, col: 6, colStart: 1, value: null, selectOpt: g.selectOptKeg(kodePemda)
             },
             {
-                type: 'select', label: "Pilih Tenaga Ahli",  id: "idLevel3", dataMsg: "Tenaga Ahli", required: true, col: 3, colStart: 1, value: null, selectOpt: g.selectOptTA()
+                type: 'select', label: "Pilih Tenaga Ahli", id: "idLevel3", dataMsg: "Tenaga Ahli", required: true, col: 3, colStart: 1, value: null, selectOpt: g.selectOptTA()
             },
             {
-                type: 'text', label: "Tugas/Peran",  id: "role", dataMsg: "Tugas/Peran", required: true, col: 3, colStart: 4, value: null,  
+                type: 'text', label: "Tugas/Peran", id: "role", dataMsg: "Tugas/Peran", required: true, col: 3, colStart: 4, value: null,
             },
             {
-                type: 'date', label: "Tanggal Mulai",  id: "start", dataMsg: "Tanggal mulai", required: true, col: 3, colStart: 4, value: null,  
+                type: 'date', label: "Tanggal Mulai", id: "start", dataMsg: "Tanggal mulai", required: true, col: 3, colStart: 4, value: null,
             },
             {
-                type: 'date', label: "Tanggal Mulai",  id: "end", dataMsg: "Sampai dengan", required: true, col: 3, colStart: 4, value: null,  
+                type: 'date', label: "Tanggal Mulai", id: "end", dataMsg: "Sampai dengan", required: true, col: 3, colStart: 4, value: null,
             },
 
 
@@ -225,64 +225,66 @@ var g = {
 
                 g.oneTwoLvlData = []
 
-                var count = 0
-
-                g.pemdaList.forEach(p => {
-                    count++
-                    var idPemda = p._id
-                    var prm = {
-                        method: "get",
-                        tableName: "kegModel",
-                        json: { pemda_ref: idPemda }
-                    }
-
-                    r.comm(prm, () => {
-                        if (r.dataReturn.success != 0) {
 
 
-                            var kegData
-
-                            kegData = [...r.dataReturn.message]
 
 
-                            // console.log(kegData)
+                var prm = {
+                    method: "getAll",
+                    tableName: "kegModel",
 
-                            Object.assign(p, { kegiatan: kegData })
-                            // console.log(p)
-                        } else {
-                            Object.assign(p, { kegiatan: [] })
-                            r.tell('warning', "mohon lengkapi data kegiatan untuk Pemda " + p.nama + " dulu", 1650, () => m.route.set("/kegiatan"))
-                        }
+                }
 
-                        g.oneTwoLvlData.push(p)
-                        if (count == g.pemdaList.length) {
-                            cb ? cb() : null
-                        }
-
-                        var prmTA = {
-                            method: "getAll", tableName: "taModel"
-                        }
-
-                        r.comm(prmTA, () => {
-                            if (r.dataReturn.success != 0) {
+                r.comm(prm, () => {
+                    if (r.dataReturn.success != 0) {
 
 
-                                g.taList = [...r.dataReturn.message]
+                        var kegData = [...r.dataReturn.message]
+                        g.oneTwoLvlData = g.pemdaList
+                        var kegiatan = []
 
-                                console.log(g.taList)
-
-
-                                // console.log(p)
+                        g.oneTwoLvlData.forEach(pem => {
+                            kegData.forEach(keg => {
+                                if (keg.pemda_ref = pem._id) {
+                                    kegiatan.push(keg)
+                                }
+                            })
+                            pem.kegiatan = kegiatan
+                            if (kegiatan.length == 0) {
+                                r.tell('warning', "mohon lengkapi data kegiatan untuk Pemda " + pem.nama + " dulu", 1650, () => m.route.set("/kegiatan"))
                             } else {
-
-                                r.tell('warning', "mohon lengkapi data Tenaga Ahli terlebih dahulu", 1650, () => m.route.set("/ta"))
+                                kegiatan = []
                             }
+
                         })
 
 
+                    }
+
+
+
+                    var prmTA = {
+                        method: "getAll", tableName: "taModel"
+                    }
+
+                    r.comm(prmTA, () => {
+                        if (r.dataReturn.success != 0) {
+
+                            g.taList = [...r.dataReturn.message]
+                            console.log(g.taList)
+
+                            // console.log(p)
+                        } else {
+
+                            r.tell('warning', "mohon lengkapi data Tenaga Ahli terlebih dahulu", 1650, () => m.route.set("/ta"))
+                        }
+                        cb ? cb() : null
                     })
 
+
                 })
+
+
 
 
             } else {
@@ -309,8 +311,6 @@ var g = {
         // var fn =  req.body.fn
 
         g.getData(() => g.addNewTask())
-
-
 
     },
 

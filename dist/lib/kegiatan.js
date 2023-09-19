@@ -113,9 +113,9 @@ var g = {
 
         return [
 
-            m("div", { "class": "collapse collapse-arrow border border-base-300"  },
+            m("div", { "class": "collapse collapse-arrow border border-base-300" },
                 [
-                    m("input", { "type": "radio", "name": "nve", "checked": kode==pemdaObj.kode ? "checked" : false }),
+                    m("input", { "type": "radio", "name": "nve", "checked": kode == pemdaObj.kode ? "checked" : false }),
                     m("div", { "class": "collapse-title text-xl font-medium" },
                         content
                     ),
@@ -154,7 +154,7 @@ var g = {
                 } else {
 
                     insertComp = [
-                        m('span', "Pemda "+p.nama +" belum memiliki kegiatan"), 
+                        m('span', "Pemda " + p.nama + " belum memiliki kegiatan"),
                         m("button", {
                             "class": "btn btn-success btn-sm mt-3", onclick: () => {
 
@@ -258,7 +258,7 @@ var g = {
         foot.push(line)
 
         return m('div', { class: "preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4" },
-            r.gTab("tab" + idPemda, { title, body, bandeng: foot }, ))
+            r.gTab("tab" + idPemda, { title, body, bandeng: foot },))
 
 
     },
@@ -278,41 +278,37 @@ var g = {
 
                 g.allData = []
 
-                var count = 0
+                var prm = {
+                    method: "getAll",
+                    tableName: "kegModel",
+                }
 
-                g.pemdaList.forEach(p => {
-                    count++
-                    var idPemda = p._id
-                    var prm = {
-                        method: "get",
-                        tableName: "kegModel",
-                        json: { pemda_ref: idPemda }
+                r.comm(prm, () => {
+                    if (r.dataReturn.success != 0) {
+
+                        var kegData = [...r.dataReturn.message]
+
+                        var kegiatan = []
+
+                        g.allData = g.pemdaList
+
+                        g.allData.forEach(pem => {
+                            kegData.forEach(keg => {
+                                if (keg.pemda_ref == pem._id) {
+                                    kegiatan.push(keg)
+                                }
+                            })
+                            pem.kegiatan = kegiatan
+                            kegiatan = []
+                        })
+
                     }
 
-                    r.comm(prm, () => {
-                        if (r.dataReturn.success != 0) {
-
-
-                            var kegData
-
-                            kegData = [...r.dataReturn.message]
-
-
-                            // console.log(kegData)
-
-                            Object.assign(p, { kegiatan: kegData })
-                            // console.log(p)
-                        } else {
-                            Object.assign(p, { kegiatan: [] })
-                        }
-
-                        g.allData.push(p)
-                        if (count == g.pemdaList.length) {
-                            cb ? cb() : null
-                        }
-                    })
+                    cb ? cb() : null
 
                 })
+
+
 
 
             } else {
@@ -339,7 +335,7 @@ var g = {
         // var fn =  req.body.fn
 
         g.getData(() => g.showAkor())
-
+        console.log(g.allData)
 
 
     },

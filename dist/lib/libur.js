@@ -21,33 +21,15 @@ var g = {
 
         var foot = []
 
-        line = [{
-            d: { colspan: 4 }, c: m("p", { "class": "buttons text-center" },
-                [
-                    m("button", {
-                        "class": "btn btn-success btn-sm", onclick: () => {
-
-                            g.body == null ? r.tell('warning', 'still loading', 2500) : g.verify(() => g.impor())
-
-                        }, disabled: g.dataExist ? "disabled" : false
-                    },
-                        "Impor"
-
-
-                    ),
-                    m("button", { "class": "btn btn-warning btn-sm ml-1", onclick: () => { } },
-                        m("span", "Edit"
-                        )
-                    ),
-
-                ]
-            )
+        if (g.dataExist) {
+            foot.push(g.footer())
         }
-        ]
 
-        foot.push(line)
+
+
 
         g.tabelLibur = m({ view: () => r.gTab("liburList", { title, body, bandeng: foot }) })
+        m.redraw()
 
     },
 
@@ -124,6 +106,7 @@ var g = {
             if (r.dataReturn.success == 1) {
                 r.tell('error', "data libur telah diimpor", 2222, () => {
                     r.closeMdl()
+                    g.loadTab(() => g.showTab())
                 })
             } else {
                 var url = "https://api-holidays-id.rizkysam.web.id/holidays/2023"
@@ -142,23 +125,17 @@ var g = {
                         r.comm(prm, () => {
                             console.log(r.dataReturn)
                             r.closeMdl()
-                            g.showTab()
+                            g.loadTab(() => g.showTab())
                         })
                     }
-
-
 
                 })
             }
         })
 
-
-
-
-
     },
 
-    addPemda: () => {
+    addLibur: () => {
 
         //  modal = r.getById('modalicious')
 
@@ -268,6 +245,10 @@ var g = {
                 cb()
             } else {
                 g.dataExist = [...r.dataReturn.message].sort((a, b) => a.datetime_ms - b.datetime_ms);
+                g.dataExist.forEach((d,idx)=>{
+                    d.urut = idx+1
+                })
+           
                 cb()
             }
 
@@ -275,42 +256,106 @@ var g = {
 
     },
 
+    controller: null,
+
+    controllerShow: () =>
+        m("div", { "class": "buttons text-center mb-5" },
+            [
+                m("button", {
+                    "class": "btn btn-success btn-sm", onclick: () => {
+
+                        g.body == null ? r.tell('warning', 'still loading', 2500) : g.verify(() => g.impor())
+
+                    }, disabled: g.body ? "disabled" : false
+                },
+                    "Impor"
+
+
+                ),
+                m("button", { "class": "btn btn-warning btn-sm ml-1", onclick: () => { } },
+                    m("span", "Edit"
+                    )
+                ),
+
+            ]
+        )
+    ,
+
+
+
+    footer: () => [{
+        d: { colspan: 4 }, c: m("p", { "class": "buttons text-center" },
+            [
+                m("button", {
+                    "class": "btn  btn-xs", onclick: () => {
+
+                        g.previousPage()
+
+                    }, disabled: g.curPage == 1 ? "disabled" : false
+                }, "< sebelum"),
+                m("button", {
+                    "class": "btn  btn-xs ml-1", onclick: () => {
+
+                        g.nextPage()
+
+                    }, disabled: g.curPage * g.pageSize >= g.dataExist.length ? "disabled" : false
+                }, "berikut >"),
+
+            ]
+        )
+    }
+    ],
+
     pageSize: 8,
     curPage: 1,
 
-     previousPage:()=> {
-        if(g.curPage > 1) g.curPage--;
+    previousPage: () => {
+        if (g.curPage > 1) g.curPage--;
         g.showTab();
-      },
-      
-        nextPage:(data)=> {
-        if((g.curPage * g.pageSize) < data.length) g.curPage++;
+    },
+
+    nextPage: (data) => {
+        if ((g.curPage * g.pageSize) < g.dataExist.length) g.curPage++;
         g.showTab();
-      },
+    },
 
     showTab: () => {
-
-        g.body = [[{ c: 'LOADING ... ', d: { "colspan": "3", "class": "text-center font-bold " } }]]
-        m.redraw()
 
 
         var line = []
 
-        //      var line = [{ c: 'No.' }, { c: "Hari" }, { c: "Tanggal", r: { class: "font-black " } }, { c: "Peringatan" }]
+        if (g.dataExist) {
 
-        var no = 0
-        g.dataExist.forEach(d => {
 
-            var tgl = d.date + " " + d.month + " " + d.year
+            g.dataExist.filter((row, index) => {
+                let start = (g.curPage - 1) * g.pageSize;
+                let end = g.curPage * g.pageSize;
+                if (index >= start && index < end) return true;
+            }).forEach((d,idx) => {
 
-            no++
-            var row = [{ c: no }, { c: d.day, r: { id: d._id } }, { c: tgl }, { c: d.holiday }]
-            line.push(row)
-        })
+                var tgl = d.date + " " + d.month + " " + d.year
+                var row = [{ c: d.urut }, { c: d.day, r: { id: d._id } }, { c: tgl }, { c: d.holiday }]
+                line.push(row)
+            })
 
-        g.body = line
+            g.body = line
+        }
 
         g.liburList()
+
+        var elem
+        var borokokok = (cb) => {
+            elem = r.getById('liburList')
+            if (elem) {
+                console.log('borokokok')
+                cb()
+            }
+
+        }
+        borokokok(() => {
+            g.controller = g.controllerShow()
+            m.redraw()
+        })
 
 
     },
@@ -333,12 +378,14 @@ var g = {
 
         g.loadTab(() => g.showTab())
 
+        console.log(g.dataExist)
+
 
     },
 
     oncreate: () => {
 
-        g.modal = g.addPemda()
+        g.modal = g.addLibur()
 
         // r.urutFn(() => { g.modal = r.makeModal() }, () => { modal = r.getById('modalicious') })
 
@@ -352,6 +399,7 @@ var g = {
             m('div', { class: "flex justify-center items-center my-6" }, m('div', { class: "preview border-base-300 bg-base-100 rounded-b-box rounded-tr-box flex min-h-[6rem] min-w-[36rem] max-w-4xl flex-wrap items-center justify-center gap-2 overflow-x-hidden border bg-cover bg-top p-4" },
                 g.tabelLibur ? g.tabelLibur : m('div', { class: "flex justify-center items-center my-3" }, m("span", { "class": "loading loading-spinner  loading-xl" })))
             ),
+            g.controller ? g.controller : g.controllerShow(),
             g.modal
         ]
 
