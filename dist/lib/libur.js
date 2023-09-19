@@ -29,11 +29,11 @@ var g = {
 
                             g.body == null ? r.tell('warning', 'still loading', 2500) : g.verify(() => g.impor())
 
-                        }
+                        }, disabled: g.dataExist ? "disabled" : false
                     },
-                        m("span", "Impor"
-                            //<i class="fa-solid fa-file-circle-plus"></i>
-                        )
+                        "Impor"
+
+
                     ),
                     m("button", { "class": "btn btn-warning btn-sm ml-1", onclick: () => { } },
                         m("span", "Edit"
@@ -246,47 +246,78 @@ var g = {
 
     },
 
-    showTab: () => {
+    dataExist: null,
 
-        g.body = [[{ c: 'LOADING ... ', d: { "colspan": "3", "class": "text-center font-bold " } }]]
-        m.redraw()
+    loadTab: (cb) => {
+
+        var thisYear = new Date().getFullYear();
 
         var param = {
-            method: "getAll", tableName: "liburModel"
+            method: "get",
+            tableName: "liburModel",
+            json: { year: '' + thisYear }
         }
+
+
 
         r.comm(param, () => {
             console.log(r.dataReturn)
             modal = r.getById('modalicious')
             if (r.dataReturn.success == 0) {
                 g.body = false
+                cb()
             } else {
-                //   [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]] 
-
-
-
-                var line = []
-
-                //      var line = [{ c: 'No.' }, { c: "Hari" }, { c: "Tanggal", r: { class: "font-black " } }, { c: "Peringatan" }]
-
-                var no = 0
-                r.dataReturn.message.forEach(d => {
-
-                    var tgl = d.date + " " + d.month + " " + d.year
-
-                    no++
-                    var row = [{ c: no }, { c: d.day, r: { id: d._id } }, { c: tgl }, { c: d.holiday }]
-                    line.push(row)
-                })
-
-                g.body = line
-
+                g.dataExist = [...r.dataReturn.message].sort((a, b) => a.datetime_ms - b.datetime_ms);
+                cb()
             }
 
-            g.liburList()
         })
 
     },
+
+    pageSize: 8,
+    curPage: 1,
+
+     previousPage:()=> {
+        if(g.curPage > 1) g.curPage--;
+        g.showTab();
+      },
+      
+        nextPage:(data)=> {
+        if((g.curPage * g.pageSize) < data.length) g.curPage++;
+        g.showTab();
+      },
+
+    showTab: () => {
+
+        g.body = [[{ c: 'LOADING ... ', d: { "colspan": "3", "class": "text-center font-bold " } }]]
+        m.redraw()
+
+
+        var line = []
+
+        //      var line = [{ c: 'No.' }, { c: "Hari" }, { c: "Tanggal", r: { class: "font-black " } }, { c: "Peringatan" }]
+
+        var no = 0
+        g.dataExist.forEach(d => {
+
+            var tgl = d.date + " " + d.month + " " + d.year
+
+            no++
+            var row = [{ c: no }, { c: d.day, r: { id: d._id } }, { c: tgl }, { c: d.holiday }]
+            line.push(row)
+        })
+
+        g.body = line
+
+        g.liburList()
+
+
+    },
+
+
+
+
 
     tabelLibur: null,
 
@@ -300,7 +331,7 @@ var g = {
         // var json = req.body.json
         // var fn =  req.body.fn
 
-        g.showTab()
+        g.loadTab(() => g.showTab())
 
 
     },
