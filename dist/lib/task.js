@@ -6,7 +6,7 @@ var g = {
     body: null,
     modal: null,
 
-    taTable: () => {
+    taskTableShow: () => {
 
 
         var title = []
@@ -56,7 +56,7 @@ var g = {
 
     },
 
-    addNewTask: () => {
+    addNewTask: (cb) => {
 
 
 
@@ -84,7 +84,7 @@ var g = {
 
 
             var bodyArrAgain = [{
-                type: 'select', label: "(semua field harus diisi)" + arrSel[0].text, id: "idLevel2", dataMsg: "Kegiatan", required: true, col: 6, colStart: 1, value: null, selectOpt: g.selectOptKeg(kodePemda)
+                type: 'select', label: "(semua field harus diisi/dipilih)", id: "idLevel2", dataMsg: "Kegiatan", required: true, col: 6, colStart: 1, value: null, selectOpt: g.selectOptKeg(kodePemda)
             },
             {
                 type: 'select', label: "Pilih Tenaga Ahli", id: "idLevel3", dataMsg: "Tenaga Ahli", required: true, col: 3, colStart: 1, value: null, selectOpt: g.selectOptTA()
@@ -93,10 +93,10 @@ var g = {
                 type: 'text', label: "Tugas/Peran", id: "role", dataMsg: "Tugas/Peran", required: true, col: 3, colStart: 4, value: null,
             },
             {
-                type: 'date', label: "Tanggal Mulai", id: "start", dataMsg: "Tanggal mulai", required: true, col: 3, colStart: 4, value: null,
+                type: 'date', label: "Tanggal mulai", id: "start", dataMsg: "Tanggal mulai", required: true, col: 3, colStart: 4, value: null,
             },
             {
-                type: 'date', label: "Tanggal Mulai", id: "end", dataMsg: "Sampai dengan", required: true, col: 3, colStart: 4, value: null,
+                type: 'date', label: "Sampai dengan", id: "end", dataMsg: "Tanggal selesai", required: true, col: 3, colStart: 4, value: null,
             },
 
 
@@ -113,61 +113,98 @@ var g = {
 
                 var tempObj = r.getSelected()
                 console.log(tempObj)
+                var tempArr = r.getValues()
+                console.log(tempArr)
+                var Obj = { idLevel1: kodePemda }
+                Object.assign(Obj, tempObj[0], tempObj[1], tempArr[0])
+                console.log(Obj)
+
+                //cek level1 with idLevel1, if not exist:
+                /*
+
+                level : 1
+                idTask : idLevel1
+
+
+                     level: Number,
+                     idTask: { type: String, unique: true }, //kodePemda/keg if TA code plus ObjectID
+                     idLevel: null,
+
+                     name: idLevel1-Name
+                     role: null
+                     start: startdate
+                     end: enddate,
+                     progress: 20,
+                     dependencies: null,
+                     created_by: String,
+                     duration_unit: String
+
+
+
+
+
+
+                */
 
 
 
             }
 
-            g.modal = r.makeModalToo(m({ view: () => r.gForm("Entry Penugasan", "Pilih Kegiatan", bodyArrAgain, xFn2, vFn2) }))
+            g.modal = r.makeModalToo(m({ view: () => r.gForm("Entry Penugasan", "Pilih Kegiatan pada Pemda " + arrSel[0].text, bodyArrAgain, xFn2, vFn2) }))
             r.tunda(() => r.showModal(), 500)
 
         }
 
 
         g.modal = r.makeModalToo(m({ view: () => r.gForm("Entry Penugasan", "Pilih Wilayah Penugasan", bodyArr, xFn, vFn) }))
-
+        cb ? cb() : null
 
     },
 
+    taskList: null,
+    taskTable: null,
 
-    showTab: () => {
-
-        g.body = [[{ c: 'LOADING ... ', d: { "colspan": "3", "class": "text-center font-bold " } }]]
-        m.redraw()
+    getTaskData: (cb) => {
 
         var param = {
             method: "getAll", tableName: "taskModel"
         }
-
         r.comm(param, () => {
             console.log(r.dataReturn)
 
             if (r.dataReturn.success == 0) {
                 g.body = false
             } else {
-                //   [[{ c: 'Data masih kosong', d: { "colspan": "3", "class": "text-center font-bold" } }]] 
-
-
-
-                var line = []
-
-                var no = 0
-                r.dataReturn.message.forEach(d => {
-                    no++
-                    var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }, { c: d.contact }]
-                    line.push(row)
-                })
-
-                g.body = line
-
+                g.taskList = [...r.dataReturn.message]
             }
-
-            g.taTable()
+            cb ? cb() : null
         })
 
     },
 
-    taskTable: null,
+
+    showTab: () => {
+
+        var line = []
+
+        var no = 0
+        if (g.taskList) {
+            g.taskList.message.forEach(d => {
+                no++
+                var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }, { c: d.contact }]
+                line.push(row)
+            })
+        }
+
+
+        g.body = line
+
+        g.taskTableShow()
+
+
+    },
+
+
 
     taList: null,
 
@@ -261,8 +298,6 @@ var g = {
 
                     }
 
-
-
                     var prmTA = {
                         method: "getAll", tableName: "taModel"
                     }
@@ -283,8 +318,6 @@ var g = {
 
 
                 })
-
-
 
 
             } else {
@@ -310,13 +343,13 @@ var g = {
         // var json = req.body.json
         // var fn =  req.body.fn
 
-        g.getData(() => g.addNewTask())
+        g.getData(() => g.getTaskData(() => { g.addNewTask(() => g.showTab()) }))
 
     },
 
     oncreate: () => {
 
-        g.showTab()
+
 
         //   console.log(g.modal)
 

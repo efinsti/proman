@@ -48,7 +48,7 @@ const taskSchema = new Schema({
   
   level: Number,
   idTask: { type: String, unique: true }, //kodePemda/keg if TA code plus ObjectID
-  idLevel: String,
+  // idLevel: String,
    
   // name: String,
   role: String,
