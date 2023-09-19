@@ -85,7 +85,13 @@ var nav = {
               r.closeDDowns();
               m.route.set('/ta');
             }
-          },"Tenaga Ahli"))
+          },"Tenaga Ahli")),
+          m('li', m('a', {
+            onclick: () => {
+              r.closeDDowns();
+              m.route.set('/libur');
+            }
+          },"Hari Libur")),
         ])
       ])
     ),

@@ -10,6 +10,7 @@ import pemda from './pemda.js'
 import kegiatan from './kegiatan.js'
 import ta from './ta.js'
 import task from './task.js'
+import libur from './libur.js'
 
 import test from './test.js'
 import md_employees from "./md_employees.js"
@@ -131,6 +132,15 @@ m.route(ref.getById('content'), '/', {
     },
     onmatch: () => {
       document.title = 'Daftar Tenaga Ahli - ' + tag
+    }
+  },
+
+  '/libur': {
+    render: () => {
+      return m(Layout, m(libur))
+    },
+    onmatch: () => {
+      document.title = 'Daftar Hari Libur - ' + tag
     }
   },
 

@@ -72,6 +72,11 @@ var ref = {
 
     },
     getValues() {
+
+
+        var elBtn = ref.getById("modaliciousTooSimpanBtn")
+        if (elBtn) elBtn.innerHTML = '<span class="loading loading-spinner text-success"></span>'
+
         var els = [...ref.getByTag('input')]
 
         console.log(els)
@@ -107,8 +112,9 @@ var ref = {
         if (zeroVal.length > 0) {
             data2send = null
 
-            ref.tell('warning', 'Ada isian yang masih kosong', 2121, () => { return null })
+            ref.tell('warning', 'Ada isian yang masih kosong', 2121, () => { if (elBtn) elBtn.innerHTML = '<span>Simpan</span>' })
         }
+
 
         return data2send
     },
@@ -125,7 +131,7 @@ var ref = {
 
         console.log(ids)
 
-       
+
         var arrTemp = []
 
         ids.forEach(i => {
@@ -1338,7 +1344,7 @@ var ref = {
                                 subtitle
                             ),
                             m("div", { "class": "mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6" }, content), //grid-cols-1
-                            
+
                         ]
                     )
                 ),
@@ -1351,7 +1357,14 @@ var ref = {
                         },
                             "Batal"
                         ) : null, vFn ?
-                            m("button", { "class": "btn rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", "type": "button", onclick: () => { vFn() } },
+                            m("button", {
+                                id: "modaliciousTooSimpanBtn", "class": "btn rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", "type": "button",
+
+                                onclick: () => {
+
+                                    vFn()
+                                }
+                            },
                                 "Simpan"
                             ) : null
                     ]
@@ -1442,7 +1455,7 @@ var ref = {
 
             } else if (b.type == "select") {
 
-           
+
                 var optionFill = () => {
                     var opts = []
                     b.selectOpt.forEach(opt => {
@@ -1456,7 +1469,7 @@ var ref = {
                 }
 
                 var inputComp = m("div", { "class": "mt-2" },
-                    m("select", { "class": compClass+" select select-bordered", "id": b.id, "name": b.id, "data-msg": b.label },
+                    m("select", { "class": compClass + " select select-bordered", "id": b.id, "name": b.id, "data-msg": b.label },
                         optionFill()
                     )
                 )

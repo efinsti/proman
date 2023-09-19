@@ -62,6 +62,15 @@ const taskSchema = new Schema({
 
 })
 
+const liburSchema = new Schema({
+  date: String,
+  day: String,
+  month: String,
+  year: String,
+  holiday: String,
+  datetime_ms: Number,
+})
+
 const logSchema = new Schema({
   username: String,
   method: String,
@@ -77,8 +86,9 @@ const pemdaModel = mongoose.model('pemda', pemdaSchema);
 const kegModel = mongoose.model('kegiatan', kegiatanSchema);
 const taModel = mongoose.model('ta', taSchema);
 const taskModel = mongoose.model('task', taskSchema);
+const liburModel = mongoose.model('libur', liburSchema);
 const logModel = mongoose.model('log', logSchema);
 
 
-module.exports = { userModel, signonModel, pemdaModel, kegModel, taModel, taskModel, logModel }
+module.exports = { userModel, signonModel, pemdaModel, kegModel, taModel, taskModel, liburModel, logModel }
 

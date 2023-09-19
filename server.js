@@ -1,16 +1,11 @@
-
-
-
 const fastify = require('fastify');
 const path = require("path");
 const connect = require("./db/db")
 
-
-// const bikin = require('./db/init.js');
-
 const daftar = require('./auth/daftar')
 const login = require('./auth/login')
 const gate = require('./api/gate')
+const auth1 = require('./auth/authone')
 
 var nyambung = false
 
@@ -19,6 +14,8 @@ connect()
     nyambung = smartTheo
 })
 .catch(err => console.log(err));
+
+
 
 
 const app = fastify({
@@ -42,6 +39,7 @@ app.register(require("@fastify/view"), {
 app.post('/api/daftar', daftar)
 app.post('/api/login', login)
 app.post('/api/gate', gate)
+app.post('/api/auth1', auth1)
 
 
 app.get('/', (abrakadabracilukbaaaaaaa, res) => {
@@ -68,11 +66,11 @@ app.listen({ port: 3000 }, (err, address) => {
 
 
 
-//const {gen} = require("./auth/genhash")
-// var word = " "
+const {gen} = require("./auth/genhash")
+var word = "password"
 
 
-// gen(word).then(hash=>{
-//     console.log(hash)})
+gen(word).then(hash=>{
+    console.log(hash)})
 
 
