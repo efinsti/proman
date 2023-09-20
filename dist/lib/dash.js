@@ -8,8 +8,8 @@ var tasks = [
     name: 'Pemerintah Nusantara',
     start: '2023-03-28',
     end: '2023-12-31',
-    progress: 100,
-
+    progress: 80,
+    
     custom_class: 'bar-milestone' // optional
   },
 
@@ -25,9 +25,9 @@ var tasks = [
 
   {
     id: 'Task 3',
-    name: 'Ir. Sukarno',
+    name: 'Habibie',
     start: '2023-03-28',
-    end: '2023-03-30',
+    end: '2023-07-30',
     progress: 100,
     dependencies: 'Task 2',
     custom_class: 'bar-milestone' // optional
@@ -35,10 +35,10 @@ var tasks = [
 
   {
     id: 'Task 4',
-    name: 'Ir. Joko Widodo',
+    name: 'Abdurrahman Wahid',
     start: '2023-06-01',
     end: '2023-12-31',
-    progress: 20,
+    progress: 73,
     dependencies: 'Task 2',
     custom_class: 'bar-milestone' // optional
   },

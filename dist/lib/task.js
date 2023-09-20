@@ -116,20 +116,132 @@ var g = {
                 var tempArr = r.getValues()
                 console.log(tempArr)
                 var Obj = { idLevel1: kodePemda }
-                Object.assign(Obj, tempObj[0], tempObj[1], tempArr[0])
+                Object.assign(Obj, { idLevel2: tempObj[0].idLevel2, namaKegiatan: tempObj[0].text }, tempObj[1], tempArr[0])
                 console.log(Obj)
+
+                var idLevel1 = Obj.idLevel1
+                var namaPemda = arrSel[0].text
+                var idLevel2 = Obj.idLevel2
+                var namaKegiatan = Obj.namaKegiatan
+                var idLevel3 = Obj.idLevel3
+                var namaTA = Obj.text
+                var role = Obj.role
+                var start = Obj.start
+                var end = Obj.end
+
+                // level: Number,
+                // idTask: { type: String, unique: true }, //kodePemda/keg if TA code plus ObjectID
+                // // idLevel: String,
+
+                // name: String,
+                // role: String,
+                // start: Date,
+                // end: Date,
+                // progress: Number,
+                // dependencies: String,
+                // created_by: String,
+
+
+
+                var prmCheckLvl1 = {
+                    method: "get",
+                    tableName: "taskModel",
+                    json: { idTask: idLevel1 }
+                }
+
+                r.comm(prmCheckLvl1, () => {
+                    if (r.dataReturn.success == 0) {
+
+                        var prmCreateLvl1 = {
+                            method: "create",
+                            tableName: "taskModel",
+                            json: {
+                                level: 1,
+                                idTask: idLevel1,
+                                name: namaPemda,
+                                 start,
+                                 end,
+                                progress: 20
+                            }
+                        }
+
+                        r.comm(prmCreateLvl1, () => {
+                            lvl2routine()
+                        })
+
+                    } else lvl2routine()
+                })
+
+                var lvl2routine = () => {
+
+                    var prmCheckLvl2 = {
+                        method: "get",
+                        tableName: "taskModel",
+                        json: { idTask: idLevel2 }
+                    }
+
+                    r.comm(prmCheckLvl2, () => {
+                        console.log(r.dataReturn)
+                        if (r.dataReturn.success == 0) {
+
+                            var prmCreateLvl2 = {
+                                method: "create",
+                                tableName: "taskModel",
+                                json: {
+                                    level: 2,
+                                    idTask: idLevel2,
+                                    name: namaKegiatan,
+                                      start,
+                                      end,
+                                    progress: 20,
+                                    dependencies: idLevel1,
+                                }
+                            }
+
+                            r.comm(prmCreateLvl2, () => {
+                                taskRoutine()
+                            })
+
+                        } else taskRoutine()
+                    })
+                }
+
+                var taskRoutine = () => {
+
+                    var prmCreateTask = {
+                        method: "create",
+                        tableName: "taskModel",
+                        json: {
+                            level: 3,
+                            idTask: idLevel3 + "-" + r.ObjectID(),
+                            name: namaTA + " [" + role + "]",
+                            start: start,
+                            end: end,
+                            progress: 20,
+                            dependencies: idLevel2,
+                        }
+                    }
+
+                    r.comm(prmCreateTask, () => {
+                        g.updateParent(idLevel2, start, end)
+                        g.getData(() => g.getTaskData(() => g.showTab()))
+                        r.closeMdl()
+
+                    })
+
+                }
 
                 //cek level1 with idLevel1, if not exist:
                 /*
-
+ 
                 level : 1
                 idTask : idLevel1
-
-
+ 
+ 
                      level: Number,
                      idTask: { type: String, unique: true }, //kodePemda/keg if TA code plus ObjectID
                      idLevel: null,
-
+ 
                      name: idLevel1-Name
                      role: null
                      start: startdate
@@ -138,12 +250,12 @@ var g = {
                      dependencies: null,
                      created_by: String,
                      duration_unit: String
-
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
                 */
 
 
@@ -158,6 +270,92 @@ var g = {
 
         g.modal = r.makeModalToo(m({ view: () => r.gForm("Entry Penugasan", "Pilih Wilayah Penugasan", bodyArr, xFn, vFn) }))
         cb ? cb() : null
+
+    },
+
+    updateParent: (idLevel2, start, end, cb) => {
+
+        var getLvl2IDprm = {
+            method: "get",
+            tableName: "taskModel",
+            idTask: idLevel2
+        }
+
+        r.comm(getLvl2IDprm, () => {
+
+            var lvl2Data = r.dataReturn.message[0]
+            console.log(lvl2Data)
+
+            var idLevel1 = lvl2Data.dependencies
+            var kegID = lvl2Data._id
+
+            var startKeg = lvl2Data.start
+            var endKeg = lvl2Data.end
+
+            var newStart, newEnd
+
+            if (new Date(start) < new Date(startKeg)) {
+                newStart = start
+            } else { newStart = startKeg }
+
+            if (new Date(end) > new Date(endKeg)) {
+                newEnd = end
+            } else { newEnd = endKeg }
+
+            var updateKeg = {
+                method: "update",
+                tableName: "taskModel",
+                id: kegID,
+                json: { start: newStart, end: newEnd }
+
+            }
+
+            r.comm(updateKeg, () => {
+
+                var getLvl1IDprm = {
+                    method: "get",
+                    tableName: "taskModel",
+                    idTask: idLevel1
+                }
+
+                r.comm(getLvl1IDprm, () => {
+
+                    var lvl1Data = r.dataReturn.message[0]
+                    console.log(lvl1Data)
+
+                    var PemID = lvl1Data._id
+                    var startPem = lvl1Data.start
+                    var endPem = lvl1Data.end
+
+                    var newStart, newEnd
+
+                    if (new Date(start) < new Date(startPem)) {
+                        newStart = start
+                    } else { newStart = startPem }
+
+                    if (new Date(end) > new Date(endPem)) {
+                        newEnd = end
+                    } else { newEnd = endPem }
+
+                    var updatePem = {
+                        method: "update",
+                        tableName: "taskModel",
+                        id: PemID,
+                        json: { start: newStart, end: newEnd }
+                    }
+                    r.comm(updatePem, () => {
+
+                        cb ? cb() : null
+                    })
+
+
+                })
+
+
+            })
+
+
+        })
 
     },
 
@@ -189,7 +387,7 @@ var g = {
 
         var no = 0
         if (g.taskList) {
-            g.taskList.message.forEach(d => {
+            g.taskList.forEach(d => {
                 no++
                 var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }, { c: d.contact }]
                 line.push(row)
