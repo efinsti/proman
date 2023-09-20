@@ -378,8 +378,8 @@ var g = {
                 var no = 0
                 g.taskList.forEach(d => {
                     if (d.level == 3) {
-
-                        d.urut = no + 1
+                        no++
+                        d.urut = no 
                     }
                 });
                 g.taskList = g.taskList.sort((a, b) => a.urut - b.urut);
