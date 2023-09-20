@@ -4577,6 +4577,10 @@ details.collapse summary::-webkit-details-marker {
   font-weight: 600;
 }
 
+.font-extrabold {
+  font-weight: 800;
+}
+
 .capitalize {
   text-transform: capitalize;
 }
