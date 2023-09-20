@@ -31,15 +31,15 @@ var g = {
         label: 
         required :
         col : length (1-6)
-        colstart : 
+        colStart : 
         val :         }]
     } 
     */
 
         var bodyArr = [{
-            type: 'text', label: "Kode Kegiatan", id: "kode", dataMsg: "Kode Kegiatan", required: true, col: 6, colstart: 1, val: null
+            type: 'text', label: "Kode Kegiatan", id: "kode", dataMsg: "Kode Kegiatan", required: true, col: 6, colStart: 1, val: null
         }, {
-            type: 'text', label: "Nama Kegiatan", id: "nama", dataMsg: "Nama Kegiatan", required: true, col: 6, colstart: 1, val: null
+            type: 'text', label: "Nama Kegiatan", id: "nama", dataMsg: "Nama Kegiatan", required: true, col: 6, colStart: 1, val: null
         },
 
         ]

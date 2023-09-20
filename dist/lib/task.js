@@ -263,9 +263,6 @@ var g = {
                 g.oneTwoLvlData = []
 
 
-
-
-
                 var prm = {
                     method: "getAll",
                     tableName: "kegModel",
@@ -281,18 +278,12 @@ var g = {
                         var kegiatan = []
 
                         g.oneTwoLvlData.forEach(pem => {
-                            kegData.forEach(keg => {
-                                if (keg.pemda_ref = pem._id) {
-                                    kegiatan.push(keg)
-                                }
-                            })
+                            kegData.forEach(keg => keg.pemda_ref == pem._id ? kegiatan.push(keg) : null)
                             pem.kegiatan = kegiatan
-                            if (kegiatan.length == 0) {
+                            if (pem.kegiatan.length == 0) {
                                 r.tell('warning', "mohon lengkapi data kegiatan untuk Pemda " + pem.nama + " dulu", 1650, () => m.route.set("/kegiatan"))
-                            } else {
-                                kegiatan = []
                             }
-
+                            kegiatan = []
                         })
 
 
@@ -344,6 +335,7 @@ var g = {
         // var fn =  req.body.fn
 
         g.getData(() => g.getTaskData(() => { g.addNewTask(() => g.showTab()) }))
+        r.tunda(() => console.log(g.oneTwoLvlData), 5000)
 
     },
 
