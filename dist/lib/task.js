@@ -159,8 +159,8 @@ var g = {
                                 level: 1,
                                 idTask: idLevel1,
                                 name: namaPemda,
-                                 start,
-                                 end,
+                                start,
+                                end,
                                 progress: 20
                             }
                         }
@@ -191,8 +191,8 @@ var g = {
                                     level: 2,
                                     idTask: idLevel2,
                                     name: namaKegiatan,
-                                      start,
-                                      end,
+                                    start,
+                                    end,
                                     progress: 20,
                                     dependencies: idLevel1,
                                 }
@@ -361,11 +361,12 @@ var g = {
 
     taskList: null,
     taskTable: null,
+    holidays: null,
 
     getTaskData: (cb) => {
 
         var param = {
-            method: "get", tableName: "taskModel", json:{level:3}
+            method: "getAll", tableName: "taskModel"
         }
         r.comm(param, () => {
             console.log(r.dataReturn)
@@ -374,8 +375,45 @@ var g = {
                 g.body = false
             } else {
                 g.taskList = [...r.dataReturn.message]
+                var no = 0
+                g.taskList.forEach(d => {
+                    if (d.level == 3) {
+
+                        d.urut = no + 1
+                    }
+                });
+                g.taskList = g.taskList.sort((a, b) => a.urut - b.urut);
             }
-            cb ? cb() : null
+
+            var getHolidayprm = {
+                method: "getAll",
+                tableName: "liburModel"
+            }
+
+            r.comm(getHolidayprm, () => {
+                console.log(r.dataReturn)
+                if (r.dataReturn.success == 1) {
+                    var holyArr = [];
+                    [...r.dataReturn.message].forEach(d => {
+
+                        var tgl = new Date(d.datetime_ms).toLocaleString({  timeZone: 'Asia/Jakarta'}).split(',')[0];
+                        holyArr.push(tgl)
+
+                    })
+                    console.log(holyArr)
+                    g.holidays = holyArr
+                } else {
+
+                    r.tell('warning', "Silakan isi data Hari Libur terlebih dahulu", 2222, () => {
+                        //  m.route.set("/libur")
+                    })
+                }
+
+                cb ? cb() : null
+            })
+
+
+
         })
 
     },
@@ -385,13 +423,53 @@ var g = {
 
         var line = []
 
-      
-        if (g.taskList) {
-            g.taskList.forEach((d,idx) => {
 
-                d.urut = idx+1
-                var row = [{ c: d.urut }, { c: d.kode, r: { id: d._id } }, { c: d.nama }, { c: d.contact }]
-                line.push(row)
+        if (g.taskList) {
+            g.taskList.forEach((d, idx) => {
+
+                if (d.level == 3) {
+
+                    var contact
+
+                    g.taList.forEach(ta => {
+                        if (ta.kode == d.idTask.split('-')[0]) { contact = ta.contact }
+                    })
+
+                    var kegiatan, wilayahDependant, wilayah
+                    g.taskList.forEach(task => {
+                        if (task.idTask == d.dependencies) {
+                            kegiatan = task.name
+                            wilayahDependant = task.dependencies
+
+                        }
+                    })
+
+                    g.taskList.forEach(task => {
+                        if (task.idTask == wilayahDependant) {
+                            wilayah = task.name
+
+
+                        }
+                    })
+
+
+                    var start = r.indoDateFmt(d.start)
+                    var end = r.indoDateFmt(d.end)
+
+                    var durasi = r.diffdays(d.start, d.end)
+                    var durasiWithHolidays = r.workingDaysBetweenDates(d.start, d.end, g.holidays)
+
+
+
+                    var row = [{ c: d.urut }, { c: d.name.split('[')[0], r: { id: d._id } }, { c: contact },
+                    { c: kegiatan }, { c: wilayah }, { c: d.name.split('[')[1].slice(0, -1) }, { c: start }, { c: end },
+                    { c: durasi +" | "+durasiWithHolidays }, { c: "Hari Kalender | Kerja" }]
+                    line.push(row)
+
+                   
+                }
+
+
             })
         }
 
@@ -408,6 +486,7 @@ var g = {
     taList: null,
 
     pemdaList: null,
+    kegData: null,
     oneTwoLvlData: null,
     selectOptPemda: () => {
 
@@ -448,6 +527,8 @@ var g = {
 
     },
 
+
+
     getData: (cb) => {
 
 
@@ -472,12 +553,12 @@ var g = {
                     if (r.dataReturn.success != 0) {
 
 
-                        var kegData = [...r.dataReturn.message]
+                        g.kegData = [...r.dataReturn.message]
                         g.oneTwoLvlData = g.pemdaList
                         var kegiatan = []
 
                         g.oneTwoLvlData.forEach(pem => {
-                            kegData.forEach(keg => keg.pemda_ref == pem._id ? kegiatan.push(keg) : null)
+                            g.kegData.forEach(keg => keg.pemda_ref == pem._id ? kegiatan.push(keg) : null)
                             pem.kegiatan = kegiatan
                             if (pem.kegiatan.length == 0) {
                                 r.tell('warning', "mohon lengkapi data kegiatan untuk Pemda " + pem.nama + " dulu", 1650, () => m.route.set("/kegiatan"))
@@ -498,7 +579,6 @@ var g = {
                             g.taList = [...r.dataReturn.message]
                             console.log(g.taList)
 
-                            // console.log(p)
                         } else {
 
                             r.tell('warning', "mohon lengkapi data Tenaga Ahli terlebih dahulu", 1650, () => m.route.set("/ta"))

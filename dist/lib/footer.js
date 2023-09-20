@@ -7,10 +7,10 @@ const footer =  {
         [
           m("div",
             [
-              m("img", {src:"/img/ven.png", "width":"88","height":"78"}),
+              m("img", {src:"/img/STI.png", "width":"88","height":"78"}),
               m("p",
                 [
-                  "Venice System",
+                  "Solusi Teknologi Informasi",
                   m("br"),
                   "Providing reliable tech since long time ago"
                 ]

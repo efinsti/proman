@@ -1,11 +1,10 @@
 import r from './ref.js'
-import a from './pemda.js'
-import g from "./dash.js"
+
 
 var lo = () => {
   r.tell('query', 'Anda yakin akan keluar?', 20000, () => {
     sessionStorage.removeItem(r.lsname)
-    r.admMenu = null 
+    r.admMenu = null
     r.logged = null
     r.username = null
     r.fullname = null
@@ -63,46 +62,49 @@ var nav = {
     m('li', m('a', 'Item 3'))
   ],
 
-  admMenu: [
+  admMenu: {
+    view: () => [
 
-    m('li', { tabindex: '0' },
-      m('details', [
-        m('summary', 'Master/Setup'),
-        m('ul', { class: 'p-2' }, [
-          m('li', m('a', {
-            onclick: () => {
-              r.closeDDowns();
-              m.route.set('/pemda');
-            }
-          }, "Pemda")),
-          m('li', m('a', {
-            onclick: () => {
-              r.closeDDowns();
-              m.route.set('/kegiatan');
-            }
-          },"Kegiatan")),
-          m('li', m('a', {
-            onclick: () => {
-              r.closeDDowns();
-              m.route.set('/ta');
-            }
-          },"Tenaga Ahli")),
-          m('li', m('a', {
-            onclick: () => {
-              r.closeDDowns();
-              m.route.set('/libur');
-            }
-          },"Hari Libur")),
+      m('li', { tabindex: '0' },
+        m('details', [
+          m('summary', 'Master/Setup'),
+          m('ul', { class: 'p-2' }, [
+            m('li', m('a', {
+              onclick: () => {
+                r.closeDDowns();
+                m.route.set('/pemda');
+              }
+            }, "Pemda")),
+            m('li', m('a', {
+              onclick: () => {
+                r.closeDDowns();
+                m.route.set('/kegiatan');
+              }
+            }, "Kegiatan")),
+            m('li', m('a', {
+              onclick: () => {
+                r.closeDDowns();
+                m.route.set('/ta');
+              }
+            }, "Tenaga Ahli")),
+            m('li', m('a', {
+              onclick: () => {
+                r.closeDDowns();
+                m.route.set('/libur');
+              }
+            }, "Hari Libur")),
+          ])
         ])
-      ])
-    ),
-    m('li', m('a', {
-      onclick: () => {
-        r.closeDDowns();
-        m.route.set('/task');
-      }
-    },'Penugasan'))
-  ],
+      ),
+      m('li', m('a', {
+        onclick: () => {
+          r.closeDDowns();
+          m.route.set('/task');
+        }
+      }, 'Penugasan'))
+    ]
+  },
+
 
   view: () => {
     return m('div', { class: 'navbar bg-base-200' }, [
@@ -146,7 +148,7 @@ var nav = {
             m.route.set('/')
 
           }
-        }, 'veniCe')
+        },    m("img", {src:"/img/STI.png", "width":44*1.5+"","height":39*1.5+""}),)
       ]),
       m(
         'div',
@@ -154,7 +156,7 @@ var nav = {
         m(
           'ul',
           { class: 'menu menu-horizontal px-1 z-10' },
-          r.admMenu ? nav.admMenu : null
+          r.admMenu ? m(nav.admMenu) : null
         )
       ),
       m(

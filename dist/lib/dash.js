@@ -118,20 +118,12 @@ var g = {
   },
 
   modal: r.makeModal(),
-  content: (hi) => [
-
-    m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
-    hi == null ? m('p', { class: "text-xl text-center mb-5" }, "Silakan login") : m('div',
-      m('svg', { id: "gantt" }),
-      m('div', { id: "viewMode" }),
-      g.modal,)
-
-  ],
+ 
   oninit: () => {
 
-    if (r.logged) {
-      ganttOpts.view_mode = 'Month'
-    } else m.route.set("/login")
+    // if (r.logged) {
+    //   ganttOpts.view_mode = 'Month'
+    // } else m.route.set("/login")
 
 
 
@@ -152,9 +144,15 @@ var g = {
 
   view: () => {
 
-    var hi = r.fullname ? r.fullname.charAt(0).toUpperCase() + r.fullname.slice(1) : null
+    var hi 
+    r.fullname ? hi = r.fullname.charAt(0).toUpperCase() + r.fullname.slice(1) : null
 
-    return g.content(hi)
+    return     m('div', m('div', { class: 'text-3xl font-bold text-center mt-6' }, 'Solusi Teknologi Informasi'), 
+    m('p', { class: 'text-2xl mb-4 text-center ' }, "Manajemen Tenaga Ahli"),
+    hi == null ? m('div', { class: "text-xl text-center mb-5" }, "Silakan login") : m('div',
+      m('svg', { id: "gantt" }),
+      m('div', { id: "viewMode" }),
+      g.modal,))
 
   }
 }
