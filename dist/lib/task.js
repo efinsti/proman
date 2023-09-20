@@ -365,7 +365,7 @@ var g = {
     getTaskData: (cb) => {
 
         var param = {
-            method: "getAll", tableName: "taskModel"
+            method: "get", tableName: "taskModel", json:{level:3}
         }
         r.comm(param, () => {
             console.log(r.dataReturn)
@@ -385,11 +385,12 @@ var g = {
 
         var line = []
 
-        var no = 0
+      
         if (g.taskList) {
-            g.taskList.forEach(d => {
-                no++
-                var row = [{ c: no }, { c: d.kode, r: { id: d._id } }, { c: d.nama }, { c: d.contact }]
+            g.taskList.forEach((d,idx) => {
+
+                d.urut = idx+1
+                var row = [{ c: d.urut }, { c: d.kode, r: { id: d._id } }, { c: d.nama }, { c: d.contact }]
                 line.push(row)
             })
         }

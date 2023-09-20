@@ -650,6 +650,20 @@ var ref = {
 
                         if (data) {
 
+
+                            if (data.status == 403) {
+                                sessionStorage.removeItem(ref.lsname)
+                                ref.admMenu = null
+                                ref.logged = null
+                                ref.username = null
+                                ref.fullname = null
+                                ref.loginBtnDisabled = false
+                                ref.tell('error', 'You need to re-login', 877, () => {
+                                    m.redraw()
+                                    m.route.set('/')
+                                })
+                            }
+
                             if (data.success == 0) {
                                 console.log("return warning/error")
 

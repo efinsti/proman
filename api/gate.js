@@ -33,7 +33,7 @@ module.exports = (req, res) => {
                 if (err) {
                     console.log(err); // Token has expired, has been tampered with, etc
                     delete_token(tkn.token)
-                    res.send(new fail("Unauthorized!", 403))
+                    res.send(new fail("Token not valid, Unauthorized!", 403))
                 } else {
 
                     console.log("allbody", req.body)

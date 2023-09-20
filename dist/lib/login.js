@@ -84,8 +84,9 @@ var loginFire = () => {
               r.checkAdm(() => {
                 console.log('check done')
               })
-              m.redraw()
+              
               m.route.set('/')
+              m.redraw()
             })
           }
         })

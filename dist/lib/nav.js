@@ -5,7 +5,8 @@ import g from "./dash.js"
 var lo = () => {
   r.tell('query', 'Anda yakin akan keluar?', 20000, () => {
     sessionStorage.removeItem(r.lsname)
-      ; (r.admMenu = null), (r.logged = null)
+    r.admMenu = null 
+    r.logged = null
     r.username = null
     r.fullname = null
     r.loginBtnDisabled = false
