@@ -1,7 +1,7 @@
 {
  "private": true,
  "scripts": {
-  "start": "nodemon server.js -e *",
+  "start": "node server.js",
   "wp_start": "webpack --config webpack.config.js --watch",
   "build": "tailwindcss -i ./dist/css/input.css -o ./dist/css/main.css" 
  
