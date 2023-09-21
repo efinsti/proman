@@ -1,4 +1,4 @@
-const check = require("./passcheck").cek
+const check = require("../auth/passcheck").cek
 const { userModel, signonModel } = require('../db/schema')
 const nJwt = require("njwt")
 

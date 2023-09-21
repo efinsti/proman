@@ -4,8 +4,8 @@ require("dotenv").config()
 const path = require("path");
 const connect = require("./db/db")
 
-const daftar = require('./auth/daftar')
-const login = require('./auth/login')
+const daftar = require('./api/daftar')
+const login = require('./api/login')
 const gate = require('./api/gate')
 const auth1 = require('./auth/authone')
 
@@ -24,7 +24,6 @@ app.register(require('@fastify/static'), {
 })
 
 
-
 app.post('/api/daftar', daftar)
 app.post('/api/login', login)
 app.post('/api/gate', gate)
@@ -33,16 +32,20 @@ app.post('/api/auth1', auth1)
 
 app.get('/', (abrakadabracilukbaaaaaaa, res) => {
 
+
+    // res.send({hello:"world"})
+
     //    res.view("/dist/wait.pug", { so: "Sally can wait"});
 
     if (nyambung) {
-        res.sendFile("/dist/index.html", { so: "Sally can't wait" });
+        res.sendFile("index.html");
     } else {
-        res.sendFile("/dist/wait.html", { so: "Sally can wait" });
+        res.sendFile("wait.html");
     }
 
-})
+});
 
+ 
 
 connect()
     .then(smartTheo => {
