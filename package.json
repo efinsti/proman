@@ -1,8 +1,8 @@
 {
  "private": true,
  "scripts": {
-  "start": "node app.js",
-  "go": "nodemon app.js -e *",
+  "start": "node server.js",
+  "go": "nodemon server.js -e *",
   "wp_start": "webpack --config webpack.config.js --watch",
   "build": "tailwindcss -i ./dist/css/input.css -o ./dist/css/main.css"
  },
@@ -14,6 +14,7 @@
   "fastify": "^4.18.0",
   "lodash": "^4.17.21",
   "mongoose": "^7.5.0",
+  "newrelic": "^11.1.0",
   "njwt": "^2.0.0"
  },
  "devDependencies": {
