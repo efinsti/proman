@@ -4,7 +4,7 @@ require("dotenv").config()
 
 const check = require("./passcheck")
 const {gen} = require("./genhash")
-const darkMatter = process.env.SECRET
+const darkMatter = process.env.SECRET2
 const { userModel } = require("../db/schema")
 
 class ObjectID {
