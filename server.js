@@ -1,4 +1,6 @@
 const fastify = require('fastify');
+require("dotenv").config()
+
 const path = require("path");
 const connect = require("./db/db")
 
@@ -55,7 +57,7 @@ app.get('/', (abrakadabracilukbaaaaaaa, res) => {
 })
 
 
-app.listen({ port: 3000 }, (err, address) => {
+app.listen({ port: process.env.PORT }, (err, address) => {
 
     if (err) {
         app.log.error(err)
