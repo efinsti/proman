@@ -24,7 +24,6 @@ app.register(require('@fastify/static'), {
 })
 
 
- 
 
 app.post('/api/daftar', daftar)
 app.post('/api/login', login)
