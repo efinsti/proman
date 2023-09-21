@@ -11,11 +11,7 @@ const auth1 = require('./auth/authone')
 
 var nyambung = false
 
-connect()
-.then(smartTheo=>{
-    nyambung = smartTheo
-})
-.catch(err => console.log(err));
+
 
 
 
@@ -46,33 +42,47 @@ app.post('/api/auth1', auth1)
 
 app.get('/', (abrakadabracilukbaaaaaaa, res) => {
 
-//    res.view("/dist/wait.pug", { so: "Sally can wait"});
- 
-    if(nyambung){
-       res.view("/dist/index.pug", { so: "Sally can't wait"}); 
-    }  else {
-        res.view("/dist/wait.pug", { so: "Sally can wait"}); 
+    //    res.view("/dist/wait.pug", { so: "Sally can wait"});
+
+    if (nyambung) {
+        res.view("/dist/index.pug", { so: "Sally can't wait" });
+    } else {
+        res.view("/dist/wait.pug", { so: "Sally can wait" });
     }
-        
+
 })
 
 
-app.listen({ port: process.env.PORT }, (err, address) => {
+connect()
+    .then(smartTheo => {
+        nyambung = smartTheo;
+        app.listen({ port: process.env.PORT }, (err, address) => {
 
-    if (err) {
-        app.log.error(err)
-        process.exit(1)
-    }
-    app.log.info(`server listening on ${address}`)
-})
+            if (err) {
+                app.log.error(err)
+                process.exit(1)
+            }
+            app.log.info(`server listening on ${address}`)
+        })
+
+
+    })
+    .catch(err => console.log(err));
 
 
 
-const {gen} = require("./auth/genhash")
+
+
+
+
+
+
+const { gen } = require("./auth/genhash")
 var word = "password"
 
 
-gen(word).then(hash=>{
-    console.log(hash)})
+gen(word).then(hash => {
+    console.log(hash)
+})
 
 
