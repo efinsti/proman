@@ -3,8 +3,8 @@
  "scripts": {
   "start": "nodemon server.js -e *",
   "wp_start": "webpack --config webpack.config.js --watch",
-  "tw": "tailwindcss -i ./dist/css/input.css -o ./dist/css/main.css --watch",
-  "build": "webpack --config webpack.config.js s -p"
+  "tw": "tailwindcss -i ./dist/css/input.css -o ./dist/css/main.css --watch"
+ 
  },
  "dependencies": {
   "@fastify/static": "^6.10.2",
