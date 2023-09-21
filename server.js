@@ -12,10 +12,6 @@ const auth1 = require('./auth/authone')
 var nyambung = false
 
 
-
-
-
-
 const app = fastify({
     logger: {
         level: 'info'

@@ -3,20 +3,17 @@
  "scripts": {
   "start": "node server.js",
   "wp_start": "webpack --config webpack.config.js --watch",
-  "build": "tailwindcss -i ./dist/css/input.css -o ./dist/css/main.css" 
- 
+  "build": "tailwindcss -i ./dist/css/input.css -o ./dist/css/main.css"
  },
  "dependencies": {
   "@fastify/static": "^6.10.2",
-  "@fastify/view": "^7.4.1",
   "@tailwindcss/typography": "^0.5.10",
   "bcrypt": "^5.0.1",
   "dotenv": "^16.3.1",
   "fastify": "^4.18.0",
   "lodash": "^4.17.21",
   "mongoose": "^7.5.0",
-  "njwt": "^2.0.0",
-  "pug": "^3.0.2"
+  "njwt": "^2.0.0"
  },
  "devDependencies": {
   "daisyui": "^3.7.4",
