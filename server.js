@@ -24,11 +24,7 @@ app.register(require('@fastify/static'), {
 })
 
 
-app.register(require("@fastify/view"), {
-    engine: {
-        pug: require("pug"),
-    },
-});
+ 
 
 app.post('/api/daftar', daftar)
 app.post('/api/login', login)
@@ -41,9 +37,9 @@ app.get('/', (abrakadabracilukbaaaaaaa, res) => {
     //    res.view("/dist/wait.pug", { so: "Sally can wait"});
 
     if (nyambung) {
-        res.view("/dist/index.pug", { so: "Sally can't wait" });
+        res.sendFile("/dist/index.html", { so: "Sally can't wait" });
     } else {
-        res.view("/dist/wait.pug", { so: "Sally can wait" });
+        res.sendFile("/dist/wait.html", { so: "Sally can wait" });
     }
 
 })
