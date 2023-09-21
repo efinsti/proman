@@ -1,18 +1,12 @@
-doctype html
-head
-  meta(charset='UTF-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1.0')
-  link(rel='icon' type='image/x-icon' href='/img/favicon.ico')
-  link(href='/css/main.css' rel='stylesheet')
- 
-  title waiting for connection
- 
- 
-  p establishing connection to database server, please wait...
-    span &nbsp
-    span.loading.loading-bars.loading-xs
-   
- 
-script(src='/lib/mithril.min.js')
-script(src='/lib/wait.js' type='module')
- 
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+    <link href="/css/main.css" rel="stylesheet">
+    <title>waiting for connection</title>
+    <p>establishing connection to database server, please wait...<span>&nbsp</span><span class="loading loading-bars loading-xs"></span></p>
+</head>
+<script src="/lib/mithril.min.js"></script>
+<script src="/lib/wait.js" type="module"></script>
